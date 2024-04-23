@@ -4,8 +4,7 @@ import { React, useEffect, useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Layout, Button, Typography, Card, Form, Input, Space, Flex, Modal } from "antd";
 import { message } from "antd";
-import logo4 from "../assets/images/logo_nsf.png";
-import Swal from "sweetalert2";
+import logo4 from "../assets/images/logo.png";
 import SystemService from "../service/SystemService";
 import { Authenticate } from "../service/Authenticate.service";
 
@@ -98,7 +97,7 @@ const Login = () => {
       <div className="layout-default ant-layout layout-sign-up">
         <Header>
           <div className="header-col header-brand">
-            <h5>Nine Star Food</h5>
+            <h5>VEERA DRYCUTTING</h5>
           </div>
         </Header>
 
@@ -115,7 +114,7 @@ const Login = () => {
           <Card className="card-signup header-solid h-full ant-card pt-0" bordered="false" >
             <Space direction="vertical" className="width-100" size={12}>
               <div className="sign-up-gateways flex justify-center">
-                <img className="width-50 uploadfile.pb-15" src={logo4} alt="่ninestartfood, jaroon logo" /> 
+                <img style={{width:150}} src={logo4} alt="่ninestartfood, jaroon logo" /> 
               </div> 
               <Form name="basic" initialValues={{ remember: true }} onFinish={onFinish} onFinishFailed={onFinishFailed} className="row-col" >
                 <Flex gap={8} className="width-100 px-2 md:px-5" vertical>
