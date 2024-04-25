@@ -47,8 +47,8 @@ const Sidenav = () => {
   return (
     <>
       <Flex vertical className="brand width-100" justify='center' align='center' >
-        <img src={logo} alt="9star logo" style={{width:'max-content', height:'max-content'}}  />
-        <span>Nine Star Food</span>
+        <img src={logo} alt="9star logo" style={{width:100, height:100}}  />
+        <span>VEERA DRYCUTTING</span>
       </Flex>
       <hr />
 

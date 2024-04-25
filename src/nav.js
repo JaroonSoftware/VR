@@ -31,7 +31,7 @@ let _nav = [
   {
     title: "ใบเสนอราคา",
     icon: <FileTextFilled className="nav-ico" />, 
-    to: "/sample-request",
+    to: "/quotation",
   },
   {
     title: "ใบขายสินค้า",

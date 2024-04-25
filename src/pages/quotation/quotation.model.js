@@ -10,7 +10,7 @@ import { formatCommaNumber } from "../../utils/util";
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "Quotation Code.",
+    title: "รหัสใบเสนอราคา",
     key: "quotcode",
     dataIndex: "quotcode",
     align: "left",
@@ -18,7 +18,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     width:140,
   },
   {
-    title: "Quotation Date",
+    title: "วันที่ใบเสนอราคา",
     dataIndex: "quotdate",
     key: "quotdate",
     width: 140,
@@ -26,14 +26,14 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     render: (v) => dayjs(v).format("DD/MM/YYYY"),
   },
   {
-    title: "Customet Code",
+    title: "รหัสลูกค้า",
     dataIndex: "cuscode",
     key: "cuscode",
     width: 120,
     sorter: (a, b) => (a.cuscode).localeCompare(b.cuscode),
   },
   {
-    title: "Customet Name",
+    title: "ชื่อลูกค้า",
     dataIndex: "cusname",
     key: "cusname",
     width: 180,
@@ -44,7 +44,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
   },
   {
-    title: "Request By",
+    title: "ร้องขอโดย",
     dataIndex: "created_name",
     key: "created_name", 
     width: '15%',
