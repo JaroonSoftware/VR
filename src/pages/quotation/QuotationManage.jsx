@@ -279,7 +279,7 @@ function QuotationManage() {
       <Space size='small' direction='vertical' className='flex gap-2' >
         <Row gutter={[8, 8]} className='m-0'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='cuscode' htmlFor="cuscode-1" label='Customer Code' className='!mb-1' rules={[{ required: true, message: 'Missing Loading type', }]}> 
+            <Form.Item name='cuscode' htmlFor="cuscode-1" label='รหัสลูกค้า' className='!mb-1' rules={[{ required: true, message: 'Missing Loading type', }]}> 
               <Space.Compact style={{ width: '100%' }}>
                   <Input readOnly placeholder='เลือก ลูกค้า' id="cuscode-1" value={formDetail.cuscode} className='!bg-white' />
                   <Button type="primary" icon={<SearchOutlined />} onClick={() => setOpenCustomer(true)} style={{minWidth:40}} ></Button>
@@ -287,23 +287,23 @@ function QuotationManage() {
             </Form.Item> 
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='cusname' label='Customer Name' className='!mb-1'> 
-              <Input placeholder='Customer Name.' readOnly />
+            <Form.Item name='cusname' label='ชื่อลูกค้า' className='!mb-1'> 
+              <Input placeholder='ชื่อลูกค้า' readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item name='address' label='Customer Address' className='!mb-1'> 
-              <Input placeholder='Customer Address.' readOnly />
+            <Form.Item name='address' label='ที่อยู่ลูกค้า' className='!mb-1'> 
+              <Input placeholder='ที่อยู่ลูกค้า' readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='contact' label='Customer Contact' className='!mb-1'> 
-              <Input placeholder='Customer Contact.' readOnly/>
+            <Form.Item name='contact' label='ช่องทางติดต่อ' className='!mb-1'> 
+              <Input placeholder='ติดต่อลูกค้า' readOnly/>
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='tel' label='Customer Tel' className='!mb-1'> 
-              <Input placeholder='Customer Tel.' readOnly />
+            <Form.Item name='tel' label='เบอร์โทร' className='!mb-1'> 
+              <Input placeholder='เบอร์โทรลูกค้า' readOnly />
             </Form.Item>
           </Col>
         </Row>
@@ -387,18 +387,18 @@ function QuotationManage() {
       <Space size='small' direction='vertical' className='flex gap-2' >
         <Row gutter={[8, 8]} className='m-0' align='middle'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Typography.Title level={4} className='m-0 !text-zinc-400'>Banks for Quotation</Typography.Title>
+            <Typography.Title level={4} className='m-0 !text-zinc-400'>ธนาคารสำหรับใบเสนอราคา</Typography.Title>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Flex justify='end'>
-              <Button className='bn-success-outline bn-center' icon={<BankFilled />} onClick={()=> setOpenBanks(true) } >Choose Bank</Button> 
+              <Button className='bn-success-outline bn-center' icon={<BankFilled />} onClick={()=> setOpenBanks(true) } >เลือกธนาคาร</Button> 
             </Flex>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Table
               columns={bankcolumns}
               dataSource={quotBanks}
-              locale = {{ emptyText: <span>No data available, please choose data.</span> }}
+              locale = {{ emptyText: <span>ไม่มีข้อมูล โปรดเลือกข้อมูล</span> }}
               size='small'
               rowKey='acc_no'
               pagination={false}
@@ -427,14 +427,14 @@ function QuotationManage() {
                   Modal.error({ title: 'This is an error message', content: 'Please enter require data', });
                 });
 
-              }}>Choose Product</Button> 
+              }}>เลือกสินค้า</Button> 
             </Flex>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Table
               columns={prodcolumns}
               dataSource={quotDetails}
-              locale = {{ emptyText: <span>No data available, please choose data.</span> }}
+              locale = {{ emptyText: <span>ไม่มีข้อมูล โปรดเลือกข้อมูล</span> }}
               size='small'
               rowKey='id'
               pagination={false}
@@ -445,15 +445,15 @@ function QuotationManage() {
                   <>
                   <Table.Summary.Row>
                       <Table.Summary.Cell index={0} colSpan={4} ></Table.Summary.Cell>
-                      <Table.Summary.Cell index={4} align='end' className='!pe-4'>Total</Table.Summary.Cell>
+                      <Table.Summary.Cell index={4} align='end' className='!pe-4'>รวม</Table.Summary.Cell>
                       <Table.Summary.Cell className='!pe-4 text-end border-right-0' style={{borderRigth:"0px solid"}} >
                         <Typography.Text type="danger">{ formatCommaNumber(Number(formDetail?.total_price || 0)) }</Typography.Text>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell >Baht</Table.Summary.Cell>
+                      <Table.Summary.Cell >บาท</Table.Summary.Cell>
                   </Table.Summary.Row>
                   <Table.Summary.Row>
                       <Table.Summary.Cell index={0} colSpan={4} ></Table.Summary.Cell>
-                      <Table.Summary.Cell index={4} align='end' className='!pe-4'>Vat</Table.Summary.Cell>
+                      <Table.Summary.Cell index={4} align='end' className='!pe-4'>ภาษีมูลค่าเพิ่ม</Table.Summary.Cell>
                       <Table.Summary.Cell className='!pe-4 text-end border-right-0' style={{borderRigth:"0px solid"}} >
                         <Form.Item name="vat" className='!m-0'>
                           <InputNumber className='width-100 input-30 text-end' controls={false} min={0} onFocus={(e)=>{ e.target.select() }} onChange={handleVat} />
@@ -463,11 +463,11 @@ function QuotationManage() {
                   </Table.Summary.Row>
                   <Table.Summary.Row>
                       <Table.Summary.Cell index={0} colSpan={4} ></Table.Summary.Cell>
-                      <Table.Summary.Cell index={4} align='end' className='!pe-4'>Grand Total</Table.Summary.Cell>
+                      <Table.Summary.Cell index={4} align='end' className='!pe-4'>ผลรวมทั้งสิ้น</Table.Summary.Cell>
                       <Table.Summary.Cell className='!pe-4 text-end border-right-0' style={{borderRigth:"0px solid"}} > 
                         <Typography.Text type="danger">{ formatCommaNumber(Number(formDetail?.grand_total_price || 0)) }</Typography.Text> 
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell >Baht</Table.Summary.Cell>
+                      <Table.Summary.Cell >บาท</Table.Summary.Cell>
                   </Table.Summary.Row>  
                   </>                
                 )}
@@ -484,8 +484,8 @@ function QuotationManage() {
     <Space size='small' direction='vertical' className='flex gap-2' >
       <Row gutter={[8,8]} className='m-0'>
         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24} >
-          <Form.Item className='' name='remark' label='Remark' >
-            <Input.TextArea placeholder='Enter Remark' rows={4}  />
+          <Form.Item className='' name='remark' label='หมายเหตุ' >
+            <Input.TextArea placeholder='ระบุหมายเหตุ' rows={4}  />
           </Form.Item>
         </Col>
       </Row>    

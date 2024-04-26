@@ -185,7 +185,7 @@ const QuotationAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          Request Quotation
+                          เพิ่มใบเสนอราคา
                       </Button>
                 </Flex>
             </Col>  
