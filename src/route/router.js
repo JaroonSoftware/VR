@@ -14,10 +14,8 @@ import PrivateRoute from "../components/auth/PrivateRoutes";
 import { FileControl } from "../pages/file-control/file-control";
 import { SampleRequest, SampleRequestIndex, SampleRequestForm, SampleRequestView } from "../pages/sr/sample-request";
 import { SamplePreparation, SamplePreparationIndex, SamplePreparationForm, SamplePreparationView } from "../pages/sp/sample-preparation";
-import { DeliveryNote, DeliveryNoteAccess, DeliveryNoteManage } from "../pages/delivery-note";
 import { Bom, BomAccess, BomManage } from "../pages/bom";
 import { Packaging, PackagingAccess, PackagingManage } from "../pages/packaging";
-import { PackingSet, PackingSetAccess, PackingSetManage } from "../pages/packing-set";
 import { Estimation, EstimationAccess, EstimationManage } from "../pages/estimation";
 import { Quotation, QuotationAccess, QuotationManage } from "../pages/quotation";
 import { Customers, CustomersAccess, CustomersManage } from "../pages/customers";
@@ -64,13 +62,6 @@ const Router = () => {
                 <Route path="manage/:action" element={<SamplePreparationForm />} />
                 <Route path="view" element={<SamplePreparationView />} />
               </Route>
-
-              <Route path="/delivery-note/"  exact element={<DeliveryNote />} >
-                <Route index element={<DeliveryNoteAccess />} />
-                <Route path="manage/:action" element={<DeliveryNoteManage />} />
-                {/* <Route path="view" element={<PilotScaleView />} /> */}
-              </Route>
-
               <Route path="/estimation/"  exact element={<Estimation />} >
                 <Route index element={<EstimationAccess />} />
                 <Route path="manage/:action" element={<EstimationManage />} />
@@ -89,11 +80,6 @@ const Router = () => {
                 {/* <Route path="view" element={<PilotScaleView />} /> */}
               </Route>
 
-              <Route path="/packing-set/"  exact element={<PackingSet />} >
-                <Route index element={<PackingSetAccess />} />
-                <Route path="manage/:action" element={<PackingSetManage />} />
-                {/* <Route path="view" element={<PilotScaleView />} /> */}
-              </Route>
 
               <Route path="/customers/"  exact element={<Customers />} >
                 <Route index element={<CustomersAccess />} />
