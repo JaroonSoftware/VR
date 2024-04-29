@@ -14,18 +14,13 @@ import PrivateRoute from "../components/auth/PrivateRoutes";
 import { FileControl } from "../pages/file-control/file-control";
 import { SampleRequest, SampleRequestIndex, SampleRequestForm, SampleRequestView } from "../pages/sr/sample-request";
 import { SamplePreparation, SamplePreparationIndex, SamplePreparationForm, SamplePreparationView } from "../pages/sp/sample-preparation";
-import { PilotScale, PilotScaleAccess, PilotScaleManage, PilotScaleView } from "../pages/pilot-scale";
 import { DeliveryNote, DeliveryNoteAccess, DeliveryNoteManage } from "../pages/delivery-note";
 import { Bom, BomAccess, BomManage } from "../pages/bom";
 import { Packaging, PackagingAccess, PackagingManage } from "../pages/packaging";
 import { PackingSet, PackingSetAccess, PackingSetManage } from "../pages/packing-set";
 import { Estimation, EstimationAccess, EstimationManage } from "../pages/estimation";
 import { Quotation, QuotationAccess, QuotationManage } from "../pages/quotation";
-import { ShippingType, ShippingTypeAccess, ShippingTypeManage } from "../pages/shipping-type";
-
 import { Customers, CustomersAccess, CustomersManage } from "../pages/customers";
-import { Suppliers, SuppliersAccess, SuppliersManage } from "../pages/suppliers";
-
 import { DashBoard } from "../pages/dashboard"
 
 import { 
@@ -70,12 +65,6 @@ const Router = () => {
                 <Route path="view" element={<SamplePreparationView />} />
               </Route>
 
-              <Route path="/pilot-scale/"  exact element={<PilotScale />} >
-                <Route index element={<PilotScaleAccess />} />
-                <Route path="manage/:action" element={<PilotScaleManage />} />
-                <Route path="view" element={<PilotScaleView />} />
-              </Route>
-
               <Route path="/delivery-note/"  exact element={<DeliveryNote />} >
                 <Route index element={<DeliveryNoteAccess />} />
                 <Route path="manage/:action" element={<DeliveryNoteManage />} />
@@ -112,21 +101,9 @@ const Router = () => {
                 {/* <Route path="view" element={<PilotScaleView />} /> */}
               </Route>
 
-              <Route path="/suppliers/"  exact element={<Suppliers />} >
-                <Route index element={<SuppliersAccess />} />
-                <Route path="manage/:action" element={<SuppliersManage />} />
-                {/* <Route path="view" element={<PilotScaleView />} /> */}
-              </Route>
-
               <Route path="/quotation/"  exact element={<Quotation />} >
                 <Route index element={<QuotationAccess />} />
                 <Route path="manage/:action" element={<QuotationManage />} />
-                {/* <Route path="view" element={<PilotScaleView />} /> */}
-              </Route>
-
-              <Route path="/shipping-type/"  exact element={<ShippingType />} >
-                <Route index element={<ShippingTypeAccess />} />
-                <Route path="manage/:action" element={<ShippingTypeManage />} />
                 {/* <Route path="view" element={<PilotScaleView />} /> */}
               </Route>
 

@@ -5,14 +5,11 @@ import {Flex,Collapse,message,Typography,Tag,Tooltip} from "antd";
 import Swal from "sweetalert2";
 import ItemService from "../service/ItemService";
 import ItemTypeService from "../service/ItemTypeService";
-
 import { MdPostAdd } from "react-icons/md";
-
 import { FileControl } from "../pages/file-control/file-control";
 import { items } from "../model/items.model";
 import { formatCommaNumber } from "../utils/util.js";
 import { ModalUnit } from "../components/modal/unit/modal-unit.js";
-import { ModalSupplier } from "../components/modal/supplier/modal-supplier.js";
 
 const Items = () => {
   const { TextArea } = Input;
@@ -743,7 +740,7 @@ const Items = () => {
 
       {/* Modal เลือกรหัสผู้ขาย */}
       {isShowModalSupcode && (
-        <ModalSupplier type="supplier" show={isShowModalSupcode} close={() => { setIsShowModalSupcode(false) }} values={(record)=>{
+        <Modal type="supplier" show={isShowModalSupcode} close={() => { setIsShowModalSupcode(false) }} values={(record)=>{
           formManage.setFieldValue("supcode", record.supcode);
           formManage.setFieldValue("supname", record.supname);       
           setItemsDetail((prev) => ({ ...prev, supcode: record?.supcode, supname:record?.supname }));
@@ -752,7 +749,7 @@ const Items = () => {
 
       {/* Modal เลือกรหัสผู้ผลิต */}
       {isShowModalProcode && (
-        <ModalSupplier type="producer" show={isShowModalProcode} close={() => { setIsShowModalProcode(false) }} values={(record)=>{
+        <Modal type="producer" show={isShowModalProcode} close={() => { setIsShowModalProcode(false) }} values={(record)=>{
           formManage.setFieldValue("procode", record.supcode);
           formManage.setFieldValue("proname", record.supname);       
           setItemsDetail((prev) => ({ ...prev, procode: record?.supcode, proname:record?.supname }));
