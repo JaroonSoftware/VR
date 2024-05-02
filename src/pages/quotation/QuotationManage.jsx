@@ -311,76 +311,6 @@ function QuotationManage() {
     </> 
   );
 
-  const SectionQuotation = (
-    <>
-      <Space size='small' direction='vertical' className='flex gap-2' >
-        <Row gutter={[8, 8]} className='m-0'>
-          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='valid_price_until' label='Valid price until' className='!mb-1' rules={[{ required: true, message: 'Missing Valid price until'}]} > 
-              <InputNumber placeholder='Valid price until (Day)' controls={false} min={0} className='input-40 w-full' onChange={handleValidPriceUntil} />                
-            </Form.Item> 
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='dated_price_until' label='Valid price until date' className='!mb-1'>
-              <Input placeholder='Customer Valid price until date.' readOnly value={formDetail?.dated_price_until} />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={6} md={6} lg={6} xl={6} xxl={6}>
-            <Form.Item name='currency' label='Currency' className='!mb-1' rules={[{ required: true, message: 'Missing Currency' }]}> 
-              <AutoComplete 
-                style={{ height:40, width:'100%' }}
-                options={currenciesOptions}
-                // onSearch={handleSearch}
-                filterOption={(inputValue, option) =>
-                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                allowClear 
-                placeholder='Enter Loading type Name.'
-              /> 
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={6} md={6} lg={6} xl={6} xxl={6}>
-            <Form.Item name='rate' label='Rate' className='!mb-1' rules={[{ required: true, message: 'Missing Rate' }]}> 
-              <InputNumber placeholder='Enter Rate.' controls={false} min={0} className='input-40 w-full' />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='price_terms' label='Price Term' className='!mb-1' rules={[{ required: true, message: 'Missing Price Term' }]}> 
-              <Select
-                  showSearch
-                  autoClearSearchValue
-                  style={{ height:40, width:'100%' }}
-                  options={quotationTerm} 
-                  optionFilterProp="children"
-                  filterOption={(input, option) => {  
-                    const val = input?.toLowerCase();
-                    return ( option.label?.toLowerCase() ?? '').includes(val)
-                  }} 
-                  optionLabelProp="label"
-                  allowClear 
-                  placeholder='Enter Price Term.'              
-              />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item name='payment_condition' label='Payment Condition' className='!mb-1' rules={[{ required: true, message: 'Missing Payment Condition' }]}> 
-              <AutoComplete 
-                style={{ height:40, width:'100%' }}
-                options={payConditionOptions}
-                // onSearch={handleSearch}
-                filterOption={(inputValue, option) =>
-                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                allowClear 
-                placeholder='Enter Loading type Name.'
-              />
-            </Form.Item>
-          </Col>  
-        </Row>
-      </Space>
-    </> 
-  );
 
   const SectionBanks =( 
     <>
@@ -415,7 +345,7 @@ function QuotationManage() {
       <Space size='small' direction='vertical' className='flex gap-2' >
         <Row gutter={[8, 8]} className='m-0' align='middle'>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Typography.Title level={4} className='m-0 !text-zinc-400'>Products for Quotation</Typography.Title>
+            <Typography.Title level={4} className='m-0 !text-zinc-400'>ผลิตภัณฑ์สำหรับใบเสนอราคา</Typography.Title>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Flex justify='end'>
@@ -427,7 +357,7 @@ function QuotationManage() {
                   Modal.error({ title: 'This is an error message', content: 'Please enter require data', });
                 });
 
-              }}>เลือกสินค้า</Button> 
+              }}>เลือกผลิตภัณฑ์</Button> 
             </Flex>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
@@ -569,11 +499,11 @@ function QuotationManage() {
             <Card title={<>
               <Row className='m-0 py-3 sm:py-0' gutter={[12,12]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                  <Typography.Title level={3} className='m-0' >QUOTATION NO : {quotCode}</Typography.Title> 
+                  <Typography.Title level={3} className='m-0' >ใบเสนอราคาเลขที่ : {quotCode}</Typography.Title> 
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                   <Flex gap={10} align='center' className='justify-start sm:justify-end'>
-                    <Typography.Title level={3} className='m-0' >QUOTATION DATE : </Typography.Title>
+                    <Typography.Title level={3} className='m-0' >วันที่ใบเสนอราคา :</Typography.Title>
                     <Form.Item name="quotdate" className='!m-0'>
                       <DatePicker className='input-40' allowClear={false} onChange={handleQuotDate} />
                     </Form.Item>
@@ -582,32 +512,26 @@ function QuotationManage() {
               </Row>
             </>} >
                 <Row className='m-0' gutter={[12,12]}>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Customer </Divider>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                    <Divider orientation="left" className='!mb-3 !mt-1'>รายละเอียดลูกค้า</Divider>
                     <Card style={cardStyle} > 
                       {SectionCustomer}
                     </Card>          
                   </Col>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Details </Divider>
-                    <Card  style={cardStyle} > 
-                      {SectionQuotation}
-                    </Card>         
-                  </Col>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Banks </Divider>
+                    <Divider orientation="left" className='!mb-3 !mt-1'>ธนาคาร</Divider>
                     <Card  style={cardStyle} className={`border-spacing-1 ${(submited && quotBanks.length < 1 ? 'border-red-500' : 'border-transparent')}`} > 
                       {SectionBanks}
                     </Card>         
                   </Col>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Products </Divider>
+                    <Divider orientation="left" className='!mb-3 !mt-1'>ผลิตภัณฑ์</Divider>
                     <Card  style={cardStyle} className={`border-spacing-1 ${(submited && quotDetails.length < 1 ? 'border-red-500' : 'border-transparent')}`}> 
                       {SectionProduct}
                     </Card>         
                   </Col>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Other </Divider>
+                    <Divider orientation="left" className='!mb-3 !mt-1'>เพิ่มเติม</Divider>
                     <Card  style={cardStyle} > 
                       {SectionOther}
                     </Card>         
