@@ -53,7 +53,7 @@ let _nav = [
   {
     title: "ผู้ใช้งาน",
     icon: <TeamOutlined className="nav-ico" />,
-    to: "/user",
+    to: "/users",
   },
 
 ];

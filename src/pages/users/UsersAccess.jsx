@@ -71,14 +71,14 @@ const UsersAccess = () => {
     };      
             
     useEffect( () => { 
-        ctmService.getAllCustomer().then( res => {
-            const {data} = res;
+        // ctmService.getAllCustomer().then( res => {
+        //     const {data} = res;
 
-            setAccessData(data);
-        }).catch( err => {
-            console.log(err);
-            message.error("Request error!");
-        });
+        //     setAccessData(data);
+        // }).catch( err => {
+        //     console.log(err);
+        //     message.error("Request error!");
+        // });
     }, []);
 
     const FormSearch = (

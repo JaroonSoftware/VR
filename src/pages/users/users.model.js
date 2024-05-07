@@ -1,87 +1,80 @@
-import { Badge, Space, Typography } from "antd";
+import { Space } from "antd";
 import { Button } from "antd";
 // import { PrinterOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import { EditOutlined } from "@ant-design/icons"; 
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 
 export const accessColumn = ({handleEdit, handleDelete, handleView}) => [
-    {
-      title: "Customer Code.",
-      key: "cuscode",
-      dataIndex: "cuscode",
-      align: "left",
-      width: 110,
-      sorter: (a, b) => (a?.cuscode || "").localeCompare(b?.cuscode || ""),
-    },
-    {
-      title: "Customer Name.",
-      dataIndex: "cusname",
-      key: "cusname",
-      width: '20%',
-      sorter: (a, b) => (a?.cusname || "").localeCompare(b?.cusname || ""),
-    },
-    {
-      title: "Address",
-      dataIndex: "idno",
-      key: "idno",
-      width: '28%', 
-      sorter: (a, b) => (a?.idno || "").localeCompare(b?.idno || ""),
-      render: (_, head) => (
-      <Typography.Text> 
-        {head.idno && `${head.idno}` } 
-        {head.road && ` ${head.road}` } 
-        {head.subdistrict && ` ${head.subdistrict}` } 
-        {head.district && ` ${head.district}` }  
-        {head.province && ` ${head.province}` } 
-        {head.zipcode && ` ${head.zipcode}` } 
-        {head.tel && ` ${head.tel}` }
-      </Typography.Text>
-      )
-    },
-    {
-      title: "Country",
-      dataIndex: "country",
-      key: "country",
-      sorter: (a, b) => (a?.country || "").localeCompare(b?.country || ""),
-      width: 140, 
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      width: 120,
-      sorter: (a, b) => (a?.status || "").localeCompare(b?.status || ""),
-      render: (data) => (
-        <div>
-          {data === "Y" ? <Badge status="success" text="เปิดการใช้งาน" /> : <Badge status="error" text="ปิดการใช้การ" />}
-        </div>
-      ),
-    },
-    {
-      title: "Request Date",
-      dataIndex: "created_date",
-      key: "created_date", 
-      width: 120,
-      sorter: (a, b) => (a?.created_date || "").localeCompare(b?.created_date || ""),
-      render: (v) => dayjs(v).format("DD/MM/YYYY"),
-    },
-    {
-      title: "Action",
-      key: "operation",
-      width: '60px',
-      fixed: 'right',
-      render: (text, record) => (
-        <Space > 
-          <Button
-            icon={<EditOutlined />} 
-            className='bn-primary-outline'
-            style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-            onClick={(e) => handleEdit(record) }
-            size="small"
-          />
-        </Space>
-      ),
-    },    
+  {
+    title: "User Code",
+    dataIndex: "unitcode",
+    key: "unitcode",
+    hidden: "true",
+    width: "10%",
+  },
+  {
+    title: "Username",
+    dataIndex: "username",
+    key: "username",
+    width: "15%",
+    sorter: (a, b) => a.username.length - b.username.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "ชื่อ",
+    dataIndex: "firstname",
+    key: "firstname", 
+    sorter: (a, b) => a.firstname.length - b.firstname.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "นามสกุล",
+    dataIndex: "lastname",
+    key: "lastname",
+    sorter: (a, b) => a.lastname.length - b.lastname.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "เบอร์โทร",
+    dataIndex: "tel",
+    key: "tel",
+    width: "15%",
+    sorter: (a, b) => a.tel.length - b.tel.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "อีเมล",
+    dataIndex: "email",
+    key: "email",
+    width: "15%",
+    sorter: (a, b) => a.email.length - b.email.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "ประเภท",
+    dataIndex: "type",
+    key: "type",
+    width: 120,
+    sorter: (a, b) => a.type.length - b.type.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Action",
+    key: "operation",
+    width: 90,
+    fixed: "right",
+    render: (text) => (
+      <Space > 
+        <Button
+          icon={<EditOutlined />} 
+          className='bn-primary-outline'
+          style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+          onClick={(e) => handleEdit(text.code) }
+          size="small"
+        />
+      </Space> 
+    ),
+  },   
 ]; 
 
 export const customers = {
