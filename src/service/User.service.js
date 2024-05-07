@@ -1,69 +1,42 @@
-import axios from "axios";
-import { MEDTHOD } from "../constant/constant";
-import { BACKEND_URL } from "../utils/util";
+import { requestService as api } from "./Request.service"  
+import { STORE_KEY } from "../constant/constant";
 
 const API_URL = {
-  Add_USER: `${BACKEND_URL}/user/add_user.php`,
-  GET_USER: `${BACKEND_URL}/user/get_user.php`,
-  GETSUP_USER: `${BACKEND_URL}/user/getsup_user.php`,
-  Edit_USER: `${BACKEND_URL}/user/edit_user.php`,
-  ResetPassword: `${BACKEND_URL}/user/resetpassword.php`,
+  API_GETMASTER: `/user/get_user.php`, 
+
+  API_MANAGE: `/user/manage.php`,
 };
 
-let contenttype = {"content-type": "application/x-www-form-urlencoded"};
+const getHeader = () => {
+  const t = sessionStorage.getItem(STORE_KEY.authen);
 
-const UserService = {
-  resetPassword: (pwd,id) => {
-    return axios({
-      method: MEDTHOD.POST,      
-      url: API_URL.ResetPassword,
-      data: {
-        idcode: id,
-        pwd: pwd,
-      },
-      headers: contenttype,
-    });
-  },
+  return {
+    // "content-type" : "application/x-www-form-urlencoded",
+    "Authorization" : `Bearer ${t}`
+  }
+}
 
-  addUser: (reqData) => {
-    return axios({
-      method: MEDTHOD.POST,
-      url: API_URL.Add_USER,
-      headers: contenttype,
-      data: reqData,
-    });
-  },
 
-  getUser: (parm = {}) => {
-    const cancelTokenSource = axios.CancelToken.source();
-    return axios({
-      method: MEDTHOD.POST,
-      url: API_URL.GET_USER,
-      headers: contenttype,
-      data: parm,
-      cancelToken : cancelTokenSource?.token
-    });
-  },
-  
-  getSupUser: (reqData) => {
-    return axios({
-      method: MEDTHOD.POST,      
-      url: API_URL.GETSUP_USER,
-      data: {
-        idcode: reqData,
-      },
-      headers: contenttype,
-    });
-  },
+const UserService = () => { 
+ 
 
-  editUser: (reqData) => {
-    return axios({
-      method: MEDTHOD.POST,
-      url: API_URL.Edit_USER,
-      headers: contenttype,
-      data: reqData,
-    });
-  },
+  const create = (parm = {}) => api.post(`${API_URL.API_MANAGE}`, parm, { headers: getHeader() });
+  const update = (parm = {}) => api.put(`${API_URL.API_MANAGE}`, parm, { headers: getHeader() });
+  const deleted = (code) => api.delete(`${API_URL.API_MANAGE}?code=${code}`, { headers: getHeader() });
+  const get = (code) => api.get(`${API_URL.API_MANAGE}?code=${code}`, { headers: getHeader() });
+
+
+  const search = (parm = {}) => api.post(`${API_URL.API_GETMASTER}`, parm, { headers: getHeader() });
+
+  return {
+    create,
+    update,
+    deleted,
+    get,
+
+    search,
+
+  };
 };
 
 export default UserService;

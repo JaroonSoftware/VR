@@ -10,9 +10,9 @@ import { MdGroupAdd } from "react-icons/md";
 import { accessColumn } from "./users.model";
 
 // import dayjs from 'dayjs';
-import CustomerService from '../../service/CustomerService'; 
+import UserService from '../../service/User.service'; 
 
-const ctmService = {...CustomerService};
+const userService = UserService();
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
 const UsersAccess = () => {
     const navigate = useNavigate();
@@ -23,15 +23,7 @@ const UsersAccess = () => {
     const handleSearch = () => {
         form.validateFields().then( v => {
             const data = {...v}; 
-            ctmService.getAllCustomer(data).then( res => {
-                const {data} = res;
-
-                setAccessData(data);
-            }).catch( err => {
-                console.log(err);
-                message.error("Request error!");
-            });
-
+            getData({data})
         });
 
     }
@@ -70,16 +62,20 @@ const UsersAccess = () => {
         // });
     };      
             
-    useEffect( () => { 
-        // ctmService.getAllCustomer().then( res => {
-        //     const {data} = res;
-
-        //     setAccessData(data);
-        // }).catch( err => {
-        //     console.log(err);
-        //     message.error("Request error!");
-        // });
+    useEffect(() => { 
+        getData({})
     }, []);
+
+    const getData = (data) => {
+        userService.search(data).then( res => {
+            const {data} = res;
+
+            setAccessData(data);
+        }).catch( err => {
+            console.log(err);
+            message.error("Request error!");
+        });
+      };
 
     const FormSearch = (
         <Collapse 
@@ -95,13 +91,13 @@ const UsersAccess = () => {
                             <Form form={form} layout="vertical" autoComplete="off">
                                 <Row gutter={[8,8]}>
                                     <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                                        <Form.Item label='Customer Code.' name='cuscode'>
-                                            <Input placeholder='Enter Customer Code.' />
+                                        <Form.Item label='User Code.' name='cuscode'>
+                                            <Input placeholder='Enter User Code.' />
                                         </Form.Item>                            
                                     </Col>
                                     <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                                        <Form.Item label='Customer Name.' name='cusname'>
-                                            <Input placeholder='Enter SCustomer Name.' />
+                                        <Form.Item label='User Name.' name='cusname'>
+                                            <Input placeholder='Enter SUser Name.' />
                                         </Form.Item>                            
                                     </Col> 
                                     <Col xs={24} sm={8} md={8} lg={8} xl={8}>
@@ -157,7 +153,7 @@ const UsersAccess = () => {
         </Flex>
     );    
     return (
-    <div className='customer-access'>
+    <div className='User-access'>
         <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative' }} >
             {FormSearch}
             <Card>
