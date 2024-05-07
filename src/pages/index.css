@@ -1,17 +1,12 @@
 @import './dashboard/dashboard.css';
 @import './sp/sample-preparation.css';
 @import './sr/sample-request.css';
-@import './delivery-note/delivery-note.css';
 @import './file-control/file-control.css';
 @import './packaging/packaging.css';
 @import './tags-control/tags-control.css';
-@import './pilot-scale/pilot-scale.css';
 @import './bom/bom.css';
-@import './packing-set/packing-set.css';
 @import './estimation/esitmation.css';
 @import './customers/customers.css';
-@import './suppliers/suppliers.css';
-@import './shipping-type/shipping-type.css';
 @import './quotation/quotation.css';
 
 

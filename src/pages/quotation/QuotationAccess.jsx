@@ -31,28 +31,28 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Code' name='quotcode'>
-                    <Input placeholder='Enter Quotation Code.' />
+                <Form.Item label='รหัสใบเสนอราคา' name='quotcode'>
+                    <Input placeholder='ใส่รหัสใบเสนอราคา' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Date.' name='quotdate'>
-                    <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
+                <Form.Item label='วันที่ใบเสนอราคา' name='quotdate'>
+                    <RangePicker placeholder={['จากวันที่', 'ถึงวันที่']} style={{width:'100%', height:40}}  />
                 </Form.Item>                            
             </Col> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Request By.' name='created_by'>
-                    <Input placeholder='Enter First Name or Last Name.' />
+                <Form.Item label='ร้องขอโดย' name='created_by'>
+                    <Input placeholder='ใส่ ชื่อ-นามสกุล ผู้ร้องขอ' />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Code' name='cuscode'>
-                    <Input placeholder='Enter Customer Code.' />
+                <Form.Item label='รหัสลูกค้า' name='cuscode'>
+                    <Input placeholder='ใส่รหัสลูกค้า' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Name' name='cusname'>
-                    <Input placeholder='Enter Customer Name.' />
+                <Form.Item label='ชื่อลูกค้า' name='cusname'>
+                    <Input placeholder='ใส่ชื่อลูกค้า' />
                 </Form.Item>                            
             </Col>
         </Row>
@@ -63,10 +63,10 @@ const QuotationAccess = () => {
           <Col xs={24} sm={8} md={12} lg={12} xl={12}>
               <Flex justify='flex-end' gap={8}>
                   <Button type="primary" size='small' className='bn-action' icon={<SearchOutlined />} onClick={() => handleSearch()}>
-                      Search
+                     ค้นหา
                   </Button>
                   <Button type="primary" size='small' className='bn-action' danger icon={<ClearOutlined />} onClick={() => handleClear()}>
-                      Clear
+                      ล้าง
                   </Button>
               </Flex>
           </Col>
@@ -82,7 +82,7 @@ const QuotationAccess = () => {
         items={[
         { 
             key: '1', 
-            label: <><SearchOutlined /><span> Search</span></>,  
+            label: <><SearchOutlined /><span> ค้นหา</span></>,  
             children: <>{CollapseItemSearch}</>,
             showArrow: false, 
         } 
@@ -175,7 +175,7 @@ const QuotationAccess = () => {
         <Flex className='width-100' align='center'>
             <Col span={12} className='p-0'>
                 <Flex gap={4} justify='start' align='center'>
-                  <Typography.Title className='m-0 !text-zinc-800' level={3}>List of Quotation</Typography.Title>
+                  <Typography.Title className='m-0 !text-zinc-800' level={3}>รายการใบเสนอราคา</Typography.Title>
                 </Flex>
             </Col>
             <Col span={12} style={{paddingInline:0}}>
@@ -185,7 +185,7 @@ const QuotationAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          Request Quotation
+                          เพิ่มใบเสนอราคา
                       </Button>
                 </Flex>
             </Col>  

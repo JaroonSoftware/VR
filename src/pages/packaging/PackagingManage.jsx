@@ -7,7 +7,7 @@ import { CaretRightOutlined, SaveFilled, SearchOutlined } from  "@ant-design/ico
 
 import { ButtonBack, ButtonUpload } from '../../components/button';
 import ModalPackagingType from '../../components/modal/packaging/ModalPackagingType';
-import ModalSupplier from '../../components/modal/supplier/ModalSupplier';
+// import ModalSupplier from '../../components/modal/supplier/ModalSupplier';
 import ModalUnit from '../../components/modal/unit/ModalUnit';
 
 import { pkmaster } from './packaging.model';
@@ -28,7 +28,7 @@ const PackagingManage = () => {
     const [formDetail, setFormDetail] = useState(pkmaster);
 
     const [openModalPackagingType, setOpenModalPackgingType] = useState(false);
-    const [openModalSupplier, setOpenModalSupplier] = useState(false);
+    // const [openModalSupplier, setOpenModalSupplier] = useState(false);
 
     const [openModalUnit, setOpenModalUnit] = useState(false);
     // const [packageTypeOption, setPackageTypeOption] = useState([]);
@@ -71,13 +71,13 @@ const PackagingManage = () => {
         form.setFieldsValue( val );
     }
 
-    const handleChoosedSupplier = (v) => {
-        const f = form.getFieldsValue();
-        const val = {...formDetail, ...f, supcode: v.supcode, supname: v.supname };
-        setFormDetail(val);
+    // const handleChoosedSupplier = (v) => {
+    //     const f = form.getFieldsValue();
+    //     const val = {...formDetail, ...f, supcode: v.supcode, supname: v.supname };
+    //     setFormDetail(val);
 
-        form.setFieldsValue( val );
-    }
+    //     form.setFieldsValue( val );
+    // }
 
     const handleChoosedUnit = (v) => {
         const f = form.getFieldsValue();
@@ -200,7 +200,7 @@ const PackagingManage = () => {
                             className='bn-primary' 
                             icon={<SearchOutlined />} 
                             style={{minWidth:40}}
-                            onClick={()=>setOpenModalSupplier(true)}
+                            // onClick={()=>setOpenModalSupplier(true)}
                         ></Button>
                     </Space.Compact>
                 </Form.Item>
@@ -332,10 +332,10 @@ const PackagingManage = () => {
             { openModalPackagingType && 
                 <ModalPackagingType show={openModalPackagingType} close={() => { setOpenModalPackgingType(false) }} values={(v)=>{handleChoosedPackagingType(v)}} /> 
             }
-            
+{/*             
             { openModalSupplier && 
-                <ModalSupplier show={openModalSupplier} close={() => { setOpenModalSupplier(false) }} values={(v)=>{handleChoosedSupplier(v)}} /> 
-            }
+                <Modal show={openModalSupplier} close={() => { setOpenModalSupplier(false) }} values={(v)=>{handleChoosedSupplier(v)}} /> 
+            } */}
 
             {openModalUnit && 
                 <ModalUnit show={openModalUnit} close={() => { setOpenModalUnit(false) }} values={(v)=>{handleChoosedUnit(v)}} /> 
