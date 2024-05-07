@@ -7,8 +7,8 @@ import { EditOutlined } from "@ant-design/icons";
 export const accessColumn = ({handleEdit, handleDelete, handleView}) => [
   {
     title: "User Code",
-    dataIndex: "unitcode",
-    key: "unitcode",
+    dataIndex: "code",
+    key: "code",
     hidden: "true",
     width: "10%",
   },
@@ -43,14 +43,6 @@ export const accessColumn = ({handleEdit, handleDelete, handleView}) => [
     sortDirections: ["descend", "ascend"],
   },
   {
-    title: "อีเมล",
-    dataIndex: "email",
-    key: "email",
-    width: "15%",
-    sorter: (a, b) => a.email.length - b.email.length,
-    sortDirections: ["descend", "ascend"],
-  },
-  {
     title: "ประเภท",
     dataIndex: "type",
     key: "type",
@@ -63,13 +55,13 @@ export const accessColumn = ({handleEdit, handleDelete, handleView}) => [
     key: "operation",
     width: 90,
     fixed: "right",
-    render: (text) => (
+    render: (text,record) => (
       <Space > 
         <Button
           icon={<EditOutlined />} 
           className='bn-primary-outline'
           style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-          onClick={(e) => handleEdit(text.code) }
+          onClick={(e) => handleEdit(record) }
           size="small"
         />
       </Space> 

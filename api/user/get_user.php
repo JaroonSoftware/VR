@@ -13,7 +13,7 @@ $lastname = !empty($lastname) ? "and a.lastname like '%$lastname%'" : "";
 $tel = !empty($tel) ? "and a.tel like '%$tel%'" : "";
 $email = !empty($email) ? "and a.email like '%$email'" : "";
 
-$sql = "SELECT a.*, a.status as statususer
+$sql = "SELECT a.*
 FROM `user` a
 where 1 = 1
 $username
@@ -21,7 +21,7 @@ $firstname
 $lastname
 $tel
 $email
-order by a.date desc";
+order by a.created_date desc";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

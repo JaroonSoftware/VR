@@ -40,8 +40,8 @@ const UsersAccess = () => {
     }
 
     const handleEdit = (data) => {
-        // setManageConfig({...manageConfig, title:"แก้ไข Sample Request", action:"edit", code:data?.srcode});
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไข Delivery Note", action:"edit", code:data?.cuscode} }, replace:true } );
+        // setManageConfig({...manageConfig, title:"แก้ไข Sample Request", action:"edit", code:data?.srcode});        
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไข Delivery Note", action:"edit", code:data?.code} }, replace:true } );
     }; 
       
     const handleView = (data) => {
