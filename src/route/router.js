@@ -8,7 +8,7 @@ import PrivateRoute from "../components/auth/PrivateRoutes";
 
 import { Users, UsersAccess, UsersManage } from "../pages/users";
 
-// import { Customers, CustomersAccess, CustomersManage } from "../pages/customers";
+import { Customers, CustomersAccess, CustomersManage } from "../pages/customers";
 // import { Suppliers, SuppliersAccess, SuppliersManage } from "../pages/suppliers";
 
 import { DashBoard } from "../pages/dashboard"
@@ -27,6 +27,11 @@ const Router = () => {
 
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/unit" element={<Unit />} />   
+
+              <Route path="/customers/"  exact element={<Customers />} >
+                <Route index element={<CustomersAccess />} />
+                <Route path="manage/:action" element={<CustomersManage />} />                
+              </Route>
                        
               <Route path="/users/"  exact element={<Users />} >
                 <Route index element={<UsersAccess />} />

@@ -10,7 +10,7 @@ import { MdGroupAdd } from "react-icons/md";
 import { accessColumn } from "./customers.model";
 
 // import dayjs from 'dayjs';
-import CustomerService from '../../service/CustomerService'; 
+import CustomerService from '../../service/Customer.Service'; 
 
 const ctmService = {...CustomerService};
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};

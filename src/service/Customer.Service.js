@@ -27,7 +27,7 @@ const CustomerService = {
   getAllCustomer: (reqData) => {
     return axios({
       method: MEDTHOD.POST,
-      url: API_URL.GET_ALL_CUSTOMER,
+      url: API_URL.GET_CUSTOMER,
       headers: contenttype,
       data: reqData,
     });

@@ -29,7 +29,7 @@ const UsersAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      getData({ data });
+      getData(data);
     });
   };
 
@@ -92,7 +92,7 @@ const UsersAccess = () => {
     userService
       .search(data)
       .then((res) => {
-        const { data } = res;
+        const { data } = res.data;
 
         setAccessData(data);
       })

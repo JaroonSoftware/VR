@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Collapse, Form, Input, Button, Flex, message, AutoComplete, Radio } from "antd";
+import { Collapse, Form, Input, Button, Flex, message, Radio } from "antd";
 import { Row, Col, Space } from "antd";
 
 import { CaretRightOutlined, SaveFilled } from  "@ant-design/icons";
@@ -11,17 +11,16 @@ import { customers } from './customers.model';
 import { useLocation, useNavigate } from 'react-router';
 import { delay } from '../../utils/util';
 // import OptionService from '../../service/Options.service';
-import CustomerService from '../../service/CustomerService'; 
-import OptionService from '../../service/Options.service';
+import CustomerService from '../../service/Customer.Service'; 
+
 import { CreateInput } from 'thai-address-autocomplete-react';
 
 
 const InputThaiAddress = CreateInput();
 const ctmService = {...CustomerService};
-const opservice = OptionService();
+
 // const opservice = OptionService();
 const from = "/customers"
-const THAICOUNTRY = "ไทย";
 const CustomersManage = () => {
     const navigate = useNavigate(); 
     const location = useLocation(); 
@@ -32,9 +31,6 @@ const CustomersManage = () => {
     
     const [formDetail, setFormDetail] = useState(customers);
     
-    const [countriesOption, setCountriesOption] = useState([]); 
-    const [countries, setCountries] = useState(null);
-    const [deliveryCountries, setDeliveryCountries] = useState(null);
 
     // const [packageTypeOption, setPackageTypeOption] = useState([]); 
     const init = async () => { 
@@ -44,8 +40,6 @@ const CustomersManage = () => {
                 const initialValues = { ...customers, ...data }; 
                 setFormDetail(initialValues);
                 form.setFieldsValue(initialValues);
-                setCountries(initialValues?.country);
-                setDeliveryCountries(initialValues?.delcountry);
             })
             .catch( err => {
                 // console.warn(err);
@@ -61,13 +55,6 @@ const CustomersManage = () => {
             form.setFieldsValue(initForm);
         }
 
-        const [
-            countryOptionRes,
-        ] = await Promise.all([
-            opservice.optionsCountries(),
-        ]);  
-        const { data:op } = countryOptionRes.data;  
-        setCountriesOption( op );
     }
  
     useEffect( ()=>{   
@@ -151,12 +138,7 @@ const CustomersManage = () => {
                 <Form.Item label='เลขที่ผู้เสียภาษี' name='taxnumber'>
                     <Input placeholder='Enter Tax Number.' />
                 </Form.Item> 
-            </Col> 
-            <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10} >
-                <Form.Item label='Express Code' name='express_code' rules={[ { required: true, message: "Please enter data!", } ]}>
-                    <Input placeholder='Enter Express Code.' />
-                </Form.Item> 
-            </Col>             
+            </Col>            
         </Row>
     );
 
@@ -173,53 +155,23 @@ const CustomersManage = () => {
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
-                <Form.Item label='ประเทศ' name='country' > 
-                    <AutoComplete
-                        options={countriesOption}
-                        style={{ height: 40 }}
-                        placeholder="Enter Country."
-                        filterOption={(inputValue, option) =>
-                            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                        onSelect={(value) => setCountries(value)}
-                        onBlur={(e) => { setCountries(e.target.value) }}
-                    />                  
-                </Form.Item>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
-                <Form.Item label='ตำบล' name='subdistrict' >
-                {
-                  countries === THAICOUNTRY 
-                  ? <InputThaiAddress.District onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Sub District"}}  />
-                  : <Input placeholder="Enter Sub District" />
-                } 
+                <Form.Item label='ตำบล' name='subdistrict' >                
+                  <InputThaiAddress.District onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Sub District"}}  />                  
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='อำเภอ' name='district'  >
-                {
-                    countries === THAICOUNTRY 
-                    ? <InputThaiAddress.Amphoe onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter District"}} />
-                    : <Input placeholder="Enter District" />                        
-                } 
+                    <InputThaiAddress.Amphoe onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter District"}} />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='จังหวัด' name='province' >
-                {
-                    countries === THAICOUNTRY 
-                    ? <InputThaiAddress.Province onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Province"}} />
-                    : <Input placeholder="Enter Province" />                        
-                }  
+                     <InputThaiAddress.Province onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Province"}} />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='รหัสไปรษณีย์' name='zipcode'  >
-                {
-                    countries === THAICOUNTRY 
-                    ? <InputThaiAddress.Zipcode onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Zipcode"}} />
-                    : <Input placeholder="Enter Zipcode" />                        
-                }
+                    <InputThaiAddress.Zipcode onSelect={handleSelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Zipcode"}} />
                 </Form.Item>
             </Col>
         </Row>
@@ -238,53 +190,23 @@ const CustomersManage = () => {
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
-                <Form.Item label='ประเทศ' name='delcountry' > 
-                    <AutoComplete
-                        options={countriesOption}
-                        style={{ height: 40 }}
-                        placeholder="Enter Country."
-                        filterOption={(inputValue, option) =>
-                            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                        onSelect={(value) => setDeliveryCountries(value)}
-                        onBlur={(e) => { setDeliveryCountries(e.target.value) }}
-                    />                  
-                </Form.Item>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='ตำบล' name='delsubdistrict' >
-                {
-                  deliveryCountries === THAICOUNTRY 
-                  ? <InputThaiAddress.District onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Sub District"}}  />
-                  : <Input placeholder="Enter Sub District" />
-                } 
+                    <InputThaiAddress.District onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Sub District"}}  />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='อำเภอ' name='deldistrict'  >
-                {
-                    deliveryCountries === THAICOUNTRY 
-                    ? <InputThaiAddress.Amphoe onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter District"}} />
-                    : <Input placeholder="Enter District" />                        
-                } 
+                    <InputThaiAddress.Amphoe onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter District"}} />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='จังหวัด' name='delprovince' >
-                {
-                    deliveryCountries === THAICOUNTRY 
-                    ? <InputThaiAddress.Province onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Province"}} />
-                    : <Input placeholder="Enter Province" />                        
-                }  
+                    <InputThaiAddress.Province onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Province"}} />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6} >
                 <Form.Item label='รหัสไปรษณีย์' name='delzipcode'  >
-                {
-                    deliveryCountries === THAICOUNTRY 
-                    ? <InputThaiAddress.Zipcode onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Zipcode"}} />
-                    : <Input placeholder="Enter Zipcode" />                        
-                }
+                    <InputThaiAddress.Zipcode onSelect={handleDeliverySelect} style={{height:40}} autoCompleteProps={{placeholder:"Enter Zipcode"}} />
                 </Form.Item>
             </Col>
         </Row>
