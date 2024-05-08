@@ -1,162 +1,132 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Modal, Card, Table, message, Form, Spin } from "antd";
+import { Modal, Card, Form } from "antd";
 import { Row, Col, Space } from "antd";
 import { Input } from "antd";
-import { SearchOutlined, TagOutlined } from "@ant-design/icons";
-import { useForm } from 'antd/es/form/Form';
+import { useForm } from "antd/es/form/Form";
+import Swal from "sweetalert2";
 
-import { columns } from "./modal-reset.model";
-import SamplePreparationService from '../../../service/SamplePreparation.service';
-export default function ModalResetPassword({show, close, values=()=>{}}) {
-    
-    const request = SamplePreparationService();
-    const [form] = useForm();
+import UserService from "../../../service/User.service";
 
-    const [masterDatas, setMasterDatas] = useState([]);
-    const [masterDatasWrap, setMasterDatasWrap] = useState([]);
- 
-    const [openModal,  setOpenModel] = useState(show);
-    const [loading,  setLoading] = useState(true);
-    /** handle logic component */
-    const handleClose = () =>{ 
-        setTimeout( () => { close(false);  }, 140);
-        
-        //setTimeout( () => close(false), 200 );
-    } 
- 
-    const getSearchValue = ( source, str ) => {
-        return source.filter( d => ( 
-               (d.spcode?.toLowerCase()?.includes(str.toLowerCase())) 
-            || (d.spname?.toLowerCase()?.includes(str.toLowerCase())) 
-            || (d.srcode?.toLowerCase()?.includes(str.toLowerCase()))
-        ));
+const userService = UserService();
+
+export default function ModalResetPassword({ show, close, code }) {
+  const [form] = useForm();
+
+  const [openModal, setOpenModel] = useState(show);
+
+  const onload = () => {
+    // debugger;
+    form.setFieldValue("resetcode", code);
+  };
+
+  useEffect(() => {
+    if (!!openModal) {
+      onload();
+      // console.log("modal-sample-preparation")
     }
+  }, [openModal]);
 
-    const getSearchTagValue = ( source, str ) => {
-        return  source.filter( d => {
-            const t = JSON.parse(d?.tag || "[]");
-            return t.find( tag => tag?.toLowerCase()?.includes(str.toLowerCase()) );
+  const handleSubmit = (v) => {
+    form.validateFields().then((value) => {
+      
+      if (
+        form.getFieldValue("resetpassword") ===
+        form.getFieldValue("resetpassword2")
+      ) {
+        const parm = { code:form.getFieldValue("resetcode"),pwd:form.getFieldValue("resetpassword")};
+        // form.getFieldValue("resetcode"),
+        //     form.getFieldValue("resetpassword")
+        userService
+          .resetPassword(
+            
+            parm
+          )
+          .then(async (res) => {
+            let { data } = res.data;
+
+            await Swal.fire({
+              title: "<strong>สำเร็จ</strong>",
+              html: data.message,
+              icon: "success",
+            });
+
+            close(false);
+          })
+          .catch((err) => {
+            Swal.fire({
+              title: "<strong>ผิดพลาด!</strong>",
+              html: err.message,
+              icon: "error",
+            });
+          });
+      } else {
+        Swal.fire({
+          title: "<strong>ผิดพลาด!</strong>",
+          html: "password ไม่ตรงกัน",
+          icon: "error",
         });
-    }
+        // alert('password ไม่ตรงกัน')
+      }
+    });
+  };
 
-    const handleSearch = (value) => {
-        const { tag } = form.getFieldValue();
-        if(!!value || !!tag){    
-            let f = getSearchValue(masterDatas, value);
-            if( !!tag ) f = getSearchTagValue( f, tag )
-            // console.log(f);
-             
-            setMasterDatasWrap(f);            
-        } else { 
-            setMasterDatasWrap(masterDatas);            
-        }
-
-    }
-
-    const handleSearchTag = (value) => {
-        const { search } = form.getFieldValue(); 
-        if(!!value || !!search){    
-            let f = getSearchTagValue( masterDatas, value);
-            if( !!search ) f = getSearchValue( f, search );
-             
-            setMasterDatasWrap(f);            
-        } else { 
-            setMasterDatasWrap(masterDatas);            
-        }
-
-    }
- 
-    const handleChoose = (value) => {
-        values(value);
-        setOpenModel(false);
-    }
-
-    /** setting initial component */ 
-    const column = columns({handleChoose});
-
-    const onload = () => {
-        // debugger;
-        setLoading(true);
-        request.search({approved_result:"'approved'"},{ ignoreLoading : true })
-        .then((res) => {
-          let { status, data } = res;
-          if (status === 200) {
-            setMasterDatas([...data.data]);
-            setMasterDatasWrap([...data.data]);
-
-          } 
-        })
-        .catch((err) => {  
-            message.error("Request error!")
-        })
-        .finally( () => setTimeout( () => { setLoading(false) }, 400));
-    }
-
-    useEffect( () => {
-        if( !!openModal ){
-            onload();
-            // console.log("modal-sample-preparation")
-        } 
-    }, [openModal]);
- 
-    return (
-        <>
-        <Modal
-            open={openModal}
-            title="เลือก Sample Preparation"
-            afterClose={() => handleClose() }
-            onCancel={() => setOpenModel(false) } 
-            maskClosable={false}
-            style={{ top: 20 }}
-            width={800}
-            className='modal-sample-preparation'
+  return (
+    <>
+      <Modal
+        open={openModal}
+        title="แก้ไขรหัสผ่าน"
+        width={500}
+        okText="ยืนยัน"
+        cancelText="ยกเลิก"
+        onOk={() => {
+          handleSubmit();
+        }}
+        onCancel={() => setOpenModel(false)}
+      >
+        <Space
+          direction="vertical"
+          size="middle"
+          style={{ display: "flex", position: "relative" }}
         >
-            <Spin spinning={loading} >
-                <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative'}}  >
-                    <Card style={{backgroundColor:'#f0f0f0' }}>
-                        <Form form={form} layout="vertical" autoComplete="off" >
-                            <Row gutter={[{xs:32, sm:32, md:32, lg:12, xl:12}, 8]} className='m-0'>
-                                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                                    <Form.Item label="Search" name="search"  >
-                                        <Input 
-                                        suffix={<SearchOutlined />} 
-                                        onChange={ (e) => { handleSearch(e.target.value) } } 
-                                        placeholder='ค้นหา SR No, SP Name, SR No'/>
-                                    </Form.Item>                        
-                                </Col> 
-                                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                                    <Form.Item label="Tag" name="tag" >
-                                        <Input 
-                                        suffix={<TagOutlined />} 
-                                        onChange={ (e) => { handleSearchTag(e.target.value) } } 
-                                        placeholder='ค้นหา Tag'/>
-                                    </Form.Item>                        
-                                </Col> 
-                            </Row> 
-                        </Form>
-                    </Card>
-                    <Card>
-                        <Table  
-                            bordered
-                            dataSource={masterDatasWrap}
-                            columns={column}
-                            rowKey="spcode"
-                            pagination={{ 
-                                total:masterDatasWrap.length, 
-                                showTotal:(_, range) => `${range[0]}-${range[1]} of ${masterDatas.length} items`,
-                                defaultPageSize:25,
-                                pageSizeOptions:[25,35,50,100]
-                            }}
-                            scroll={{ x: 'max-content' }} 
-                            size='small'
-                        /> 
-                    </Card>
-                </Space>                
-            </Spin>
-
-        </Modal>    
-        </>
-    )
+          <Card style={{ backgroundColor: "#f0f0f0" }}>
+            <Form
+              form={form}
+              layout="vertical"
+              name="form_in_modal"
+              initialValues={{ modifier: "public" }}
+            >
+              <Row gutter={[24, 0]}>
+                <Col xs={24} sm={24} md={16} lg={16} xl={24}>
+                  <Form.Item
+                    name="resetpassword"
+                    label="รหัสผ่านใหม่"
+                    rules={[
+                      { required: true, message: "Please input your data!" },
+                    ]}
+                  >
+                    <Input.Password placeholder="ใส่รหัสผ่านใหม่" />
+                  </Form.Item>
+                  <Form.Item
+                    name="resetpassword2"
+                    label="ยืนยีนรหัสผ่านใหม่"
+                    rules={[
+                      { required: true, message: "Please input your data!" },
+                    ]}
+                  >
+                    <Input.Password placeholder="ยืนยีนรหัสผ่านใหม่" />
+                  </Form.Item>
+                  <Form.Item name="resetcode">
+                    {/* <Input disabled /> */}
+                    <Input type="hidden" disabled />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
+        </Space>
+      </Modal>
+    </>
+  );
 }

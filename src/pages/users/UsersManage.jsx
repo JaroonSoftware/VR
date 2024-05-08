@@ -75,19 +75,6 @@ const UsersManage = () => {
       });
   };
 
-  const handleResetSubmit = (v) => {
-    // setSpData( state => ({...state, ...v}) );
-    // estservice.spcost( v?.spcode || "").then( r => {
-    //   const { data: {spcost} } = r.data;
-    //   setSpCostData(spcost);
-    //   handleEstimateSampleCost(spcost);
-    // }).catch( err => {
-    //   setChoosed(false);
-    //   message.error("Getting sample fail.")
-    //   console.warn(err);
-    // });
-  };
-
   const panelStyle = {
     marginBottom: 24,
     borderRadius: 8,
@@ -263,12 +250,9 @@ const UsersManage = () => {
             />
           </Form.Item>
         </Col>
-        <Col style={{ display: "none" }}>
-          {/* <Col> */}
-          <Form.Item name="code" label="รหัส">
-            <Input disabled />
+          <Form.Item name="code" >
+            <Input type="hidden" disabled />            
           </Form.Item>
-        </Col>
       </Row>
     </>
   );
@@ -343,8 +327,8 @@ const UsersManage = () => {
       {openResetModal && (
         <ModalResetPassword
           show={openResetModal}
-          close={() => setOpenResetModal(false)}
-          values={handleResetSubmit}
+          close={() => {setOpenResetModal(false)}}          
+          code={form.getFieldValue("code")}
         />
       )}
     </div>

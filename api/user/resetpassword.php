@@ -1,21 +1,59 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-// header("Access-Control-Allow-Origin: *");
-// header("Access-Control-Allow-Headers: *");
-// header("Access-Control-Allow-Methods: *");
+ob_start(); 
+include_once(dirname(__FILE__, 2)."/onload.php");
+include_once(dirname(__FILE__, 2)."/common/fnc-code.php");
 
-include '../conn.php';
+$db = new DbConnect;
+$conn = $db->connect();
+$conn->beginTransaction();
+http_response_code(400);
 
-$password = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
-$sql = "UPDATE user SET ";
-$sql .= " password='".$password."' ";
-$sql .= "WHERE code= '" . $_POST["idcode"] . "' ";
-$stmt = $conn->prepare($sql);
+if ($_SERVER["REQUEST_METHOD"] == "PUT"){
+    $rest_json = file_get_contents("php://input");
+    $_PUT = json_decode($rest_json, true); 
+    extract($_PUT, EXTR_OVERWRITE, "_"); 
 
-if ($stmt->execute())
-    $response = ['status' => 1, 'message' => 'แก้ไขรหัสผ่านสำเร็จ'];
-else
-    $response = ['status' => 0, 'message' => 'Error! ติดต่อโปรแกรมเมอร์'];
+    try {  
+        
+        $action_datetime = date("Y-m-d H:i:s"); 
+        $action_user = $token->userid;
+        $password = password_hash($pwd, PASSWORD_DEFAULT);
+        // var_dump($action_username, $action_datetime); exit;
+        $sql = "
+        update user set  
+        password = :password 
+        where code = :code";
 
-echo json_encode($response);
+        $stmt = $conn->prepare($sql);
+        if(!$stmt) throw new PDOException("Update data error => {$conn->errorInfo()}"); 
+
+        $stmt->bindParam( ':password', $password, PDO::PARAM_STR);
+        $stmt->bindParam( ':code', $code, PDO::PARAM_STR);
+
+        if(!$stmt->execute()) {
+            $error = $conn->errorInfo();
+            throw new PDOException("Insert data error => $error");
+            die;
+        }
+
+        $conn->commit();
+        http_response_code(200);
+        echo json_encode(array("data"=> array("id" => $_PUT)));
+        // echo json_encode(array("data"=> array("message" => "แก้ไขรหัสผ่านสำเร็จ")));
+    } catch (mysqli_sql_exception $e) { 
+        http_response_code(400);
+        echo json_encode(array('status' => '0', 'message' => $e->getMessage()));
+        //throw $exception;
+    } catch (Exception $e) { 
+        http_response_code(400);
+        echo json_encode(array('status' => '0', 'message' => $e->getMessage()));
+    } finally{
+        $conn = null; 
+    }    
+} else {
+    http_response_code(400);
+    echo json_encode(array('status' => '0', 'message' => 'request method fail.'));
+} 
+ob_end_flush(); 
+exit;
+?>
