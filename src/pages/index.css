@@ -2,13 +2,10 @@
 @import './sp/sample-preparation.css';
 @import './sr/sample-request.css';
 @import './file-control/file-control.css';
-@import './packaging/packaging.css';
 @import './tags-control/tags-control.css';
-@import './bom/bom.css';
-@import './estimation/esitmation.css';
+/* @import './items/items.css'; */
 @import './customers/customers.css';
-@import './quotation/quotation.css';
-
+@import './users/users.css';
 
 .layout-content .ant-table-title{
     background-color: #ababab59;
