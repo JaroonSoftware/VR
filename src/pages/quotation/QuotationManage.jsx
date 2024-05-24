@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import {
-  AutoComplete,
   Button,
   DatePicker,
   Drawer,
@@ -9,7 +8,6 @@ import {
   Input,
   InputNumber,
   Modal,
-  Select,
   Table,
   Typography,
   message,
@@ -32,7 +30,6 @@ import {
   quotationForm,
   bankListColumn,
   productColumn,
-  quotationTerm,
 } from "./quotation.model";
 import { ModalBanks } from "../../components/modal/banks/modal-banks";
 import QuotationManageForm from "./QuotationManageForm";
@@ -45,17 +42,17 @@ import { LuPrinter } from "react-icons/lu";
 const opservice = OptionService();
 const quservice = QuotationService();
 const dateFormat = "DD/MM/YYYY";
-const paymentCond = [
-  "30 days after BL date by T/T",
-  "100% T/T upon shipment advice",
-  "100 % T/T against copy of documents",
-  "50% desposit and balance T/T against copy of documents",
-  "30% desposit and balance T/T against copy of document",
-  "100 % advance",
-  "credit 30 days",
-  "credit 15 days",
-  "50% deposit and balance when delivery",
-];
+// const paymentCond = [
+//   "30 days after BL date by T/T",
+//   "100% T/T upon shipment advice",
+//   "100 % T/T against copy of documents",
+//   "50% desposit and balance T/T against copy of documents",
+//   "30% desposit and balance T/T against copy of document",
+//   "100 % advance",
+//   "credit 30 days",
+//   "credit 15 days",
+//   "50% deposit and balance when delivery",
+// ];
 const currencies = ["THB", "USD"];
 
 const mngConfig = {
@@ -93,9 +90,6 @@ function QuotationManage() {
   const [quotDetails, setQuotDetails] = useState([]);
 
   // const [banksOption, setBanksOption] = useState([]);
-  const [payConditionOptions, setPayConditionOptions] = useState([]);
-  const [currenciesOptions, setCurrenciesOptions] = useState([]);
-
   const [formDetail, setFormDetail] = useState(quotationForm);
 
   const cardStyle = {
@@ -333,16 +327,11 @@ function QuotationManage() {
       // setQuotCode( quotCodeRes.data?.data );
       // setBanksOption( bankOptnRes.data.data );
 
-      setPayConditionOptions(
-        [...new Set([...payConditionRes.data?.data, ...paymentCond])].map(
-          (v) => ({ value: v })
-        )
-      );
-      setCurrenciesOptions(
-        [...new Set([...currencyRes.data?.data, ...currencies])].map((v) => ({
-          value: v,
-        }))
-      );
+      // setCurrenciesOptions(
+      //   [...new Set([...currencyRes.data?.data, ...currencies])].map((v) => ({
+      //     value: v,
+      //   }))
+      // );
     };
 
     initial();
@@ -353,7 +342,7 @@ function QuotationManage() {
     <>
       <Space size="small" direction="vertical" className="flex gap-2">
         <Row gutter={[8, 8]} className="m-0">
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
             <Form.Item
               name="cuscode"
               htmlFor="cuscode-1"
@@ -396,6 +385,11 @@ function QuotationManage() {
           <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
             <Form.Item name="tel" label="เบอร์โทร" className="!mb-1">
               <Input placeholder="เบอร์โทรลูกค้า" readOnly />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
+            <Form.Item name="fax" label="แฟกซ์" className="!mb-1">
+              <Input placeholder="แฟกซ์" readOnly />
             </Form.Item>
           </Col>
         </Row>
