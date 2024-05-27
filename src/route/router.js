@@ -4,11 +4,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Profile from "../pages/Profile";
 import Login from "../pages/Login";
 import PageNotFound from "../pages/404";
-import User from "../pages/User";
 import PrivateRoute from "../components/auth/PrivateRoutes";
 import { DashBoard } from "../pages/dashboard";
 import { ROLES } from "../constant/constant";
-
+import { Users, UsersAccess, UsersManage } from "../pages/users";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -24,7 +23,10 @@ const Router = () => {
         </Route>
 
         <Route element={<PrivateRoute allowdRole={[ROLES.ADMIN]} />}>
-          <Route path="/user" element={<User />} />
+          <Route path="/users/" exact element={<Users />}>
+            <Route index element={<UsersAccess />} />
+            <Route path="manage/:action" element={<UsersManage />} />
+          </Route>
         </Route>
 
         {/* <Route element={<PrivateRoute allowdRole={[ROLES.ADMIN, ROLES.USER]} layout={LAYOUT.ALOND} />}>
