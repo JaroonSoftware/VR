@@ -5,7 +5,7 @@ use Firebase\JWT\JWT;
 try{ 
     $isAuth = preg_match('/Bearer\s(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $matches) == 1;
     $jwt = $matches[1]; 
-    $secretKey =  "Q2ZjYzAyYmNiLTQwMjM=Jaroon";// ?? 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew='; 
+    $secretKey =  "A3ZjYzAyYmNiLTQwMjM=Jaroon";// ?? 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew='; 
     if (!$isAuth) {
         // 
         // http_response_code(400);

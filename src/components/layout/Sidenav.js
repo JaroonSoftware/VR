@@ -7,11 +7,8 @@ import logo from "../../assets/images/logo_nsf.png";
 import nav from "../../nav";
 
 import { Authenticate } from '../../service/Authenticate.service.js'; 
-import { useSelector } from "react-redux";
-import { waitingApprovedSliceSelector } from '../../store/slices/sample-preparation-approve.slices';
 // import { useAppDispatch } from '../../store/store';
 const Sidenav = () => {
-  const waitingApproveReducer = useSelector(waitingApprovedSliceSelector);
   const authService =  Authenticate();
   // const [ waitApprove, setWaitAppreve ] = useState(0);
   // const dispatch = useAppDispatch();
@@ -24,18 +21,13 @@ const Sidenav = () => {
     backgroundColor: "#fff",
     boxShadow: "0 20px 27px rgba(0,0,0,.05)",
   }
-  // useEffect( () => {
-  //   dispatch(waitingApproved());
-  //   setWaitAppreve(waitingApproveReducer?.waiting_approve)
-  //   return () => { console.log('Component is unmounting. Cleaning up... Sidenav'); };
-  // }, [pathname]);
 
   const Notification = ( {title}) => {
     // console.log(title);
     switch(title){
       case "Sample Preparation" :
         return (
-          <Badge dot={ authService.getType() === 'admin' && waitingApproveReducer?.waiting_approve > 0  } size="small" offset={[1, 2]}> 
+          <Badge dot={ authService.getType() === 'admin'  } size="small" offset={[1, 2]}> 
             <span>
               {title} 
             </span>
@@ -47,8 +39,8 @@ const Sidenav = () => {
   return (
     <>
       <Flex vertical className="brand width-100" justify='center' align='center' >
-        <img src={logo} alt="9star logo" style={{width:'max-content', height:'max-content'}}  />
-        <span>Nine Star Food</span>
+        <img src={logo} alt="9star logo" style={{width:100, height:100}}  />
+        <span>VEERA DRYCUTTING</span>
       </Flex>
       <hr />
 

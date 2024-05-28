@@ -7,14 +7,14 @@ import Header from "./Header";
 import { LoadingProvider } from "../../store/context/loading-context"
 import { AxiosInterceptor } from "./AxiosInterceptor";
 // import { useSelector } from "react-redux";
-import { waitingApproved } from '../../store/slices/sample-preparation-approve.slices';
-import { useAppDispatch } from '../../store/store';
+// import { waitingApproved } from '../../store/slices/sample-preparation-approve.slices';
+// import { useAppDispatch } from '../../store/store';
 
 const { Header: AntHeader, Content, Sider } = Layout;
 
 function Main({ children }) {
   // const waitingApproveReducer = useSelector(waitingApprovedSliceSelector); 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const [visible, setVisible] = useState(false);
   const [placement, setPlacement] = useState("right");
@@ -37,10 +37,8 @@ function Main({ children }) {
       setPlacement("right");
     }
 
-
-    dispatch(waitingApproved());
     
-  }, [dispatch, pathname]);
+  }, [ pathname]);
 
   return (
     <Layout

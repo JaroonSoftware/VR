@@ -7,21 +7,21 @@ import { CaretRightOutlined, SaveFilled } from  "@ant-design/icons";
 
 import { ButtonBack } from '../../components/button'; 
 
-import { customers } from './customers.model'; 
+import { Items } from './items.model'; 
 import { useLocation, useNavigate } from 'react-router';
 import { delay } from '../../utils/util';
 // import OptionService from '../../service/Options.service';
-import CustomerService from '../../service/Customer.Service'; 
+import Itemservice from '../../service/Items.Service'; 
 
 import { CreateInput } from 'thai-address-autocomplete-react';
 
 
 const InputThaiAddress = CreateInput();
-const ctmService = {...CustomerService};
+const ctmService = {...Itemservice};
 
 // const opservice = OptionService();
-const from = "/customers"
-const CustomersManage = () => {
+const from = "/Items"
+const ItemsManage = () => {
     const navigate = useNavigate(); 
     const location = useLocation(); 
 
@@ -29,7 +29,7 @@ const CustomersManage = () => {
     const { config } = location.state || {config:null};
     const [form] = Form.useForm();
     
-    const [formDetail, setFormDetail] = useState(customers);
+    const [formDetail, setFormDetail] = useState(Items);
     
 
     // const [packageTypeOption, setPackageTypeOption] = useState([]); 
@@ -37,7 +37,7 @@ const CustomersManage = () => {
         if(config?.action !== "create"){
             ctmService.get(config?.code).then( async (res) => {
                 const {data} = res.data;
-                const initialValues = { ...customers, ...data }; 
+                const initialValues = { ...Items, ...data }; 
                 setFormDetail(initialValues);
                 form.setFieldsValue(initialValues);
             })
@@ -117,13 +117,13 @@ const CustomersManage = () => {
     const Detail = () => (
         <Row gutter={[8,8]} className='px-2 sm:px-4 md:px-4 lg:px-4'>
             <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} >
-                <Form.Item label='Customer Code' name='cuscode' rules={[ { required: true, message: "Please enter data!", } ]}>
-                    <Input placeholder='Enter Customer Code.' className='!bg-zinc-300' readOnly />
+                <Form.Item label='item Code' name='cuscode' rules={[ { required: true, message: "Please enter data!", } ]}>
+                    <Input placeholder='Enter item Code.' className='!bg-zinc-300' readOnly />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} >
-                <Form.Item label='Customer Name' name='cusname' rules={[ { required: true, message: "Please enter data!", } ]}>
-                    <Input placeholder='Enter Customer Name.' />
+                <Form.Item label='item Name' name='cusname' rules={[ { required: true, message: "Please enter data!", } ]}>
+                    <Input placeholder='Enter item Name.' />
                 </Form.Item> 
             </Col> 
             <Col xs={24} sm={24} md={12} lg={4} xl={4} xxl={4} >
@@ -302,7 +302,7 @@ const CustomersManage = () => {
 
 
     return (
-        <div className='customer-manage xs:px-0 sm:px-0 md:px-8 lg:px-8'>
+        <div className='item-manage xs:px-0 sm:px-0 md:px-8 lg:px-8'>
             <Space direction='vertical' className='flex gap-2' >
                 {SectionTop}
                 <Form form={form} layout="vertical" autoComplete="off" >
@@ -319,4 +319,4 @@ const CustomersManage = () => {
     );
 }
 
-export default CustomersManage;
+export default ItemsManage;
