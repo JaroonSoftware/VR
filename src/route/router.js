@@ -7,6 +7,7 @@ import PageNotFound from "../pages/404";
 import PrivateRoute from "../components/auth/PrivateRoutes";
 import { DashBoard } from "../pages/dashboard";
 import { ROLES } from "../constant/constant";
+import { WarehouseRouter } from "./warehouse.router";
 import { Users, UsersAccess, UsersManage } from "../pages/users";
 const Router = () => {
   return (
@@ -27,17 +28,16 @@ const Router = () => {
             <Route index element={<UsersAccess />} />
             <Route path="manage/:action" element={<UsersManage />} />
           </Route>
+
+
+
+
+
+          {WarehouseRouter}
+        
         </Route>
 
-        {/* <Route element={<PrivateRoute allowdRole={[ROLES.ADMIN, ROLES.USER]} layout={LAYOUT.ALOND} />}>
-              <Route path="/coa-print/:code/:print?" element={<CoaPrintPreview />} />
-              <Route path="/loi-print/:code/:print?" element={<LoiPrintPreview />} />
-              <Route path="/dln-print/:code/:print?" element={<DlnPrintPreview />} />
-              <Route path="/quo-print/:code/:print?" element={<QuoPrintPreview />} />
-              <Route path="/spt-print/:code/:print?" element={<SptPrintPreview />} />
-              <Route path="/est-print/:code/:print?" element={<EstPrintPreview />} />
-            </Route> */}
-
+        
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

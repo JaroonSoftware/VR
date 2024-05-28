@@ -24,7 +24,7 @@ let _nav = [
   {
     title: "ใบเสนอราคา",
     icon: <FileTextFilled className="nav-ico" />, 
-    to: "/",
+    to: "/quotation",
   },
   {
     title: "ใบขายสินค้า",
