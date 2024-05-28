@@ -23,7 +23,7 @@ const quoservice = QuotationService();
 function QuoPrintPreview() {
     const { code } = useParams();
     const componentRef = useRef(null);
-    const printRef = useRef(null);
+   
     const handlePrint = useReactToPrint({
       documentTitle: "Print This Document",
       onBeforePrint: () => handleBeforePrint(),
@@ -40,7 +40,7 @@ function QuoPrintPreview() {
     const [newPageContent, setNewPageContent] = useState([]);
     const columnDesc = column; 
 
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
 
     const handleAfterPrint = () => { 
         setNewPageContent([]);
@@ -58,84 +58,7 @@ function QuoPrintPreview() {
         // componentRef.current.innerHTML = 'TEST'; 
     }
 
-    const handleCheckMultiPages = async () => {
-        const limitPage = 1000; 
-        setLoading(true);
-       new Promise( r =>{
-            const samples = document.getElementsByClassName("in-sample");
-            const packing = document.getElementsByClassName("in-pack"); 
 
-            const samplesPage =  [];
-            const packingPage =  [];
-            // console.log(samples, packing); 
-            // console.log(componentRef.current);
-            // let pageCount = 1;
-            let hPageCheck = 0;
-            let emlContent = [];
-            for( let elm of samples ){
-                const h = Number(window.getComputedStyle(elm).getPropertyValue('height')?.replace("px", ""));
-                if( (hPageCheck + h) >  limitPage ){
-                    console.log( { hPageCheck } ); 
-                    samplesPage.push(emlContent); 
-                    emlContent = [];
-                    hPageCheck = 0;
-                } else { 
-                    hPageCheck += h;
-                    emlContent =[...emlContent, elm];
-                }
-            }
-
-            if(emlContent.length > 0 ) samplesPage.push(emlContent); 
-
-            // pageCount = pageCount === 1 ? pageCount + 1 : pageCount;
-            hPageCheck = 0;
-            emlContent = [];
-            for( let elm of packing ){
-                const h = Number(window.getComputedStyle(elm).getPropertyValue('height')?.replace("px", ""));
-                if( (hPageCheck + h) >  limitPage ){
-                    console.log( { hPageCheck } );
-                    packingPage.push(emlContent); 
-                    emlContent = [];
-                    hPageCheck = 0;
-                } else { 
-                    hPageCheck += h;
-                    emlContent =[...emlContent, elm];
-                }
-            };
-
-            if(emlContent.length > 0 ) packingPage.push(emlContent); 
-
-            // console.log( { samplesPage, packingPage } );
-            setNewPageContent([...samplesPage, ...packingPage]);
-            r(true);
-        }).then( res => {
-            handlePrint(null, () => handlePrintMultiPages() );
-
-            setLoading(false);
-        });
-
-        
-        // const html = ReactDOMServer.renderToString(ElmContent);        
-        // const head = document.getElementById("form-head");
-        // const step = document.getElementById("form-body-step");
-        // const parm = document.getElementById("form-body-parm");
-
-        // const headHieght = Number(window.getComputedStyle(head).getPropertyValue('height')?.replace("px", ""));
-        // const stepHieght = Number(window.getComputedStyle(step).getPropertyValue('height')?.replace("px", ""));
-        // const parmHieght = Number(window.getComputedStyle(parm).getPropertyValue('height')?.replace("px", ""));
-        // console.log( {headHieght, stepHieght, parmHieght} );
-        // if( headHieght + stepHieght > limitPage ){
-        //     parm.style.pageBreakBefore = 'always';
-        // } 
-        // console.log( html.toString() );
-
-        // return componentRef.current;
-    } 
-
-    const handlePrintMultiPages = () => { 
-
-        return printRef.current;
-    }
  
 
     useEffect( () =>  {
