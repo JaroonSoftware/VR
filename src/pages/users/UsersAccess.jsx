@@ -108,21 +108,24 @@ const UsersAccess = () => {
       onChange={(e) => {
         setActiveSearch(e);
       }}
+      bordered={false}
       activeKey={activeSearch}
       items={[
         {
           key: "1",
           label: (
             <>
-              <SearchOutlined />
-              <span> ค้นหา</span>
+              <Typography.Title level={5}>
+                <SearchOutlined />
+                ค้นหา
+              </Typography.Title>
             </>
           ),
           children: (
             <>
               <Form form={form} layout="vertical" autoComplete="off">
                 <Row gutter={[8, 8]}>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
                     <Form.Item
                       label="Username"
                       name="username"
@@ -131,7 +134,7 @@ const UsersAccess = () => {
                       <Input placeholder="ใส่ Username" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
                     <Form.Item
                       label="ชื่อ"
                       name="firstname"
@@ -140,7 +143,7 @@ const UsersAccess = () => {
                       <Input placeholder="ใส่ชื่อจริง" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
                     <Form.Item
                       label="นามสกุล"
                       name="lastname"
@@ -149,18 +152,13 @@ const UsersAccess = () => {
                       <Input placeholder="ใส่นามสกุล" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                    <Form.Item label="เบอร์โทร" name="tel" onChange={handleSearch}>
-                      <Input placeholder="ใส่เบอร์โทร" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
                     <Form.Item
-                      label="Email"
-                      name="email"
+                      label="เบอร์โทร"
+                      name="tel"
                       onChange={handleSearch}
                     >
-                      <Input placeholder="ใส่ Email" />
+                      <Input placeholder="ใส่เบอร์โทร" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -198,7 +196,6 @@ const UsersAccess = () => {
           showArrow: false,
         },
       ]}
-      // bordered={false}
     />
   );
   const column = accessColumn({ handleEdit, handleDelete, handleView });
@@ -207,8 +204,8 @@ const UsersAccess = () => {
     <Flex className="width-100" align="center">
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start" align="center">
-          <Typography.Title className="m-0 !text-zinc-800" level={3}>
-           รายชื่อผู้ใช้
+          <Typography.Title className="m-0 !text-zinc-800" level={4}>
+            รายชื่อผู้ใช้
           </Typography.Title>
         </Flex>
       </Col>
@@ -235,11 +232,13 @@ const UsersAccess = () => {
         size="middle"
         style={{ display: "flex", position: "relative" }}
       >
-        {FormSearch}
         <Card>
+          {FormSearch}
+          <br></br>
           <Row gutter={[8, 8]} className="m-0">
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
               <Table
+                bordered={false}
                 title={() => TitleTable}
                 size="small"
                 rowKey="cuscode"
