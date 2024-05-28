@@ -1,4 +1,4 @@
-import { Button, Flex, Popconfirm, Space, Typography } from "antd"; 
+import { Button, Popconfirm, Space } from "antd"; 
 import "../../assets/styles/banks.css"
 // import { Typography } from "antd"; 
 // import { Popconfirm, Button } from "antd";
@@ -30,25 +30,6 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     dataIndex: "product_name",
     key: "product_name", 
     sorter: (a, b) => (a.quotdate).localeCompare(b.quotdate),
-    render: (data) => {
-      const listItems = JSON.parse(data).map((str, i) =>
-        <li key={i} style={{fontSize: "clamp(11.6px, 1vw, 0.8rem)"}}>
-          {str}            
-        </li>
-      );
-
-      return (
-        <>
-            <div className="sm-name" >
-                <ul className="!mb-0" style={{ 
-                  // listStyle: 'decimal-leading-zero', 
-                  listStyle: 'disc', 
-                  paddingInlineStart: 22  
-                }}>{listItems}</ul>
-            </div>                
-        </> 
-      );
-    },
   },
   // {
   //   title: "Customer Code",
@@ -118,70 +99,6 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
       </Space>
     ),
   }, 
-];
-
-export const bankListColumn = ({handleRemove}) => [
-  {
-    title: "No.",
-    key: "id",
-    dataIndex: "id",
-    align: "left", 
-    width:50,
-    render: (_,record, index) => (index + 1) 
-  },
-  {
-    title: "Bank", 
-    key: "bank",
-    dataIndex: "bank",
-    align: "left", 
-    render: (_,record) => (<>
-      <Flex align='center' gap={8}>
-          <i className={`bank bank-${record.bank} shadow huge`} style={{height:24, width:24, marginTop: 4}}></i>
-          <Flex align='start' gap={1} vertical>
-              <Typography.Text ellipsis style={{ fontSize: 13 }}>{record.bank_name_th}</Typography.Text> 
-              <Typography.Text ellipsis style={{ fontSize: 9, color:'#8c8386' }}>{record.bank_name}</Typography.Text> 
-          </Flex>
-      </Flex>
-    </>)
-  },
-  {
-    title: "Account Number",
-    key: "acc_no",
-    dataIndex: "acc_no",
-    align: "left", 
-    width:140,
-  },
-  {
-    title: "Account Name",
-    key: "acc_name",
-    dataIndex: "acc_name",
-    align: "left", 
-    width:'35%',
-  },
-  {
-    title: "Action",
-    key: "operation",
-    fixed: 'right',
-    width: 90,
-    render: (text, record) => (
-      <Space >
-        <Popconfirm 
-          placement="topRight"
-          title="Sure to delete?"  
-          description="Are you sure to delete this packaging?"
-          icon={<QuestionCircleFilled style={{ color: 'red' }} />}
-          onConfirm={() => handleRemove(record)}
-        >
-          <Button
-            icon={<DeleteFilled />}
-            danger
-            style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
-            size="small"
-          />
-        </Popconfirm>
-      </Space>
-    ),
-  }
 ];
 
 export const productColumn = ({handleRemove, handleEdit}) => [
@@ -325,17 +242,4 @@ export const quotationDetailForm = {
   quotations_list : description_defualt,
 }
 
-export const quotationTerm = [
-  { value:"EXW", label: "EXW - Exworks" },
-  { value:"FCA", label: "FCA - Free Carrier" },
-  { value:"FAS", label: "FAS - Free Along Side" },
-  { value:"FOB", label: "FOB - Free Onboard Vessel" },
-  { value:"CFR", label: "CFR - Cost and Freight" },
-  { value:"CIF", label: "CIF - Cost, Insurance & Freight" },
-  { value:"CIP", label: "CIP - Carriage and Insurance Paid To" },
-  { value:"CPT", label: "CPT - Carriage Paid To" },
-  { value:"DDU", label: "DDU - Delivery Duty Unpaid" },
-  { value:"DAP", label: "DAP - Delivered At Place" },
-  { value:"DDP", label: "DDP - Delivered Duty Paid" },
-];
 

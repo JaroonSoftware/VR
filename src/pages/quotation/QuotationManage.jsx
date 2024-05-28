@@ -1,57 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { AutoComplete, Button, DatePicker, Drawer, Form, Input, InputNumber, Modal, Select, Table, Typography, message } from 'antd'; 
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Table, Typography, message } from 'antd'; 
 import { Card, Col, Divider, Flex,Row, Space } from 'antd'; 
 import { FaBoxesPacking } from "react-icons/fa6";
 
-import OptionService from "../../service/Options.service";
+// import OptionService from "../../service/Options.service";
 import QuotationService from '../../service/Quotation.service';
-import { BankFilled, LeftOutlined, SaveFilled, SaveOutlined, SearchOutlined } from '@ant-design/icons';
+import { SaveFilled, SearchOutlined } from '@ant-design/icons';
 import ModalCustomers from '../../components/modal/customers/ModalCustomers';
-
-import { quotationForm, bankListColumn, productColumn, quotationTerm } from "./quotation.model"
-import { ModalBanks } from '../../components/modal/banks/modal-banks';
-import QuotationManageForm from './QuotationManageForm';
+import { useSelector } from "react-redux";
+import {
+    samplePreparationSelector,
+} from "../../store/slices/sample-preparation.slices.js";
+import { quotationForm, productColumn } from "./quotation.model"
+import { ModalItems } from '../../components/modal/items/modal-items';
 import dayjs from "dayjs";
 import { delay, formatCommaNumber } from '../../utils/util';
 import { ButtonBack } from '../../components/button';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import {   LuPrinter } from "react-icons/lu";
-const opservice = OptionService();
+// const opservice = OptionService();
 const quservice = QuotationService();
 
-const paymentCond = [
-  "30 days after BL date by T/T",
-  "100% T/T upon shipment advice",
-  "100 % T/T against copy of documents",
-  "50% desposit and balance T/T against copy of documents",
-  "30% desposit and balance T/T against copy of document",
-  "100 % advance",
-  "credit 30 days",
-  "credit 15 days",
-  "50% deposit and balance when delivery",
-];
-const currencies = [ "THB", "USD" ];
 
-const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
-const productFormName = 'product-form';
+// const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
 const gotoFrom = "/quotation";
-function QuotationManage() {
+function QuotationManage({index}) {
   const navigate = useNavigate();
   const location = useLocation();
   
   const { config } = location.state || {config:null};
-
+  const samplePreparationReducer = useSelector(samplePreparationSelector);
   const [form] = Form.useForm();
 
-  const [manageConfig, setManageConfig] = useState(mngConfig);
   const [submited, setSubmited] = useState(false);
 
   /** Modal handle */
   const [openCustomer, setOpenCustomer] = useState(false);
-  const [openBanks, setOpenBanks] = useState(false);
-  const [openProducts, setOpenProducts] = useState(false);
+  const [openProduct, setOpenProduct] = useState(false);
+  
 
   /** Quotation state */
   const [quotCode, setQuotCode] = useState(null);
@@ -62,9 +50,6 @@ function QuotationManage() {
   /** Detail Data State */
   const [quotDetails, setQuotDetails] = useState([]);
   
-  // const [banksOption, setBanksOption] = useState([]);
-  const [payConditionOptions, setPayConditionOptions] = useState([]);
-  const [currenciesOptions, setCurrenciesOptions] = useState([]);
 
   const [formDetail, setFormDetail] = useState(quotationForm);
 
@@ -92,13 +77,6 @@ function QuotationManage() {
 
       setFormDetail( state => ({...state, dated_price_until:nDateFormet}) );
       form.setFieldValue("dated_price_until", nDateFormet);    
-  }
-
-  const handleValidPriceUntil = (e) => {
-    const { quotdate } = form.getFieldsValue();
-    if(  !isNaN(e) ) {
-      handleCalculatePrice( e, (quotdate || new Date()) );
-    }     
   }
 
   const handleQuotDate = (e) => {
@@ -135,16 +113,6 @@ function QuotationManage() {
     setQuotBanks( val );
   }
 
-  /** Function handle banks */
-  const handleBanksRemove = ( record ) => {
-    const banks  = [...quotBanks];
-    const newData = banks.filter(
-        (item) => item?.acc_no !== record?.acc_no
-    );
-    setQuotBanks([...newData]);
-    //setItemsData([...newData]);
-  }
-
   /** Function handle quotation Detail ( Product ) */
   const handleQuotationDetailRemove = (record) => {
     const details  = [...quotDetails];
@@ -156,33 +124,6 @@ function QuotationManage() {
     //setItemsData([...newData]);     
   }
 
-  const handleQuotationDetailEdit = (record) => {
-    setManageConfig( s => ({...s, title:"Edit Quotation detail list",  action:"edit", data:record }));
-    setOpenProducts( true );     
-  }
-
-  const handleConfirmProduct = (val) => {
-    const prod = quotDetails;
-    const dataDuplicate = prod.findIndex( prd => prd.id === val.id );
-
-    if( dataDuplicate > -1 ){
-      const newData = prod.map( prd => {
-        if ( prd?.id === val.id ){
-          prd = {...prd, ...val};
-  
-          return prd;
-        } else return prd;
-      });
-      setQuotDetails(newData);
-      handleSummaryPrice(newData);
-    }else {
-      const newData = [...prod, val];
-      setQuotDetails(newData);
-      handleSummaryPrice(newData);
-    }
-
-    setOpenProducts(false);
-  } 
 
   const handleConfirm = () =>{
     form.validateFields().then((v) => { 
@@ -222,8 +163,7 @@ function QuotationManage() {
   };
 
   /** setting column table */
-  const bankcolumns = bankListColumn({handleRemove:handleBanksRemove});
-  const prodcolumns = productColumn({handleRemove:handleQuotationDetailRemove, handleEdit:handleQuotationDetailEdit})
+  const prodcolumns = productColumn({handleRemove:handleQuotationDetailRemove})
 
   
   useEffect( () => {
@@ -250,23 +190,6 @@ function QuotationManage() {
 
 
 
-      const [
-        // quotCodeRes,
-        // bankOptnRes,
-        payConditionRes,
-        currencyRes,
-      ] = await Promise.all([ 
-        // quservice.code(),
-        // opservice.optionsBanks(),
-        opservice.optionsQuotation({p:'pay-condition'}),
-        opservice.optionsQuotation({p:'currency'}),
-      ]); 
-      
-      // setQuotCode( quotCodeRes.data?.data );
-      // setBanksOption( bankOptnRes.data.data );
-
-      setPayConditionOptions( [ ...new Set([...payConditionRes.data?.data, ...paymentCond])].map( v => ({value:v}) )  );
-      setCurrenciesOptions( [ ...new Set([...currencyRes.data?.data, ...currencies])].map( v => ({value:v}) ) );
     }
 
     initial();
@@ -311,105 +234,6 @@ function QuotationManage() {
     </> 
   );
 
-  const SectionQuotation = (
-    <>
-      <Space size='small' direction='vertical' className='flex gap-2' >
-        <Row gutter={[8, 8]} className='m-0'>
-          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='valid_price_until' label='Valid price until' className='!mb-1' rules={[{ required: true, message: 'Missing Valid price until'}]} > 
-              <InputNumber placeholder='Valid price until (Day)' controls={false} min={0} className='input-40 w-full' onChange={handleValidPriceUntil} />                
-            </Form.Item> 
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='dated_price_until' label='Valid price until date' className='!mb-1'>
-              <Input placeholder='Customer Valid price until date.' readOnly value={formDetail?.dated_price_until} />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={6} md={6} lg={6} xl={6} xxl={6}>
-            <Form.Item name='currency' label='Currency' className='!mb-1' rules={[{ required: true, message: 'Missing Currency' }]}> 
-              <AutoComplete 
-                style={{ height:40, width:'100%' }}
-                options={currenciesOptions}
-                // onSearch={handleSearch}
-                filterOption={(inputValue, option) =>
-                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                allowClear 
-                placeholder='Enter Loading type Name.'
-              /> 
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={6} md={6} lg={6} xl={6} xxl={6}>
-            <Form.Item name='rate' label='Rate' className='!mb-1' rules={[{ required: true, message: 'Missing Rate' }]}> 
-              <InputNumber placeholder='Enter Rate.' controls={false} min={0} className='input-40 w-full' />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name='price_terms' label='Price Term' className='!mb-1' rules={[{ required: true, message: 'Missing Price Term' }]}> 
-              <Select
-                  showSearch
-                  autoClearSearchValue
-                  style={{ height:40, width:'100%' }}
-                  options={quotationTerm} 
-                  optionFilterProp="children"
-                  filterOption={(input, option) => {  
-                    const val = input?.toLowerCase();
-                    return ( option.label?.toLowerCase() ?? '').includes(val)
-                  }} 
-                  optionLabelProp="label"
-                  allowClear 
-                  placeholder='Enter Price Term.'              
-              />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item name='payment_condition' label='Payment Condition' className='!mb-1' rules={[{ required: true, message: 'Missing Payment Condition' }]}> 
-              <AutoComplete 
-                style={{ height:40, width:'100%' }}
-                options={payConditionOptions}
-                // onSearch={handleSearch}
-                filterOption={(inputValue, option) =>
-                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                allowClear 
-                placeholder='Enter Loading type Name.'
-              />
-            </Form.Item>
-          </Col>  
-        </Row>
-      </Space>
-    </> 
-  );
-
-  const SectionBanks =( 
-    <>
-      <Space size='small' direction='vertical' className='flex gap-2' >
-        <Row gutter={[8, 8]} className='m-0' align='middle'>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Typography.Title level={4} className='m-0 !text-zinc-400'>Banks for Quotation</Typography.Title>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Flex justify='end'>
-              <Button className='bn-success-outline bn-center' icon={<BankFilled />} onClick={()=> setOpenBanks(true) } >Choose Bank</Button> 
-            </Flex>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Table
-              columns={bankcolumns}
-              dataSource={quotBanks}
-              locale = {{ emptyText: <span>No data available, please choose data.</span> }}
-              size='small'
-              rowKey='acc_no'
-              pagination={false}
-              scroll={{ x: 'max-content' }}
-            />
-          </Col>
-        </Row> 
-      </Space>
-    </> 
-  );
-
   const SectionProduct = ( 
     <>
       <Space size='small' direction='vertical' className='flex gap-2' >
@@ -420,12 +244,7 @@ function QuotationManage() {
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Flex justify='end'>
               <Button className='bn-success-outline bn-center' icon={<FaBoxesPacking />} onClick={()=> {
-                form.validateFields().then( (v) => { 
-                  setManageConfig( s => ({...s, title:"Adding Quotation detail list",  action:"create" }));
-                  setOpenProducts( true ); 
-                }).catch( err => { 
-                  Modal.error({ title: 'This is an error message', content: 'Please enter require data', });
-                });
+                setOpenProduct( true ); 
 
               }}>Choose Product</Button> 
             </Flex>
@@ -508,7 +327,7 @@ function QuotationManage() {
                 icon={<LuPrinter />} 
                 onClick={()=>{handlePrint()}} 
                 className='bn-center !bg-orange-400 !text-white !border-transparent' 
-              >PRINT ESTIMATE COST</Button>
+              >PRINT QUOTATION </Button>
             }
           </Flex>  
       </Col>
@@ -535,31 +354,6 @@ function QuotationManage() {
     </Row>
   );
 
-  const SectionDrawerButtonBottom = (
-    <Row gutter={[{xs:32, sm:32, md:32, lg:12, xl:12}, 8]} className='m-0'>
-        <Col span={12} className='p-0'>
-            <Flex gap={4} justify='start'>
-                <Button  
-                    icon={<LeftOutlined style={{fontSize:'1rem'}} />} 
-                    style={{ width:'9.5rem' }}
-                    className='bn-center'
-                    onClick={()=>setOpenProducts(false)}
-                >Back</Button>
-            </Flex>
-        </Col>
-        <Col span={12} className='p-0'>
-            <Flex gap={4} justify='end'>
-                <Button 
-                    form={productFormName}
-                    htmlType='submit'
-                    icon={<SaveOutlined style={{fontSize:'1rem'}} />} 
-                    type='primary' style={{ width:'9.5rem' }} 
-                >Save</Button>
-            </Flex>
-        </Col>
-    </Row>         
-  );  
-
   return (
     <div className='quotation-manage'>
     <div id="quotation-manage" className='px-0 sm:px-0 md:px-8 lg:px-8'>
@@ -582,23 +376,11 @@ function QuotationManage() {
               </Row>
             </>} >
                 <Row className='m-0' gutter={[12,12]}>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                     <Divider orientation="left" className='!mb-3 !mt-1'> Customer </Divider>
                     <Card style={cardStyle} > 
                       {SectionCustomer}
                     </Card>          
-                  </Col>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Details </Divider>
-                    <Card  style={cardStyle} > 
-                      {SectionQuotation}
-                    </Card>         
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                    <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Banks </Divider>
-                    <Card  style={cardStyle} className={`border-spacing-1 ${(submited && quotBanks.length < 1 ? 'border-red-500' : 'border-transparent')}`} > 
-                      {SectionBanks}
-                    </Card>         
                   </Col>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                     <Divider orientation="left" className='!mb-3 !mt-1'> Quotations Products </Divider>
@@ -624,36 +406,9 @@ function QuotationManage() {
         <ModalCustomers show={openCustomer} close={() => setOpenCustomer(false)} values={(v)=>{handleChoosedCustomer(v)}} ></ModalCustomers>
     )}
 
-    { openBanks && (
-        <ModalBanks show={openBanks} close={() => setOpenBanks(false)} values={(v)=>{handleChoosedBanks(v)}} selected={quotBanks} ></ModalBanks>
-    )}
-    <Drawer
-        title={manageConfig?.title}
-        onClose={() => { setOpenProducts(false); }}
-        open={openProducts}
-        width='40vw'
-        // style={{transform: 'translateX(0px)'}}
-        className="responsive-drawer"
-        getContainer={() => document.querySelector(".quotation-manage")}
-        footer={SectionDrawerButtonBottom}
-        afterOpenChange={(e)=>{
-          if(!e) { 
-            //console.log("closed")
-          }
-        }}
-        maskClosable={false}
-        push={false}
-    > 
-        { openProducts && (
-        <QuotationManageForm 
-          confirm={handleConfirmProduct} 
-          formName={productFormName}
-          mode={manageConfig?.action} 
-          config={manageConfig} 
-          source={form.getFieldsValue()}
-          list={quotDetails}
-        /> )}
-    </Drawer>     
+    { openProduct && (
+        <ModalItems show={openProduct} close={() => setOpenProduct(false)} values={(v)=>{handleChoosedBanks(v)}} selected={samplePreparationReducer[index]?.details || []}   ></ModalItems>
+    )}  
     </div>
   )
 }

@@ -1,93 +1,64 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useRef} from 'react';
-
-import { Modal, Card, Table, message, Form, Button } from "antd";
-import { Row, Col, Space, Spin, Flex } from "antd";
-import { Input, Checkbox } from "antd";
+import React, {useState, useEffect} from 'react';
+import { Modal, Card, Table, message, Form, Spin } from "antd";
+import { Row, Col, Space } from "antd";
+import { Input, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { useForm } from 'antd/es/form/Form';
 
-import { TagItemTypes } from '../../badge-and-tag';
-import { columns } from "./modal-items.model";
-import OptionService from '../../../service/Options.service';
-import { BsUiChecks } from "react-icons/bs";
-const CheckboxGroup = Checkbox.Group;
+import { columns } from "./modal-items.model"; 
+// import ItemService from "../../service/ItemService";
+import OptionService from "../../../service/Options.service"
 
-
-export default function ModalItems({show, close, values, selected=[]}) {
-    const optionService = OptionService();
-    const [form] = useForm();
-    const inputRef = useRef(null);
-    const [modalData, setModalData] = useState([]);
-    const [modalDataWrap, setModalDataWrap] = useState([]);
-
-    const [openModal,  setOpenModel] = useState(show);
+const opnService = OptionService();
+export default function ModalItems({show, close, values, selected}) {
+    const [form] = Form.useForm();
+    /** handle state */
+    const [itemsData, setItemsData] = useState([]);
+    const [itemsDataWrap, setItemsDataWrap] = useState([]);
+    
+    const [itemsList, setItemsList] = useState(selected || []);
+    const [itemsRowKeySelect, setItemsRowKeySelect] = useState([]);
     const [loading,  setLoading] = useState(true);
-    const [onLoaded,  setOnLoaded] = useState(false);
-
-    const [rowKeySelect, setRowKeySelect] = useState([]);
-
-    const [itemsTypeData, setItemsTypeData] = useState([]);
-    const [itemsTypeOption, setItemTypeOption] = useState([]);
- 
-    const checkAll = itemsTypeOption.length === itemsTypeData.length;
-    const indeterminate = itemsTypeData.length > 0 && itemsTypeData.length < itemsTypeOption.length;
-    const onChange = (list) => { 
-        setItemsTypeData([...list]); 
-    };
-    const onCheckAllChange = (e) => {
-        const all = e.target.checked ? itemsTypeOption.map( m => m.value) : [];
-
-        setItemsTypeData([...all]); 
-    };
-
-    // console.log( itemsTypeData )
-
     /** handle logic component */
     const handleClose = () =>{ 
-        setTimeout( () => { close(false);  }, 140);
-        
-        //setTimeout( () => close(false), 200 );
+        close(false);
     }
-
-    // const handleConfirm = () => {
-    //     // console.log(itemsList); 
-    //     // values([...itemsList, ...selected]);
-    //     // setItemsList([]);
-    //     setOpenModel(false);
-    // }
-
+ 
     const handleSearch = (value) => {
-        const types = [...itemsTypeData];
-
         if(!!value){    
-            const f = modalData.filter( d => {
-                const text = ( 
-                    d.stcode?.toLowerCase().includes(value?.toLowerCase()) || 
-                    d.stname?.toLowerCase().includes(value?.toLowerCase()) || 
-                    d.stnameEN?.toLowerCase().includes(value?.toLowerCase()) 
-                ) 
-                const type = types.includes(  d.typecode ); 
-                return  text && type;
-            });
-            setModalDataWrap(f);            
+            const f = itemsData.filter( d => ( (d.stcode?.includes(value)) || (d.stname?.includes(value)) ) );
+             
+            setItemsDataWrap(f);            
         } else { 
-            const f = modalData.filter( d => {
-                const type = types.includes(  d.typecode ); 
-                return type;
-            });
-            setModalDataWrap(f); 
+            setItemsDataWrap(itemsData);            
         }
 
     }
 
-    const handleChoose = () => {
+    const handleSelectItems = (record) => {
+        const newData = {
+            ...record, 
+            amount: 1, 
+            percent: 0,
+            totalpercent: 0,
+        };
+        console.log(newData);
+
+        setItemsList([...itemsList, newData]);
+    };
+
+    const handleCheckDuplicate = (itemCode) => !!selected.find( (item) =>  item?.stcode === itemCode ) ; 
+
+    const handleConfirm = () => { 
         const choosed = selected.map( m => m.stcode );
-        const itemsChoose = (modalData.filter( f => rowKeySelect.includes(f.stcode) && !choosed.includes(f.stcode) )).map( (m, i) => (
+        const itemsChoose = (itemsData.filter( f => itemsRowKeySelect.includes(f.stcode) && !choosed.includes(f.stcode) )).map( (m, i) => (
         {
             id:m.id,
             stcode:m.stcode,
             stname:m.stname,
+            multiply: m?.multiply || 1,
+            yield: m.yield || 100,
+            price: m.price,
             amount: 1,
         }));
         
@@ -95,75 +66,21 @@ export default function ModalItems({show, close, values, selected=[]}) {
         // const rawdt = selected.filter( (item) =>  item?.stcode !== "" );
         // console.log(itemsChoose, rawdt, trans); 
         values([...selected, ...itemsChoose]);
-        
-        setOpenModel(false);
+        setItemsList([]);
+        close(false);
     }
 
-    /** setting initial component */ 
-    const column = columns();
-
-    useEffect( () => {
-        if( onLoaded ){
-            setLoading(true);
-            setTimeout( ()=>{
-                const value = inputRef.current?.input.value;
-                handleSearch(value); 
-                
-                setLoading(false);
-            }, 200)           
-        }
-    }, [itemsTypeData])
-
-    useEffect( () => {
-        const onload = () =>{
-            setLoading(true);
-            optionService.optionsItems({p:'items'}).then(async (res) => {
-                let { data } = res.data; 
-                setModalData(data);
-                setModalDataWrap(data);
-                // console.log(modalData, data) 
-                const keySeleted = selected.map( m => m.stcode );
-
-                setRowKeySelect([...keySeleted]);
-
-                const [
-                  itemTypeRes,
-                ] = await Promise.all([
-                    optionService.optionsItems({p:'items-type'}),
-                ]); 
-                const {data:itemType} = itemTypeRes.data;
-                const optionItemType = itemType.map( m => ({
-                    label: <TagItemTypes data={m.typename} />,
-                    value: m.typecode,
-                }));
-                setItemTypeOption(optionItemType);
-                setItemsTypeData([...optionItemType.map(m=>m.value)]);                
-            })
-            .catch((err) => { 
-                message.error("Request error!");
-
-                // setLoading(false);
-            })
-            .finally( () => setTimeout( () => { setLoading(false); setOnLoaded(true) }, 400));
-        }        
-        if( !!openModal ){
-            onload();
-
-            // console.log("modal-packages")        
-        } 
-    }, [openModal]);
-
-    const handleCheckDuplicate = (itemCode) => !!selected.find( (item) =>  item?.stcode === itemCode ) ;
+    /** Config Conponent */
 
     const itemSelection = {
-        selectedRowKeys : rowKeySelect,
+        selectedRowKeys : itemsRowKeySelect,
         type: "checkbox",
         fixed: true,
         hideSelectAll:true,
         onChange: (selectedRowKeys, selectedRows) => { 
-            // setRowKeySelect([...new Set([...selectedRowKeys, ...rowKeySelect])]);
+            // setItemsRowKeySelect([...new Set([...selectedRowKeys, ...itemsRowKeySelect])]);
             // setItemsList(selectedRows);
-            //setRowKeySelect(selectedRowKeys);
+            //setItemsRowKeySelect(selectedRowKeys);
         },
         getCheckboxProps: (record) => { 
             return {
@@ -174,47 +91,69 @@ export default function ModalItems({show, close, values, selected=[]}) {
         onSelect: (record, selected, selectedRows, nativeEvent) => {
             //console.log(record, selected, selectedRows, nativeEvent);
             if( selected ){
-                setRowKeySelect([...new Set([...rowKeySelect, record.stcode])]);
+                setItemsRowKeySelect([...new Set([...itemsRowKeySelect, record.stcode])]);
             } else {
-                const ind = rowKeySelect.findIndex( d => d === record.stcode);
-                const tval = [...rowKeySelect];
+                const ind = itemsRowKeySelect.findIndex( d => d === record.stcode);
+                const tval = [...itemsRowKeySelect];
                 tval.splice(ind, 1);
-                setRowKeySelect([...tval]);
-                //console.log(ind, rowKeySelect);
+                setItemsRowKeySelect([...tval]);
+                //console.log(ind, itemsRowKeySelect);
             }
         }
     };
+
+    /** End Config Component */
+
+    /** setting initial component */ 
+    const column = columns( { handleSelectItems, handleCheckDuplicate } );
+
+    useEffect( () => {
+        const onload = () =>{
+            setLoading(true);
+            opnService.optionsItems({p:'items'}).then((res) => {
+                let { status, data } = res;
+                if (status === 200) {
+                    setItemsData(data.data);
+                    setItemsDataWrap(data.data);
+
+                    const keySeleted = selected.map( m => m.stcode );
+
+                    setItemsRowKeySelect([...keySeleted]);
+                    // console.log(selected);
+
+                }
+            })
+            .catch((err) => { 
+                message.error("Request error!");
+            })
+            .finally( () => setTimeout( () => { setLoading(false) }, 400));
+        }
+
+        if( !!show ){
+            onload();
+            // console.log("modal-select-items");          
+        } 
+    }, [selected, show]);
+
     /** setting child component */
-    // const ButtonModal = (
-    //     <Space direction="horizontal" size="middle" >
-    //         <Button type='primary' onClick={() => handleConfirm() }>ยืนยันการเลือกสินค้า</Button>
-    //         <Button onClick={() => setOpenModel(false) }>ปิด</Button>
-    //     </Space>
-    // )
+    const ButtonModal = (
+        <Space direction="horizontal" size="middle" >
+            <Button type='primary' onClick={() => handleConfirm() }>ยืนยันการเลือกสินค้า</Button>
+            <Button onClick={() => handleClose() }>ปิด</Button>
+        </Space>
+    )
     /** */
     return (
         <>
         <Modal
-            open={openModal}
+            open={show}
             title="เลือกสินค้า"
-            afterClose={() => handleClose() }
-            onCancel={() => setOpenModel(false) } 
+            onCancel={() => handleClose() } 
+            footer={ButtonModal}
             maskClosable={false}
             style={{ top: 20 }}
             width={800}
-            className='modal-customers'
-            footer={(
-                <Row>
-                    <Col span={24}>
-                        {/* Ignore */}
-                    </Col>
-                    <Col span={24}>
-                        <Flex justify='flex-end'>
-                            <Button  className='bn-center bn-primary' icon={<BsUiChecks />} onClick={()=>handleChoose()}> Confirm </Button>
-                        </Flex>
-                    </Col> 
-                </Row>
-            )}
+            className='sample-request-modal-items'
         >
             <Spin spinning={loading} >
                 <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative'}}  >
@@ -223,38 +162,30 @@ export default function ModalItems({show, close, values, selected=[]}) {
                             <Row gutter={[{xs:32, sm:32, md:32, lg:12, xl:12}, 8]} className='m-0'>
                                 <Col span={24}>
                                     <Form.Item label="ค้นหา"  >
-                                        <Input ref={inputRef} suffix={<SearchOutlined />} onChange={ (e) => { handleSearch(e.target.value) } } placeholder='ค้นหาชื่อ หรือ รหัส'/>
+                                        <Input suffix={<SearchOutlined />} onChange={ (e) => { handleSearch(e.target.value) } } placeholder='ค้นหาชื่อ หรือ รหัสสินค้า'/>
                                     </Form.Item>                        
-                                </Col> 
-                            </Row> 
-                            <Row gutter={[{xs:32, sm:32, md:32, lg:12, xl:12}, 8]} className='m-0'>
-                                <Col span={24}> 
-                                    <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-                                        <TagItemTypes data={"Check All"} />
-                                    </Checkbox> 
-                                    <CheckboxGroup options={itemsTypeOption} value={itemsTypeData} onChange={onChange} />                       
                                 </Col> 
                             </Row> 
                         </Form>
                     </Card>
-                    <Card  style={{minHeight:'60vh'}}>
-                        <Table
+                    <Card>
+                        <Table  
                             bordered
-                            dataSource={modalDataWrap}
+                            dataSource={itemsDataWrap}
+                            columns={column} 
                             rowSelection={itemSelection}
-                            columns={column}
                             rowKey="stcode"
                             pagination={{ 
-                                total:modalDataWrap?.length || 0, 
-                                showTotal:(_, range) => `${range[0]}-${range[1]} of ${modalDataWrap?.length || 0} items`,
-                                defaultPageSize:25,
-                                pageSizeOptions:[25,35,50,100]
-                            }} 
-                            size='small'
+                                total:itemsDataWrap.length, 
+                                showTotal:(_, range) => `${range[0]}-${range[1]} of ${itemsData.length} items`,
+                                defaultPageSize:10,
+                                pageSizeOptions:[10,25,35,50,100]
+                            }}
+                            scroll={{ x: 'max-content' }} size='small'
                         /> 
-                    </Card>                    
-                </Space> 
-            </Spin>
+                    </Card>
+                </Space>                
+            </Spin> 
         </Modal>    
         </>
     )

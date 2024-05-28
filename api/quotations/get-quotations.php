@@ -20,11 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     if( !empty($quotdate_form) && !empty($quotdate_to) ) {
         $quotdate = "and date_format( a.quotdate, '%Y-%m-%d' ) >= '$quotdate_form' and date_format( a.quotdate, '%Y-%m-%d' ) <= '$quotdate_to' ";
     } 
-    // $spdate_cdt = "";
-    // if( !empty($spdate_form) && !empty($spdate_to) ) {
-    //     $spdate_cdt = "and date_format( s.spdate, '%Y-%m-%d' ) >= '$spdate_form' and date_format( s.spdate, '%Y-%m-%d' ) <= '$spdate_to' ";
-    // } 
-
+    
     try {   
         $sql = " 
         select 
@@ -32,20 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         concat(u.firstname, ' ', u.lastname) created_name
         from quotations a
         left join user u on a.created_by = u.code
-        where 1 = 1 and a.status = 'Y'
+        where 1 = 1 and a.active_status = 'Y'
         $quotcode
         $cuscode
         $cusname
         $created_by
         $quotdate
         order by a.created_date desc ;";
-        // $estimate_code_cdt
-        // $spcode_cdt
-        // $spname_cdt
-        // $created_date_cdt
-        // $created_by_cdt
-        // $spdate_cdt
-        // order by e.created_date desc ;";
 
         $stmt = $conn->prepare($sql); 
         $stmt->execute();
