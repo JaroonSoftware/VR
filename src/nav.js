@@ -24,17 +24,17 @@ let _nav = [
   {
     title: "ใบเสนอราคา",
     icon: <FileTextFilled className="nav-ico" />, 
-    to: "/quotation",
+    to: "/",
   },
   {
     title: "ใบขายสินค้า",
     icon: <ReconciliationFilled className="nav-ico" />, 
-    to: "/sample-preparation",
+    to: "/",
   },
   {
     title: "ใบเสร็จรับเงิน",
     icon: <TbReportMoney  className="nav-ico"/>, 
-    to: "/estimation",
+    to: "/",
   },
   {
     title: "MASTER",
@@ -43,12 +43,12 @@ let _nav = [
   {
     title: "ข้อมูลสินค้า",
     icon: <FileDoneOutlined className="nav-ico" />,
-    to: "/items",
+    to: "/",
   },
   {
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
-    to: "/customers",
+    to: "/",
   },
   {
     title: "ผู้ใช้งาน",
