@@ -71,7 +71,6 @@ const UsersAccess = () => {
     const newWindow = window.open("", "_blank");
     newWindow.location.href = `/dln-print/${data.dncode}`;
   };
-
   const handleDelete = (data) => {
     // startLoading();
     // ctmService.deleted(data?.dncode).then( _ => {
@@ -101,7 +100,6 @@ const UsersAccess = () => {
         message.error("Request error!");
       });
   };
-
   const FormSearch = (
     <Collapse
       size="small"
@@ -199,7 +197,6 @@ const UsersAccess = () => {
     />
   );
   const column = accessColumn({ handleEdit, handleDelete, handleView });
-
   const TitleTable = (
     <Flex className="width-100" align="center">
       <Col span={12} className="p-0">
