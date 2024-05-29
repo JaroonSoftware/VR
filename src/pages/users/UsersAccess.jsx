@@ -1,15 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Card, message } from "antd";
 import { Collapse, Form, Flex, Row, Col, Space } from "antd";
 import { Input, Button, Table, Typography } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { MdGroupAdd } from "react-icons/md";
 import { accessColumn } from "./users.model";
-
-// import dayjs from 'dayjs';
 import UserService from "../../service/User.service";
 
 const userService = UserService();
@@ -44,8 +41,9 @@ const UsersAccess = () => {
       state: {
         config: {
           ...mngConfig,
-          title: "สร้าง Delivery Note",
+          title: "เพิ่มผู้ใช้",
           action: "create",
+          acname: "เพิ่มผู้ใช้ใหม่",
         },
       },
       replace: true,
@@ -58,8 +56,9 @@ const UsersAccess = () => {
       state: {
         config: {
           ...mngConfig,
-          title: "แก้ไข Delivery Note",
+          title: "แก้ไขผู้ใช้",
           action: "edit",
+          acname: "แก้ใขข้อมูลผู้ใช้",
           code: data?.code,
         },
       },
@@ -201,7 +200,7 @@ const UsersAccess = () => {
     <Flex className="width-100" align="center">
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start" align="center">
-          <Typography.Title className="m-0 !text-zinc-800" level={4}>
+          <Typography.Title className="m-0 !text-zinc-800" level={3}>
             รายชื่อผู้ใช้
           </Typography.Title>
         </Flex>
@@ -235,12 +234,12 @@ const UsersAccess = () => {
           <Row gutter={[8, 8]} className="m-0">
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
               <Table
-                bordered={false}
                 title={() => TitleTable}
                 size="small"
                 rowKey="cuscode"
                 columns={column}
                 dataSource={accessData}
+                
               />
             </Col>
           </Row>

@@ -29,12 +29,12 @@ let _nav = [
   {
     title: "ใบขายสินค้า",
     icon: <ReconciliationFilled className="nav-ico" />, 
-    to: "/",
+    to: "/1",
   },
   {
     title: "ใบเสร็จรับเงิน",
     icon: <TbReportMoney  className="nav-ico"/>, 
-    to: "/",
+    to: "/2",
   },
   {
     title: "MASTER",
@@ -43,12 +43,12 @@ let _nav = [
   {
     title: "ข้อมูลสินค้า",
     icon: <FileDoneOutlined className="nav-ico" />,
-    to: "/",
+    to: "/item",
   },
   {
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
-    to: "/",
+    to: "/4",
   },
   {
     title: "ผู้ใช้งาน",
