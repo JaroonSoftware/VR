@@ -12,9 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
         $res = null;
         if($p == 'items'){
             $sql = "
-			select i.*, UUID() `key`, t.typename
+			select i.*, UUID() `key`
             from items i
-            join `type` t on i.typecode = t.typecode
             where 1 = 1 and i.status = 'Y'
             $type_code";
 

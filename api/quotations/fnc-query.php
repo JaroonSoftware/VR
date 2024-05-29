@@ -109,6 +109,7 @@ function sql__quotations_update(){
         where quotcode = :quotcode
     ";
     return $sql;
+
 } 
 #endregion
 
@@ -117,7 +118,7 @@ function sql__quotations_get(){
     $sql = "select 
     q.*, concat(u.firstname, ' ', u.lastname) created_name, u.email, u.tel
     from quotations q
-    join user u on q.created_by = u.code
+    left join user u on q.created_by = u.code
     where q.quotcode = :quotcode"; 
     return $sql;
 }

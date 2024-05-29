@@ -128,40 +128,7 @@ try {
         if (!$stmt->execute([ 'quotcode' => $code ])) throw new PDOException("Geting data error => {$conn->errorInfo()}"); 
         $detail = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $sql = sql__quotations_list_get();
-        $stmt = $conn->prepare($sql); 
-        foreach( $detail as $ind => $val){  
-            if (!$stmt->execute([ 'quotcode' => $code, 'detailid' => (int)$val['id'] ])) throw new PDOException("Geting data error => {$conn->errorInfo()}"); 
-            $list = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            $detail[$ind]["quotations_list"] = $list;
-        }
-
-        $sql = sql__quotations_bank_get();
-        $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'quotcode' => $code ])) throw new PDOException("Geting data error => {$conn->errorInfo()}"); 
-        $bank = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // $sql = sql__quotations_ship_get();
-        // $stmt = $conn->prepare($sql); 
-        // if (!$stmt->execute([ 'quotcode' => $code ])) throw new PDOException("Geting data error => {$conn->errorInfo()}"); 
-        // $ship = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $response_result = $detail;
-
-        $sql = "select * from quotations_shipping_terms where shippingtype_id = :id and detailid = :detailid"; 
-        $stmt = $conn->prepare($sql);
-        foreach( $response_result as $ind => $val){
-            if (!$stmt->execute([ 'id' => $val["shippingtype_id"], 'detailid' => $val["id"] ])){
-                $error = $conn->errorInfo(); 
-                http_response_code(404);
-                throw new PDOException("Geting data error => $error");
-            }
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-
-            $detail[$ind]['shipping_terms'] = $result;
-        } 
-
-        $response = array( "head" => $head, "detail" => $detail, "bank" => $bank, "ship" => $ship );
+        $response = array( "head" => $head, "detail" => $detail);
         $conn->commit();
         http_response_code(200);
         echo json_encode(array('status' => 1, 'data' => $response));
