@@ -5,8 +5,15 @@ import "../../assets/styles/banks.css"
 import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import dayjs from 'dayjs';
-import { DeleteFilled, DeleteOutlined, EditOutlined, PrinterOutlined, QuestionCircleFilled, QuestionCircleOutlined } from "@ant-design/icons";
-import { formatCommaNumber } from "../../utils/util";
+import { DeleteOutlined, EditOutlined, PrinterOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { comma } from '../../utils/util';
+
+const calTotalDiscount = (rec) => {
+  const total =  Number(rec?.qty ||  0) * Number(rec?.price ||  0);
+  const discount = 1 - ( Number(rec?.discount ||  0) / 100 );
+
+  return total * discount;
+}
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
@@ -103,85 +110,68 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
 
 export const productColumn = ({handleRemove, handleEdit}) => [
   {
-    title: "No.",
-    key: "id",
-    dataIndex: "id",
+    title: "ลำดับ",
+    dataIndex: "ind",
+    key: "ind",
+    width: 80, 
+    render: (im, rc, index) => <>{index + 1}</>,
+  },
+  {
+    title: "รหัสสินค้า",
+    dataIndex: "stcode",
+    key: "stcode",
+    width: 120, 
+    align: "left",
+  },
+  {
+    title: "ชื่อสินค้า",
+    dataIndex: "purdetail",
+    key: "purdetail", 
     align: "left", 
-    width:50,
-    render: (_,record, index) => (index + 1) 
+    render: (_, rec) => rec.stname,
   },
   {
-    title: "Production Description", 
-    key: "spname",
-    dataIndex: "spname",
-    align: "left", 
-  },
-  {
-    title: "Unit/Carton",
-    key: "unit_carton",
-    dataIndex: "unit_carton",
+    title: "จำนวน",
+    dataIndex: "qty",
+    key: "qty", 
+    width: "10%",
     align: "right",
-    className: "!pe-4", 
-    width:'14%',
+    className: "!pe-3",
+    editable: true,
+    type:'number',
+    render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  2, 2 )}</>,
   },
   {
-    title: <>Quantity<br />(Cartion)</>,
-    key: "loadingtype_qty",
-    dataIndex: "loadingtype_qty",
+    title: "ราคาขาย",
+    dataIndex: "price",
+    key: "price", 
+    width: "10%",
     align: "right",
-    className: "!pe-4", 
-    width:'14%',
-    render:(v) => formatCommaNumber( Number( v || 0 ))
-  }, 
-  {
-    title: <>Price per carton</>,
-    key: "price_per_carton",
-    dataIndex: "price_per_carton",
-    align: "right",
-    className: "!pe-4", 
-    width:'14%',
-    render:(v) => formatCommaNumber( Number( v || 0 ))
+    className: "!pe-3",
+    editable: true,
+    type:'number',
+    render: (_, rec) => <>{ comma( Number(rec?.price ||  0),  2, 2 )}</>,
   },
   {
-    title: <>Total amount</>,
-    key: "total_amount",
-    dataIndex: "total_amount",
+    title: "ส่วนลด(%)",
+    dataIndex: "discount",
+    key: "discount",
+    width: "10%",
     align: "right",
-    className: "!pe-4", 
-    width:'18%',
-    render:(v) => formatCommaNumber( Number( v || 0 ))
+    className: "!pe-3",
+    editable: true,
+    type:'number',
+    render: (_, rec) => <>{ comma( Number(rec?.discount ||  0),  2, 2 )}</>,
   },
   {
-    title: "Action",
-    key: "operation", 
-    fixed: 'right',
-    width: 120,
-    render: (text, record) => (
-      <Space >
-        <Button
-          icon={<EditOutlined />} 
-          className='bn-primary-outline'
-          style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-          onClick={(e) => handleEdit(record) }
-          size="small"
-        />        
-        <Popconfirm 
-          placement="topRight"
-          title="Sure to delete?"  
-          description="Are you sure to delete this packaging?"
-          icon={<QuestionCircleFilled style={{ color: 'red' }} />}
-          onConfirm={() => handleRemove(record)}
-        >
-          <Button
-            icon={<DeleteFilled />}
-            danger
-            style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            size="small"
-          />
-        </Popconfirm>
-      </Space>
-    ),
-  }  
+    title: "ราคารวม",
+    dataIndex: "total",
+    key: "total",
+    width: "10%",
+    align: "right",
+    className: "!pe-3",
+    render: (_, rec) => <>{ comma( calTotalDiscount(rec),  2, 2 )}</>,
+  }
 ];
 
 export const description_defualt = [

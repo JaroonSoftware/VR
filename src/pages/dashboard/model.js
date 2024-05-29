@@ -1,7 +1,7 @@
 import { Tag, Typography } from "antd";
 import dayjs from "dayjs";
 import { IoMdTime } from "react-icons/io";
-import { formatCommaNumber } from "../../utils/util";
+import { comma } from "../../utils/util";
 export const sampleListColumn = ({handleShowDetail}) => [
     {
       title: "SR Code",
@@ -20,7 +20,7 @@ export const sampleListColumn = ({handleShowDetail}) => [
       key: "count_srdetail",
       dataIndex: "count_srdetail", 
       align: "left",
-      render : (v, record) => <Typography.Link onClick={() => handleShowDetail(record)}>({formatCommaNumber(Number(v || 0))}) samples</Typography.Link>
+      render : (v, record) => <Typography.Link onClick={() => handleShowDetail(record)}>({comma(Number(v || 0))}) samples</Typography.Link>
     }, 
     {
       title: "Customer",
@@ -134,7 +134,7 @@ export const sampleDetailColumn = [
       key: "amount",
       dataIndex: "amount", 
       align: "left",
-      render:(v) => formatCommaNumber( Number(v || 0) )
+      render:(v) => comma( Number(v || 0) )
     },
 ];
 

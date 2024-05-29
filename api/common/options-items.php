@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
             $sql = "
 			select i.*, UUID() `key`
             from items i
-            where 1 = 1 and i.status = 'Y'
+            where 1 = 1 and i.active_status = 'Y'
             $type_code";
 
             $stmt = $conn->prepare($sql); 
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
             $sql = "
 			select t.*
             from `type` t
-            where 1 = 1 and t.status = 'Y'"; 
+            where 1 = 1 and t.active_status = 'Y'"; 
             $stmt = $conn->prepare($sql); 
             $stmt->execute();
             $res = $stmt->fetchAll(PDO::FETCH_ASSOC);             
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
             $sql = "
             select  i.stcode value, i.stname label 
             from items i
-            where 1 = 1 and i.status = 'Y'
+            where 1 = 1 and i.active_status = 'Y'
             $type_code"; 
 
             $stmt = $conn->prepare($sql); 
