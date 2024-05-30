@@ -9,7 +9,7 @@ import { RiTeamFill } from "react-icons/ri";
 import { MdOutlineDashboard } from "react-icons/md";
 let _nav = [
   {
-    title: "DATA",
+    title: "MENU",
     type: "group",
   },
   {
@@ -37,13 +37,18 @@ let _nav = [
     to: "/2",
   },
   {
-    title: "MASTER",
+    title: "DATA",
     type: "group",
   },  
   {
     title: "ข้อมูลสินค้า",
     icon: <FileDoneOutlined className="nav-ico" />,
     to: "/item",
+  },
+  {
+    title: "ประเภทสินค้า",
+    icon: <FileDoneOutlined className="nav-ico" />,
+    to: "/typeitem",
   },
   {
     title: "ข้อมูลลูกค้า",
