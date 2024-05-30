@@ -46,7 +46,7 @@ export const EditableCell = ({
         inputRef.current?.focus(); 
 
         inputRef.current?.select();
-        // console.log( inputRef.current );
+        console.log( inputRef.current );
       }
     }, [editing, readonly]);
 

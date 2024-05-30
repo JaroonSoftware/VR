@@ -13,7 +13,7 @@ import {
     samplePreparationSelector,
 } from "../../store/slices/sample-preparation.slices.js";
 
-import { quotationForm, productColumn } from "./quotation.model"
+import { quotationForm, columnsParametersEditable,componentsEditable } from "./quotation.model"
 import { ModalItems } from '../../components/modal/items/modal-items';
 import dayjs from "dayjs";
 import { delay, comma } from '../../utils/util';
@@ -158,8 +158,24 @@ function QuotationManage({index}) {
     newWindow.location.href = `/quo-print/${formDetail.quotcode}`;
   };
 
+  const handleEditCell = (row) => { 
+    const newData = (r) => { 
+        const newData = [...quotDetails];
+        
+        const ind = newData.findIndex( (item) => row.seq === item?.seq );
+        const item = newData[ind];
+        
+        newData.splice(ind, 1, {
+            ...item,
+            ...row,
+        });
+        return newData;
+    } 
+    setQuotDetails([...newData()]);
+};
+
   /** setting column table */
-  const prodcolumns = productColumn({handleRemove:handleQuotationDetailRemove})
+  const prodcolumns = columnsParametersEditable(handleEditCell,{handleRemove:handleQuotationDetailRemove})
 
   
   useEffect( () => {
@@ -253,11 +269,13 @@ function QuotationManage({index}) {
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Table
               columns={prodcolumns}
-              dataSource={quotDetails}
+              dataSource={quotDetails}              
+              rowClassName={() => "editable-row"}
+              components={componentsEditable}
+              bordered
+              rowKey='stcode'
+              pagination={false}              
               locale = {{ emptyText: <span>No data available, please choose data.</span> }}
-              size='small'
-              rowKey='id'
-              pagination={false}
               scroll={{ x: 'max-content' }}
               summary={(record) => {
                 return (<>

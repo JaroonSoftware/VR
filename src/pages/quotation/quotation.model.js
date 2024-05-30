@@ -4,6 +4,7 @@ import "../../assets/styles/banks.css"
 // import { Popconfirm, Button } from "antd";
 import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
+import { EditableRow, EditableCell } from "../../components/table/TableEditAble";
 import dayjs from 'dayjs';
 import { DeleteOutlined, EditOutlined, PrinterOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { comma } from '../../utils/util';
@@ -14,6 +15,11 @@ const calTotalDiscount = (rec) => {
 
   return total * discount;
 }
+/** export component for edit table */
+export const componentsEditable = {
+  body: { row: EditableRow, cell: EditableCell },
+};
+
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
@@ -108,7 +114,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
   }, 
 ];
 
-export const productColumn = ({handleRemove, handleEdit}) => [
+export const productColumn = ({handleRemove}) => [
   {
     title: "ลำดับ",
     dataIndex: "ind",
@@ -138,6 +144,7 @@ export const productColumn = ({handleRemove, handleEdit}) => [
     align: "right",
     className: "!pe-3",
     editable: true,
+    required: true,
     type:'number',
     render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  2, 2 )}</>,
   },
@@ -149,6 +156,7 @@ export const productColumn = ({handleRemove, handleEdit}) => [
     align: "right",
     className: "!pe-3",
     editable: true,
+    required: true,
     type:'number',
     render: (_, rec) => <>{ comma( Number(rec?.price ||  0),  2, 2 )}</>,
   },
@@ -174,15 +182,26 @@ export const productColumn = ({handleRemove, handleEdit}) => [
   }
 ];
 
-export const description_defualt = [
-  { id: 0, detail_name : "Ref"   },
-  { id: 1, detail_name : "Packing"   },
-  { id: 2, detail_name : "Unit Net wt(gm)"   },
-  { id: 3, detail_name : "carton size (WxLxH)"   },
-  { id: 4, detail_name : "Gross wt per carton(kg)"   },
-  { id: 5, detail_name : "Loading Type & Quantity"   }, 
-];
-
+export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
+  const col = productColumn({handleRemove});
+  return col.map((col, ind) => {
+      if (!col.editable) { return col; }
+      
+      return {
+          ...col,
+          onCell: (record) => {
+            // console.log(record);
+            return {
+              record,
+              editable: col.editable,
+              dataIndex: col.dataIndex,
+              title: col.title,
+              handleEditCell,
+            }
+          },
+      };
+  }); 
+}
 export const quotationForm = {
   quotcode: null,
   quotdate: null,
@@ -229,7 +248,6 @@ export const quotationDetailForm = {
   unit_carton : 0,
   qty : 0,
   price_per_carton : 0,
-  quotations_list : description_defualt,
 }
 
 
