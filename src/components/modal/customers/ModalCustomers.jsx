@@ -9,7 +9,7 @@ import { useForm } from 'antd/es/form/Form';
 import { ModalCustomersManage } from './modal-customers.js';
 
 import { customersColumn } from "./modal-customers.model";
-import CustomerService from '../../../service/CustomerService';
+import CustomerService from '../../../service/Customer.Service.js';
 
 export default function ModalCustomers({show, close, values, selected}) {
     const [form] = useForm(); 

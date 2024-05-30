@@ -25,7 +25,7 @@ export const EditableCell = ({
     children,
     dataIndex,
     record,
-    handleSave,
+    handleEditCell,
     fieldType,
     required,
     readonly,
@@ -46,7 +46,7 @@ export const EditableCell = ({
         inputRef.current?.focus(); 
 
         inputRef.current?.select();
-        console.log( inputRef.current );
+        // console.log( inputRef.current );
       }
     }, [editing, readonly]);
 
@@ -63,7 +63,7 @@ export const EditableCell = ({
         toggleEdit();
 
 
-        handleSave({
+        handleEditCell({
           ...record,
           ...values,
           key:dataIndex,
@@ -79,7 +79,7 @@ export const EditableCell = ({
         toggleEdit();
 
 
-        // handleSave({
+        // handleEditCell({
         //   ...record,
         //   ...values,
         //   key:dataIndex,

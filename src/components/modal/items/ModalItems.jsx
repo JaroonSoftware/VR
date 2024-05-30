@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import { Modal, Card, Table, message, Form, Spin } from "antd";
 import { Row, Col, Space } from "antd";
 import { Input, Button } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons"
 
 import { columns } from "./modal-items.model"; 
 // import ItemService from "../../service/ItemService";
@@ -38,11 +38,11 @@ export default function ModalItems({show, close, values, selected}) {
     const handleSelectItems = (record) => {
         const newData = {
             ...record, 
-            amount: 1, 
+            qty: 1, 
             percent: 0,
             totalpercent: 0,
         };
-        console.log(newData);
+        // console.log(newData);
 
         setItemsList([...itemsList, newData]);
     };
@@ -53,13 +53,10 @@ export default function ModalItems({show, close, values, selected}) {
         const choosed = selected.map( m => m.stcode );
         const itemsChoose = (itemsData.filter( f => itemsRowKeySelect.includes(f.stcode) && !choosed.includes(f.stcode) )).map( (m, i) => (
         {
-            id:m.id,
             stcode:m.stcode,
             stname:m.stname,
-            multiply: m?.multiply || 1,
-            yield: m.yield || 100,
-            price: m.price,
-            amount: 1,
+            price: Number(m?.price || 0),
+            qty: 1,
         }));
         
         // const trans = selected.filter( (item) =>  item?.stcode === "" );
@@ -138,8 +135,9 @@ export default function ModalItems({show, close, values, selected}) {
     /** setting child component */
     const ButtonModal = (
         <Space direction="horizontal" size="middle" >
-            <Button type='primary' onClick={() => handleConfirm() }>ยืนยันการเลือกสินค้า</Button>
+            
             <Button onClick={() => handleClose() }>ปิด</Button>
+            <Button type='primary' onClick={() => handleConfirm() }>ยืนยันการเลือกสินค้า</Button>
         </Space>
     )
     /** */

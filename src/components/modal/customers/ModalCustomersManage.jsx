@@ -8,7 +8,7 @@ import { SaveFilled } from  "@ant-design/icons";
 import { customers } from '../../../pages/customers/customers.model.js';  
 // import { delay } from '../../../utils/util';
 // import OptionService from '../../service/Options.service';
-import CustomerService from '../../../service/CustomerService.js'; 
+import CustomerService from '../../../service/Customer.Service.js'; 
 import OptionService from '../../../service/Options.service';
 import { CreateInput } from 'thai-address-autocomplete-react';
 
