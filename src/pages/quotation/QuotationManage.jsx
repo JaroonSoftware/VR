@@ -12,10 +12,11 @@ import { useSelector } from "react-redux";
 import {
     samplePreparationSelector,
 } from "../../store/slices/sample-preparation.slices.js";
+
 import { quotationForm, productColumn } from "./quotation.model"
 import { ModalItems } from '../../components/modal/items/modal-items';
 import dayjs from "dayjs";
-import { delay, formatCommaNumber } from '../../utils/util';
+import { delay, comma } from '../../utils/util';
 import { ButtonBack } from '../../components/button';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -23,10 +24,10 @@ import {   LuPrinter } from "react-icons/lu";
 // const opservice = OptionService();
 const quservice = QuotationService();
 
-
-// const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
 const gotoFrom = "/quotation";
+
 function QuotationManage({index}) {
+
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -106,11 +107,6 @@ function QuotationManage({index}) {
     
     setFormDetail( state => ({...state, ...val}));
     form.setFieldsValue({...fvalue, ...customer });
-  }
-
-  const handleChoosedBanks = ( val ) => {
-    console.log( val ); 
-    setQuotBanks( val );
   }
 
   /** Function handle quotation Detail ( Product ) */
@@ -196,6 +192,11 @@ function QuotationManage({index}) {
     return () => { }
   }, []);
 
+  const handleItemsChoosed  = (value) => {
+
+    setQuotDetails(value);
+    }
+
 
   const SectionCustomer = ( 
     <>
@@ -266,7 +267,7 @@ function QuotationManage({index}) {
                       <Table.Summary.Cell index={0} colSpan={4} ></Table.Summary.Cell>
                       <Table.Summary.Cell index={4} align='end' className='!pe-4'>Total</Table.Summary.Cell>
                       <Table.Summary.Cell className='!pe-4 text-end border-right-0' style={{borderRigth:"0px solid"}} >
-                        <Typography.Text type="danger">{ formatCommaNumber(Number(formDetail?.total_price || 0)) }</Typography.Text>
+                        <Typography.Text type="danger">{ comma(Number(formDetail?.total_price || 0)) }</Typography.Text>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell >Baht</Table.Summary.Cell>
                   </Table.Summary.Row>
@@ -284,7 +285,7 @@ function QuotationManage({index}) {
                       <Table.Summary.Cell index={0} colSpan={4} ></Table.Summary.Cell>
                       <Table.Summary.Cell index={4} align='end' className='!pe-4'>Grand Total</Table.Summary.Cell>
                       <Table.Summary.Cell className='!pe-4 text-end border-right-0' style={{borderRigth:"0px solid"}} > 
-                        <Typography.Text type="danger">{ formatCommaNumber(Number(formDetail?.grand_total_price || 0)) }</Typography.Text> 
+                        <Typography.Text type="danger">{ comma(Number(formDetail?.grand_total_price || 0)) }</Typography.Text> 
                       </Table.Summary.Cell>
                       <Table.Summary.Cell >Baht</Table.Summary.Cell>
                   </Table.Summary.Row>  
@@ -407,7 +408,7 @@ function QuotationManage({index}) {
     )}
 
     { openProduct && (
-        <ModalItems show={openProduct} close={() => setOpenProduct(false)} values={(v)=>{handleChoosedBanks(v)}} selected={samplePreparationReducer[index]?.details || []}   ></ModalItems>
+        <ModalItems show={openProduct} close={() => setOpenProduct(false)} values={(v)=>{handleItemsChoosed(v)}} selected={samplePreparationReducer[index]?.details || []}   ></ModalItems>
     )}  
     </div>
   )
