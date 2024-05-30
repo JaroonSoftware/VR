@@ -179,7 +179,16 @@ export const productColumn = ({handleRemove}) => [
     align: "right",
     className: "!pe-3",
     render: (_, rec) => <>{ comma( calTotalDiscount(rec),  2, 2 )}</>,
-  }
+  },
+  {
+    title: "ตัวเลือก",
+    align: "center",
+    key: "operation",
+    dataIndex: "operation",
+    render: (_, record, idx) => handleRemove(record),
+    width: '90px',
+    fixed: 'right',
+  },
 ];
 
 export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
@@ -210,12 +219,6 @@ export const quotationForm = {
   contact: null,
   address: null,
   tel: null,
-  email: null,
-  valid_price_until: null,
-  payment_condition: null,
-  price_terms: 'FOB',
-  currency: null,
-  rate: null,
   remark: null,
   total_price: 0,
   vat: 7,
@@ -224,12 +227,11 @@ export const quotationForm = {
   dated_price_until: null,
 }
 
-export const quotationDetailForm = {
-  id : null,
+export const quotationDetailForm = {  
   quotcode : null,
   spcode : null,
   spname : null,
-  estcode : null,
+  stcode : null,
   packingset_id : null,
   packingsetid : null,
   packingset_name : null,

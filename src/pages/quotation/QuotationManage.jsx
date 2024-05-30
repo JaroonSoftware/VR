@@ -29,6 +29,7 @@ import { delay, comma } from "../../utils/util";
 import { ButtonBack } from "../../components/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuPackageSearch } from "react-icons/lu";
 import { LuPrinter } from "react-icons/lu";
 // const opservice = OptionService();
@@ -47,12 +48,11 @@ function QuotationManage() {
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
 
-  const [listDetail, setListDetail] = useState([]);
   /** Quotation state */
   const [quotCode, setQuotCode] = useState(null);
 
   /** Detail Data State */
-  const [quotDetails, setQuotDetails] = useState([]);
+  const [listDetail, setListDetail] = useState([]);
 
   const [formDetail, setFormDetail] = useState(quotationForm);
 
@@ -61,26 +61,74 @@ function QuotationManage() {
     height: "calc(100% - (25.4px + 1rem))",
   };
 
-  const handleSummaryPrice = (record) => {
-    if (form.getFieldValue("vat") === undefined)
-      form.setFieldValue("vat", formDetail.vat);
-    const vat = form.getFieldValue("vat");
+  useEffect(() => {
+    const initial = async () => {
+      if (config?.action !== "create") {
+        const res = await quservice
+          .get(config?.code)
+          .catch((error) => message.error("get Quotation data fail."));
+        const {
+          data: { head, detail },
+        } = res.data;
+        const { quotcode, quotdate } = head;
+        setFormDetail(head);
+        setListDetail(detail);
+        setQuotCode(quotcode);
+        form.setFieldsValue({ ...head, quotdate: dayjs(quotdate) });
 
-    const total_price = record?.reduce(
-      (ac, v) => (ac += Number(v?.total_amount || 0)),
+        // setTimeout( () => {  handleCalculatePrice(head?.valid_price_until, head?.dated_price_until) }, 200);
+        // handleChoosedCustomer(head);
+      } else {
+        const { data: code } = (
+          await quservice.code().catch((e) => {
+            message.error("get Quotation code fail.");
+          })
+        ).data;
+        setQuotCode(code);
+        const ininteial_value = {
+          ...formDetail,
+          quotcode: code,
+          quotdate: dayjs(new Date()),
+        };
+        setFormDetail(ininteial_value);
+        form.setFieldsValue(ininteial_value);
+        handleSummaryPrice(listDetail);
+      }
+    };
+
+    initial();
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    if (listDetail) handleSummaryPrice(listDetail);
+  }, [listDetail]);
+
+  const handleSummaryPrice = (record) => {
+    const newData = [...record];
+
+    const total_price = newData.reduce(
+      (a, v) =>
+        (a +=
+          Number(v.qty || 0) *
+          Number(v?.price || 0) *
+          (1 - Number(v?.discount || 0) / 100)),
       0
     );
-    const grand_total_price = parseFloat(
-      (total_price / (1 - Number(vat || 0) / 100)).toFixed(2)
-    );
+    const vat = (total_price * formDetail.vat) / 100;
+    const grand_total_price = total_price + vat;
 
-    const newData = { ...formDetail, vat, total_price, grand_total_price };
-
-    setFormDetail(newData);
+    setFormDetail((state) => ({
+      ...state,
+      total_price,
+      vat,
+      grand_total_price,
+    }));
+    // console.log(formDetail)
   };
 
   const handleVat = (e) => {
-    handleSummaryPrice(quotDetails);
+    handleSummaryPrice(listDetail);
   };
 
   const handleCalculatePrice = (day, date) => {
@@ -123,27 +171,18 @@ function QuotationManage() {
     form.setFieldsValue({ ...fvalue, ...customer });
   };
 
-  /** Function handle quotation Detail ( Product ) */
-  const handleQuotationDetailRemove = (record) => {
-    const details = [...quotDetails];
-    const newData = details.filter((item) => item?.id !== record?.id);
-    setQuotDetails([...newData]);
-    handleSummaryPrice([...newData]);
-    //setItemsData([...newData]);
-  };
-
   const handleConfirm = () => {
     form
       .validateFields()
       .then((v) => {
-        if (quotDetails.length < 1) throw new Error("Detail required");
+        if (listDetail.length < 1) throw new Error("Detail required");
 
         const head = {
           ...formDetail,
           ...v,
           quotdate: dayjs(v.quotdate).format("YYYY-MM-DD"),
         };
-        const detail = quotDetails;
+        const detail = listDetail;
 
         const parm = { head, detail };
         const actions =
@@ -178,69 +217,58 @@ function QuotationManage() {
     newWindow.location.href = `/quo-print/${formDetail.quotcode}`;
   };
 
+  const handleDelete = (code) => {
+    const itemDetail = [...listDetail];
+    const newData = itemDetail.filter((item) => item?.stcode !== code);
+    setListDetail([...newData]);
+    setFormDetail([...newData]);
+  };
+
+  const handleRemove = (record) => {
+    const itemDetail = [...listDetail];
+    return itemDetail.length >= 1 ? (
+      <Button
+        className="bt-icon"
+        size="small"
+        danger
+        icon={
+          <RiDeleteBin5Line style={{ fontSize: "1rem", marginTop: "3px" }} />
+        }
+        onClick={() => handleDelete(record?.stcode)}
+        disabled={!record?.stcode}
+      />
+    ) : null;
+  };
+
   const handleEditCell = (row) => {
     const newData = (r) => {
-      const newData = [...quotDetails];
+      const itemDetail = [...listDetail];
+      const newData = [...itemDetail];
 
-      const ind = newData.findIndex((item) => row.seq === item?.seq);
+      const ind = newData.findIndex((item) => r?.stcode === item?.stcode);
+      if (ind < 0) return itemDetail;
       const item = newData[ind];
-
       newData.splice(ind, 1, {
         ...item,
         ...row,
       });
+
+      handleSummaryPrice(listDetail);
       return newData;
     };
-    setQuotDetails([...newData()]);
+    setListDetail([...newData(row)]);
+  };
+
+  const handleItemsChoosed = (value) => {
+    setFormDetail(value);
+    setListDetail(value);
+    handleSummaryPrice(listDetail);
   };
 
   /** setting column table */
   const prodcolumns = columnsParametersEditable(handleEditCell, {
-    handleRemove: handleQuotationDetailRemove,
+    handleRemove,
   });
-
-  useEffect(() => {
-    const initial = async () => {
-      if (config?.action !== "create") {
-        const res = await quservice
-          .get(config?.code)
-          .catch((error) => message.error("get Quotation data fail."));
-        const {
-          data: { head, detail},
-        } = res.data;
-        const { quotcode, quotdate } = head;
-        setFormDetail(head);
-        setListDetail(detail);
-        setQuotCode(quotcode);
-        form.setFieldsValue({ ...head, quotdate: dayjs(quotdate) });
-
-        // setTimeout( () => {  handleCalculatePrice(head?.valid_price_until, head?.dated_price_until) }, 200);
-        // handleChoosedCustomer(head);
-      } else {
-        const { data: code } = (
-          await quservice.code().catch((e) => {
-            message.error("get Quotation code fail.");
-          })
-        ).data;
-        setQuotCode(code);
-        const ininteial_value = {
-          ...formDetail,
-          quotcode: code,
-          quotdate: dayjs(new Date()),
-        };
-        setFormDetail(ininteial_value);
-        form.setFieldsValue(ininteial_value);
-      }
-    };
-
-    initial();
-    return () => {};
-  }, []);
-
-  const handleItemsChoosed = (value) => {
-    // setQuotDetails(value);
-    setListDetail(value);
-  };
 
   const SectionCustomer = (
     <>
@@ -340,7 +368,7 @@ function QuotationManage() {
           dataSource={listDetail}
           columns={prodcolumns}
           pagination={false}
-          rowKey="id"
+          rowKey="stcode"
           scroll={{ x: "max-content" }}
           locale={{
             emptyText: <span>No data available, please add some data.</span>,
@@ -348,12 +376,12 @@ function QuotationManage() {
           summary={(record) => {
             return (
               <>
-                {quotDetails.length > 0 && (
+                {listDetail.length > 0 && (
                   <>
                     <Table.Summary.Row>
                       <Table.Summary.Cell
                         index={0}
-                        colSpan={4}
+                        colSpan={5}
                       ></Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={4}
@@ -391,6 +419,7 @@ function QuotationManage() {
                         <Form.Item name="vat" className="!m-0">
                           <InputNumber
                             className="width-100 input-30 text-end"
+                            addonAfter="%"
                             controls={false}
                             min={0}
                             onFocus={(e) => {
@@ -400,12 +429,20 @@ function QuotationManage() {
                           />
                         </Form.Item>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell>%</Table.Summary.Cell>
+                      <Table.Summary.Cell
+                        className="!pe-4 text-end border-right-0"
+                        style={{ borderRigth: "0px solid" }}
+                      >
+                        <Typography.Text type="danger">
+                          {comma(Number(formDetail?.vat || 0))}
+                        </Typography.Text>
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
                     </Table.Summary.Row>
                     <Table.Summary.Row>
                       <Table.Summary.Cell
                         index={0}
-                        colSpan={4}
+                        colSpan={5}
                       ></Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={4}
