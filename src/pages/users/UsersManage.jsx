@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import {
-  Collapse,
   Form,
   Input,
   Button,
@@ -9,11 +8,10 @@ import {
   message,
   Select,
   Divider,
+  Card,
 } from "antd";
 import { Row, Col, Space, Badge } from "antd";
-
-import { CaretRightOutlined, SaveFilled } from "@ant-design/icons";
-
+import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
 import { ModalResetPassword } from "../../components/modal/users/modal-reset";
 
@@ -31,6 +29,7 @@ const UsersManage = () => {
   const [openResetModal, setOpenResetModal] = useState(false);
   const [formDetail, setFormDetail] = useState({});
   const { config } = location.state || { config: null };
+
   const [form] = Form.useForm();
   // const [packageTypeOption, setPackageTypeOption] = useState([]);
 
@@ -39,6 +38,7 @@ const UsersManage = () => {
     if (config?.action !== "create") {
       getsupData(config.code);
     }
+    console.log(config)
 
     return () => {
       form.resetFields();
@@ -84,14 +84,7 @@ const UsersManage = () => {
       });
   };
 
-  const panelStyle = {
-    marginBottom: 24,
-    borderRadius: 8,
-    border: "1px solid #d9d9d9",
-    //   backgroundColor: '#fff',
-  };
-
-  const Detail = () => (
+  const Detail = (
     <>
       <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -103,7 +96,7 @@ const UsersManage = () => {
             <Input
               disabled={config.action === "edit"}
               size="small"
-              placeholder="Username"
+              placeholder="กรอก Username"
             />
           </Form.Item>
         </Col>
@@ -132,7 +125,7 @@ const UsersManage = () => {
             <Input.Password
               disabled={config.action === "edit"}
               size="small"
-              placeholder="Password"
+              placeholder="กรอก Password"
               style={{ height: 40 }}
             />
           </Form.Item>
@@ -191,7 +184,7 @@ const UsersManage = () => {
             rules={[{ required: true, message: "กรุณาใส่ชื่อจริง!" }]}
             label="ชื่อจริง"
           >
-            <Input placeholder="ชื่อจริง" />
+            <Input placeholder="กรอกชื่อจริง" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -200,7 +193,7 @@ const UsersManage = () => {
             rules={[{ required: true, message: "กรุณาใส่ชื่อนามสกุล!" }]}
             label="นามสกุล"
           >
-            <Input placeholder="นามสกุล" />
+            <Input placeholder="กรอกนามสกุล" />
           </Form.Item>
         </Col>
       </Row>
@@ -213,6 +206,7 @@ const UsersManage = () => {
           >
             <Select
               style={{ height: 40 }}
+              placeholder="เลือกตำแหน่ง"
               options={[
                 { value: "Admin", label: "Admin" },
                 { value: "พนักงานขาย", label: "พนักงานขาย" },
@@ -227,12 +221,12 @@ const UsersManage = () => {
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Form.Item name="tel" label="เบอร์โทรศัพท์">
-            <Input placeholder="เบอร์โทรศัพท์" />
+            <Input placeholder="กรอกเบอร์โทรศัพท์" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Form.Item name="email" label="อีเมล">
-            <Input placeholder="อีเมล" />
+            <Input placeholder="กรอกอีเมล" />
           </Form.Item>
         </Col>
         <Col
@@ -270,30 +264,6 @@ const UsersManage = () => {
     </>
   );
 
-  const getItems = (style) => {
-    return [
-      {
-        key: "1",
-        label: "เพิ่มข้อมูลผู้ใช้",
-        children: <>{<Detail />}</>,
-        style: style,
-      },
-    ];
-  };
-
-  const SectionTop = (
-    <Row
-      gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
-      className="m-0"
-    >
-      <Col span={12} className="p-0">
-        <Flex gap={4} justify="start">
-          <ButtonBack target={from} />
-        </Flex>
-      </Col>
-    </Row>
-  );
-
   const SectionBottom = (
     <Row
       gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
@@ -322,21 +292,14 @@ const UsersManage = () => {
   );
 
   return (
-    <div className="customer-manage xs:px-0 sm:px-0 md:px-8 lg:px-8">
+    <div className="xs:px-0 sm:px-0 md:px-8 lg:px-8">
       <Space direction="vertical" className="flex gap-2">
-        {SectionTop}
         <Form form={form} layout="vertical">
-          <Collapse
-            defaultActiveKey={["1", "2", "3", "4"]}
-            expandIcon={({ isActive }) => (
-              <CaretRightOutlined rotate={isActive ? 90 : 0} />
-            )}
-            style={{ backgroundColor: "#ffffff00" }}
-            items={getItems(panelStyle)}
-          />
+          <Card title={config?.acname} >{Detail}</Card>
         </Form>
         {SectionBottom}
       </Space>
+
       {openResetModal && (
         <ModalResetPassword
           show={openResetModal}

@@ -9,6 +9,8 @@ import { DashBoard } from "../pages/dashboard";
 import { ROLES } from "../constant/constant";
 import { WarehouseRouter } from "./warehouse.router";
 import { Users, UsersAccess, UsersManage } from "../pages/users";
+import { Items, ItemsAccess, ItemsManage } from "../pages/item";
+import { TypeItems, TypeItemsAccess, TypeItemsManage  } from "../pages/typeitem";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -29,15 +31,19 @@ const Router = () => {
             <Route path="manage/:action" element={<UsersManage />} />
           </Route>
 
-
-
-
+          <Route path="/item/" exact element={<Items />}>
+            <Route index element={<ItemsAccess />} />
+            <Route path="manage/:action" element={<ItemsManage />} />
+          </Route>
+          
+          <Route path="/typeitem/" exact element={<TypeItems />}>
+            <Route index element={<TypeItemsAccess />} />
+            <Route path="manage/:action" element={<TypeItemsManage />} />
+          </Route>
 
           {WarehouseRouter}
-        
         </Route>
 
-        
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

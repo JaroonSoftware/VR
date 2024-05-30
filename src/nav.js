@@ -9,7 +9,7 @@ import { RiTeamFill } from "react-icons/ri";
 import { MdOutlineDashboard } from "react-icons/md";
 let _nav = [
   {
-    title: "DATA",
+    title: "MENU",
     type: "group",
   },
   {
@@ -29,26 +29,31 @@ let _nav = [
   {
     title: "ใบขายสินค้า",
     icon: <ReconciliationFilled className="nav-ico" />, 
-    to: "/",
+    to: "/1",
   },
   {
     title: "ใบเสร็จรับเงิน",
     icon: <TbReportMoney  className="nav-ico"/>, 
-    to: "/",
+    to: "/2",
   },
   {
-    title: "MASTER",
+    title: "DATA",
     type: "group",
   },  
   {
     title: "ข้อมูลสินค้า",
     icon: <FileDoneOutlined className="nav-ico" />,
-    to: "/",
+    to: "/item",
+  },
+  {
+    title: "ประเภทสินค้า",
+    icon: <FileDoneOutlined className="nav-ico" />,
+    to: "/typeitem",
   },
   {
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
-    to: "/",
+    to: "/4",
   },
   {
     title: "ผู้ใช้งาน",
