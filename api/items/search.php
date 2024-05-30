@@ -28,9 +28,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             ";
         }
 
-        $sql_query = "SELECT a.stcode, a.stname, b.typename,c.categoryname,a.brand, a.price ,a.active_status FROM `items` as a
+        $sql_query = "SELECT a.stcode, a.stname, b.typename,a.brand, a.price ,a.active_status FROM `items` as a
         left outer join `itemtype` as b on (a.typecode=b.typecode)        
-        left outer join `itemcategory` as c on (a.categorycode=c.categorycode)
+       
            where 1 = 1 $condition ";
 
         $parm = (object)param_building($conn, $sql_query, $tbparams, "a");
