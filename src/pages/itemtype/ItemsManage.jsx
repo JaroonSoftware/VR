@@ -4,15 +4,15 @@ import { Form, Input, Button, Flex, message, Badge, Card, Select } from "antd";
 import { Row, Col, Space } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
-import { Items } from "./items.model";
+import { Items } from "./itemtype.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
 import Itemservice from "../../service/Items.Service";
 
-const ctmService = { ...Itemservice };
+const itemservice = Itemservice();
 // const opservice = OptionService();
-const from = "/item";
+const from = "/itemtype";
 const ItemsManage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,43 +23,44 @@ const ItemsManage = () => {
   const [formDetail, setFormDetail] = useState(Items);
 
   // const [packageTypeOption, setPackageTypeOption] = useState([]);
-  const init = async () => {
-    if (config?.action !== "create") {
-      ctmService
-        .get(config?.code)
-        .then(async (res) => {
-          const { data } = res.data;
-          const initialValues = { ...Items, ...data };
-          setFormDetail(initialValues);
-          form.setFieldsValue(initialValues);
-        })
-        .catch((err) => {
-          // console.warn(err);
-          const { data } = err.response;
-          message.error(data?.message || "error request");
-        });
-    } else {
-      const cuscodeRes = await ctmService.getCuscode();
-
-      const { data: cuscode } = cuscodeRes.data;
-      const initForm = { ...formDetail, cuscode };
-      setFormDetail((state) => ({ ...state, ...initForm }));
-      form.setFieldsValue(initForm);
-    }
-  };
-
+  
   useEffect(() => {
-    init();
-    return () => {};
+    // setLoading(true);
+    if (config?.action !== "create") {
+      getsupData(config.code);
+    }
+    console.log(config);
+
+    return () => {
+      form.resetFields();
+    };
   }, []);
+  const getsupData = (v) => {
+    itemservice
+      .get(v)
+      .then(async (res) => {
+        const { data } = res.data;
+
+        const init = {
+          ...data,
+        };
+
+        setFormDetail(init);
+        form.setFieldsValue({ ...init });
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Error getting infomation Product.");
+      });
+  };
 
   const handleConfirm = () => {
     form.validateFields().then((v) => {
       const source = { ...formDetail, ...v };
       const actions =
         config?.action !== "create"
-          ? ctmService.update(source)
-          : ctmService.create(source);
+          ? itemservice.update(source)
+          : itemservice.create(source);
 
       actions
         .then(async (r) => {
@@ -71,7 +72,7 @@ const ItemsManage = () => {
         .catch((err) => {
           console.warn(err);
           const data = err?.response?.data;
-          message.error(data?.message || "error request");
+          message.error(data?.message || "บันทึกไม่สำเร็จ");
         });
     });
   };
@@ -94,7 +95,7 @@ const ItemsManage = () => {
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
         <Form.Item
           label="ชื่อสินค้า"
-          name="stname"
+          name="typename"
           rules={[{ required: true, message: "โปรดกรอกข้อมูล" }]}
         >
           <Input placeholder="กรอกชื่อสินค้า" />
@@ -115,13 +116,13 @@ const ItemsManage = () => {
           <Input placeholder="กรอกราคาขาย" />
         </Form.Item>
       </Col>
-
       <Col
         xs={24}
         sm={24}
         md={12}
         lg={12}
-        xl={6}
+        xl={12}
+        xxl={4}
         style={
           config.action === "edit" ? { display: "inline" } : { display: "none" }
         }

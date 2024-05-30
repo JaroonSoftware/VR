@@ -10,7 +10,7 @@ import { ROLES } from "../constant/constant";
 import { WarehouseRouter } from "./warehouse.router";
 import { Users, UsersAccess, UsersManage } from "../pages/users";
 import { Items, ItemsAccess, ItemsManage } from "../pages/items";
-import { TypeItems, TypeItemsAccess, TypeItemsManage  } from "../pages/typeitem";
+import { Itemtype, ItemtypeAccess, ItemtypeManage } from "../pages/itemtype";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -35,12 +35,13 @@ const Router = () => {
             <Route index element={<ItemsAccess />} />
             <Route path="manage/:action" element={<ItemsManage />} />
           </Route>
-          
-          <Route path="/typeitem/" exact element={<TypeItems />}>
-            <Route index element={<TypeItemsAccess />} />
-            <Route path="manage/:action" element={<TypeItemsManage />} />
+
+          <Route path="/itemtype/" exact element={<Itemtype />}>
+            <Route index element={<ItemtypeAccess />} />
+            <Route path="manage/:action" element={<ItemtypeManage />} />
           </Route>
 
+       
           {WarehouseRouter}
         </Route>
 

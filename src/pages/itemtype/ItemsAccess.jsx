@@ -1,18 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Card, message } from "antd";
 import { Collapse, Form, Flex, Row, Col, Space } from "antd";
 import { Input, Button, Table, Typography } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { MdOutlineLibraryAdd } from "react-icons/md";
-import { accessColumn } from "./items.model";
+import { accessColumn } from "./itemtype.model";
+import Itemservice from "../../service/Items.Service";
 
-// import dayjs from 'dayjs';
-import Itemservice from "../../service/ItemTypeService";
-
-const ctmService = { ...Itemservice };
+const itemservice = Itemservice();
 const mngConfig = {
   title: "",
   textOk: null,
@@ -29,11 +26,11 @@ const ItemsAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      ctmService
+      itemservice
         .getAllitem(data)
         .then((res) => {
-          const { data } = res;
-
+          const { data } = res.data;
+          console.log(data);
           setAccessData(data);
         })
         .catch((err) => {
@@ -70,7 +67,7 @@ const ItemsAccess = () => {
           ...mngConfig,
           title: "แก้ไขข้อมูลประเภทสินค้า",
           action: "edit",
-          code: data?.cuscode,
+          code: data?.typecode,
         },
       },
       replace: true,
@@ -95,15 +92,22 @@ const ItemsAccess = () => {
   };
 
   useEffect(() => {
-    // ctmService.getAllitem().then( res => {
-    //     const {data} = res;
-    //     setAccessData(data);
-    // }).catch( err => {
-    //     console.log(err);
-    //     message.error("Request error!");
-    // });
+    getData({});
   }, []);
 
+  const getData = (data) => {
+    itemservice
+      .search(data)
+      .then((res) => {
+        const { data } = res.data;
+
+        setAccessData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Request error!");
+      });
+  };
   const FormSearch = (
     <Collapse
       size="small"
@@ -127,40 +131,13 @@ const ItemsAccess = () => {
             <>
               <Form form={form} layout="vertical" autoComplete="off">
                 <Row gutter={[8, 8]}>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                     <Form.Item
-                      label="Username"
-                      name="username"
+                      label="ชื่อประเภทสินค้า"
+                      name="typename"
                       onChange={handleSearch}
                     >
-                      <Input placeholder="ใส่ Username" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
-                    <Form.Item
-                      label="ชื่อ"
-                      name="firstname"
-                      onChange={handleSearch}
-                    >
-                      <Input placeholder="ใส่ชื่อจริง" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
-                    <Form.Item
-                      label="นามสกุล"
-                      name="lastname"
-                      onChange={handleSearch}
-                    >
-                      <Input placeholder="ใส่นามสกุล" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
-                    <Form.Item
-                      label="เบอร์โทร"
-                      name="tel"
-                      onChange={handleSearch}
-                    >
-                      <Input placeholder="ใส่เบอร์โทร" />
+                      <Input placeholder="กรอกชื่อประเภทสินค้า" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -207,7 +184,7 @@ const ItemsAccess = () => {
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start" align="center">
           <Typography.Title className="m-0 !text-zinc-800" level={3}>
-            รายการสินค้า
+            รายการประเภทสินค้า
           </Typography.Title>
         </Flex>
       </Col>
@@ -221,7 +198,7 @@ const ItemsAccess = () => {
               hangleAdd();
             }}
           >
-            เพิ่มสินค้า
+            เพิ่มประเภทสินค้า
           </Button>
         </Flex>
       </Col>
@@ -242,7 +219,7 @@ const ItemsAccess = () => {
               <Table
                 title={() => TitleTable}
                 size="small"
-                rowKey="stcode"
+                rowKey="typecode"
                 columns={column}
                 dataSource={accessData}
               />

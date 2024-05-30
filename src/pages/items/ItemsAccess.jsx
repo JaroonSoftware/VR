@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Card, message } from "antd";
 import { Collapse, Form, Flex, Row, Col, Space } from "antd";
 import { Input, Button, Table, Typography } from "antd";
@@ -70,7 +69,7 @@ const ItemsAccess = () => {
           ...mngConfig,
           title: "แก้ไขข้อมูลสินค้า",
           action: "edit",
-          code: data?.cuscode,
+          code: data?.stcode,
         },
       },
       replace: true,
@@ -134,40 +133,31 @@ const ItemsAccess = () => {
             <>
               <Form form={form} layout="vertical" autoComplete="off">
                 <Row gutter={[8, 8]}>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                     <Form.Item
-                      label="Username"
-                      name="username"
+                      label="รหัสสินค้า"
+                      name="stcode"
                       onChange={handleSearch}
                     >
-                      <Input placeholder="ใส่ Username" />
+                      <Input placeholder="กรอกรหัสสินค้า" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                     <Form.Item
-                      label="ชื่อ"
-                      name="firstname"
+                      label="ชื่อสินค้า"
+                      name="stname"
                       onChange={handleSearch}
                     >
-                      <Input placeholder="ใส่ชื่อจริง" />
+                      <Input placeholder="กรอกชื่อสินค้า" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
+                  <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                     <Form.Item
-                      label="นามสกุล"
-                      name="lastname"
+                      label="ประเภทสินค้า"
+                      name="type"
                       onChange={handleSearch}
                     >
-                      <Input placeholder="ใส่นามสกุล" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={8} md={8} lg={8} xl={6}>
-                    <Form.Item
-                      label="เบอร์โทร"
-                      name="tel"
-                      onChange={handleSearch}
-                    >
-                      <Input placeholder="ใส่เบอร์โทร" />
+                      <Input placeholder="กรอกประเภทสินค้า" />
                     </Form.Item>
                   </Col>
                 </Row>

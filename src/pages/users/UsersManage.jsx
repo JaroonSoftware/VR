@@ -14,7 +14,6 @@ import { Row, Col, Space, Badge } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
 import { ModalResetPassword } from "../../components/modal/users/modal-reset";
-
 import { useLocation, useNavigate } from "react-router";
 // import OptionService from '../../service/Options.service';
 import UserService from "../../service/User.service";
@@ -38,12 +37,30 @@ const UsersManage = () => {
     if (config?.action !== "create") {
       getsupData(config.code);
     }
-    console.log(config)
+    console.log(config);
 
     return () => {
       form.resetFields();
     };
   }, []);
+  const getsupData = (v) => {
+    userService
+      .get(v)
+      .then(async (res) => {
+        const { data } = res.data;
+
+        const init = {
+          ...data,
+        };
+
+        setFormDetail(init);
+        form.setFieldsValue({ ...init });
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Error getting infomation Product.");
+      });
+  };
 
   const handleConfirm = () => {
     form.validateFields().then((v) => {
@@ -63,25 +80,6 @@ const UsersManage = () => {
           message.error(data?.message || "error request");
         });
     });
-  };
-
-  const getsupData = (v) => {
-    userService
-      .get(v)
-      .then(async (res) => {
-        const { data } = res.data;
-
-        const init = {
-          ...data,
-        };
-
-        setFormDetail(init);
-        form.setFieldsValue({ ...init });
-      })
-      .catch((err) => {
-        console.log(err);
-        message.error("Error getting infomation Product.");
-      });
   };
 
   const Detail = (
@@ -295,7 +293,7 @@ const UsersManage = () => {
     <div className="xs:px-0 sm:px-0 md:px-8 lg:px-8">
       <Space direction="vertical" className="flex gap-2">
         <Form form={form} layout="vertical">
-          <Card title={config?.acname} >{Detail}</Card>
+          <Card title={config?.acname}>{Detail}</Card>
         </Form>
         {SectionBottom}
       </Space>

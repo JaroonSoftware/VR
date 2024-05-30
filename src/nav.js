@@ -47,7 +47,7 @@ let _nav = [
   {
     title: "ประเภทสินค้า",
     icon: <TiThLarge className="nav-ico" />,
-    to: "/typeitem",
+    to: "/itemtype",
   },
   {
     title: "หน่วยสินค้า",
