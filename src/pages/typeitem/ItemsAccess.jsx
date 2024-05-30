@@ -10,7 +10,7 @@ import { MdOutlineLibraryAdd } from "react-icons/md";
 import { accessColumn } from "./items.model";
 
 // import dayjs from 'dayjs';
-import Itemservice from "../../service/Items.Service";
+import Itemservice from "../../service/ItemTypeService";
 
 const ctmService = { ...Itemservice };
 const mngConfig = {
@@ -54,7 +54,7 @@ const ItemsAccess = () => {
       state: {
         config: {
           ...mngConfig,
-          title: "เพิ่มสินค้า",
+          title: "เพิ่มประเภทสินค้าสินค้า",
           action: "create",
         },
       },
@@ -68,7 +68,7 @@ const ItemsAccess = () => {
       state: {
         config: {
           ...mngConfig,
-          title: "แก้ไขข้อมูลสินค้า",
+          title: "แก้ไขข้อมูลประเภทสินค้า",
           action: "edit",
           code: data?.cuscode,
         },

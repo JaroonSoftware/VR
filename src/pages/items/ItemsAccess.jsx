@@ -12,7 +12,7 @@ import { accessColumn } from "./items.model";
 // import dayjs from 'dayjs';
 import Itemservice from "../../service/Items.Service";
 
-const ctmService = { ...Itemservice };
+const itemservice = Itemservice();
 const mngConfig = {
   title: "",
   textOk: null,
@@ -29,11 +29,11 @@ const ItemsAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      ctmService
+      itemservice
         .getAllitem(data)
         .then((res) => {
-          const { data } = res;
-
+          const { data } = res.data;
+          console.log(data);
           setAccessData(data);
         })
         .catch((err) => {
@@ -95,15 +95,22 @@ const ItemsAccess = () => {
   };
 
   useEffect(() => {
-    // ctmService.getAllitem().then( res => {
-    //     const {data} = res;
-    //     setAccessData(data);
-    // }).catch( err => {
-    //     console.log(err);
-    //     message.error("Request error!");
-    // });
+    getData({});
   }, []);
 
+  const getData = (data) => {
+    itemservice
+      .search(data)
+      .then((res) => {
+        const { data } = res.data;
+
+        setAccessData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Request error!");
+      });
+  };
   const FormSearch = (
     <Collapse
       size="small"
