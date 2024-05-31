@@ -51,7 +51,7 @@ const ItemsAccess = () => {
       state: {
         config: {
           ...mngConfig,
-          title: "เพิ่มประเภทสินค้าสินค้า",
+          title: "เพิ่มประเภทสินค้า",
           action: "create",
         },
       },

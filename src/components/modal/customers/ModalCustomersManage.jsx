@@ -5,7 +5,7 @@ import { Row, Col, Space } from "antd";
 
 import { SaveFilled } from  "@ant-design/icons";
 
-import { customers } from '../../../pages/customers/customers.model.js';  
+// import { customers } from '../../../pages/customers/customers.model.js';  
 // import { delay } from '../../../utils/util';
 // import OptionService from '../../service/Options.service';
 import CustomerService from '../../../service/Customer.Service.js'; 
@@ -22,7 +22,7 @@ const THAICOUNTRY = "ไทย";
 const ModalCustomersManage = ({submit}) => { 
     const [form] = Form.useForm();
     
-    const [formDetail, setFormDetail] = useState(customers);
+    const [formDetail, setFormDetail] = useState();
     
     const [countriesOption, setCountriesOption] = useState([]); 
     const [countries, setCountries] = useState(null);

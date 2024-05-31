@@ -11,6 +11,8 @@ import { WarehouseRouter } from "./warehouse.router";
 import { Users, UsersAccess, UsersManage } from "../pages/users";
 import { Items, ItemsAccess, ItemsManage } from "../pages/items";
 import { Itemtype, ItemtypeAccess, ItemtypeManage } from "../pages/itemtype";
+import {  Unit, UnitAccess, UnitManage } from "../pages/unit";
+import {  Customer, CustomerAccess, CustomerManage } from "../pages/customers";
 const Router = () => {
   return (
     <BrowserRouter>
@@ -39,6 +41,17 @@ const Router = () => {
           <Route path="/itemtype/" exact element={<Itemtype />}>
             <Route index element={<ItemtypeAccess />} />
             <Route path="manage/:action" element={<ItemtypeManage />} />
+          </Route>
+
+          <Route path="/unit/" exact element={<Unit />}>
+            <Route index element={<UnitAccess />} />
+            <Route path="manage/:action" element={<UnitManage />} />
+          </Route>
+
+
+          <Route path="/customers/" exact element={<Customer />}>
+            <Route index element={<CustomerAccess />} />
+            <Route path="manage/:action" element={<CustomerManage />} />
           </Route>
 
        
