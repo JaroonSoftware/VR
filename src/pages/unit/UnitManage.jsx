@@ -4,7 +4,7 @@ import { Form, Input, Button, Flex, message, Badge, Card, Select } from "antd";
 import { Row, Col, Space } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
-import { Items } from "./itemtype.model";
+import { Items } from "./unit.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
@@ -12,7 +12,7 @@ import Itemservice from "../../service/Items.Service";
 
 const itemservice = Itemservice();
 // const opservice = OptionService();
-const from = "/itemtype";
+const from = "/unit";
 const ItemsManage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -79,41 +79,13 @@ const ItemsManage = () => {
 
   const Detail = (
     <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
-      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
-        <Form.Item
-          label="รหัสสินค้า"
-          name="stcode"
-          rules={[{ required: true, message: "โปรดกรอกข้อมูล" }]}
-        >
-          <Input
-            placeholder="กรอกรหัสสินค้า"
-            className="!bg-zinc-300"
-            readOnly
-          />
-        </Form.Item>
-      </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
         <Form.Item
-          label="ชื่อสินค้า"
-          name="typename"
+          label="ชื่อหน่วยสินค้า"
+          name="unit"
           rules={[{ required: true, message: "โปรดกรอกข้อมูล" }]}
         >
-          <Input placeholder="กรอกชื่อสินค้า" />
-        </Form.Item>
-      </Col>
-      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
-        <Form.Item label="หน่วยสินค้า" name="stunit">
-          <Select size="large" placeholder="เลือกประเภทสินค้า" />
-        </Form.Item>
-      </Col>
-      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
-        <Form.Item label="ประเภทสินค้า" name="typecode">
-          <Select size="large" placeholder="เลือกประเภทสินค้า" />
-        </Form.Item>
-      </Col>
-      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
-        <Form.Item label="ราคาขาย" name="">
-          <Input placeholder="กรอกราคาขาย" />
+          <Input placeholder="กรอกชื่อหน่วยสินค้า" />
         </Form.Item>
       </Col>
       <Col

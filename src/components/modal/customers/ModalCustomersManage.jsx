@@ -20,7 +20,7 @@ const THAICOUNTRY = "ไทย";
 const ModalCustomersManage = ({submit}) => { 
     const [form] = Form.useForm();
     
-    const [formDetail, setFormDetail] = useState(customers);
+    const [formDetail, setFormDetail] = useState();
     
     const [countriesOption, setCountriesOption] = useState([]); 
     const [countries, setCountries] = useState(null);

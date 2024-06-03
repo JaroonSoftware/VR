@@ -6,17 +6,17 @@ import { EditOutlined } from "@ant-design/icons";
 
 export const accessColumn = ({ handleEdit, handleDelete, handleView }) => [
   {
-    title: "รหัสประเภทสินค้า",
-    key: "typecode",
-    dataIndex: "typecode",
+    title: "รหัสหน่วยสินค้า",
+    key: "unitcode",
+    dataIndex: "unitcode",
     align: "left",
     hidden: true,
     sorter: (a, b) => (a?.typecode || "").localeCompare(b?.typecode || ""),
   },
   {
-    title: "ชื่อสินค้า",
-    dataIndex: "typename",
-    key: "typename",
+    title: "ชื่อหน่วยสินค้า",
+    dataIndex: "unit",
+    key: "unit",
     width: "60%",
     sorter: (a, b) => (a?.typename || "").localeCompare(b?.typename || ""),
   },
