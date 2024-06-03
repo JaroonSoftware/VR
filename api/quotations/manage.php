@@ -10,6 +10,7 @@ http_response_code(400);
 try {
     $action_date = date("Y-m-d H:i:s"); 
     $action_user = $token->userid;
+    // echo $action_user;
 
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $rest_json = file_get_contents("php://input");
@@ -18,7 +19,7 @@ try {
 
         // var_dump($_POST);
         $sql = "insert qtmaster (`qtcode`, `qtdate`, `cuscode`, `cusname`, `cusaddress`,
-         `cuscontact`, `custel`, `payment`, `total_price`, `vat`, `grand_total_price`, `remark`,created_by,updated_by) 
+         `cuscontact`, `custel`, `payment`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
         values (:qtcode,:qtdate,:cuscode,:cusname,:cusaddress,:cuscontact,:custel,:payment,:total_price,:vat,:grand_total_price,
         :remark,:action_user,:action_user)";
 
@@ -38,7 +39,7 @@ try {
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
         $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR); 
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
-        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT); 
+        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_STR); 
 
         if(!$stmt->execute()) {
             $error = $conn->errorInfo();
@@ -46,7 +47,7 @@ try {
             die;
         }
 
-        $sql2 = " update options set maxpocode = maxpocode+1 WHERE year= '".date("Y")."' ";        
+        $sql2 = " update options set qtcode = qtcode+1 WHERE year= '".date("Y")."' ";        
 
         $stmt2 = $conn->prepare($sql2);
         if(!$stmt2) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
@@ -56,7 +57,7 @@ try {
             die;
         }
 
-        $id = $conn->lastInsertId();
+        $code = $conn->lastInsertId();
         // var_dump($master); exit;
         
         $sql = "insert into qtdetail (qtcode,stcode,stname,qty,price,discount)
@@ -82,7 +83,7 @@ try {
 
         $conn->commit();
         http_response_code(200);
-        echo json_encode(array("data"=> array("id" => $id)));
+        echo json_encode(array("data"=> array("code" => $code)));
 
     } else  if($_SERVER["REQUEST_METHOD"] == "PUT"){
         $rest_json = file_get_contents("php://input");
@@ -90,31 +91,39 @@ try {
         extract($_PUT, EXTR_OVERWRITE, "_");
         // var_dump($_POST);
         $sql = "
-        update pomaster 
+        update qtmaster 
         set
-        supcode = :supcode,
-        podate = :podate,
-        deldate = :deldate,
+        cuscode = :cuscode,
+        cusname = :cusname,
+        cusaddress = :cusaddress,
+        cuscontact = :cuscontact,
+        custel = :custel,
         payment = :payment,
-        poqua = :poqua,
+        total_price = :total_price,
+        vat = :vat,
+        grand_total_price = :grand_total_price,
         remark = :remark,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
-        where pocode = :pocode";
+        where qtcode = :qtcode";
 
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
 
         $header = (object)$header; 
 
-        $stmt->bindParam(":supcode", $header->supcode, PDO::PARAM_STR);
-        $stmt->bindParam(":podate", $header->podate, PDO::PARAM_STR);
-        $stmt->bindParam(":deldate", $header->deldate, PDO::PARAM_STR);
+        $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
+        $stmt->bindParam(":cusname", $header->cusname, PDO::PARAM_STR);
+        $stmt->bindParam(":cusaddress", $header->cusaddress, PDO::PARAM_STR);
+        $stmt->bindParam(":cuscontact", $header->cuscontact, PDO::PARAM_STR);
+        $stmt->bindParam(":custel", $header->custel, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
-        $stmt->bindParam(":poqua", $header->poqua, PDO::PARAM_STR);
+        $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
+        $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
+        $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);  
-        $stmt->bindParam(":pocode", $header->pocode, PDO::PARAM_STR); 
+        $stmt->bindParam(":qtcode", $header->qtcode, PDO::PARAM_STR); 
 
         if(!$stmt->execute()) {
             $error = $conn->errorInfo();
@@ -122,26 +131,26 @@ try {
             die;
         }
 
-        $sql = "delete from podetail where pocode = :pocode";
+        $sql = "delete from qtdetail where qtcode = :qtcode";
         $stmt = $conn->prepare($sql);
-        if (!$stmt->execute([ 'pocode' => $header->pocode ])){
+        if (!$stmt->execute([ 'qtcode' => $header->qtcode ])){
             $error = $conn->errorInfo();
             throw new PDOException("Remove data error => $error");
         }
 
-        $sql = "insert into podetail (pocode,stcode,amount,price,unit,discount)
-        values (:pocode,:stcode,:amount,:price,:unit,:discount)";
+        $sql = "insert into qtdetail (qtcode,stcode,stname,qty,price,discount)
+        values (:qtcode,:stcode,:stname,:qty,:price,:discount)";
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
        // $detail = $detail;  
         foreach( $detail as $ind => $val){
             $val = (object)$val;
-            $stmt->bindParam(":pocode", $header->pocode, PDO::PARAM_STR);
+            $stmt->bindParam(":qtcode", $header->qtcode, PDO::PARAM_STR);
             $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
-            $stmt->bindParam(":amount", $val->amount, PDO::PARAM_INT);
+            $stmt->bindParam(":stname", $val->stname, PDO::PARAM_STR);
+            $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
             $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
-            $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);
             $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);
             if(!$stmt->execute()) {
                 $error = $conn->errorInfo();
@@ -151,21 +160,21 @@ try {
         
         $conn->commit();
         http_response_code(200);
-        echo json_encode(array("data"=> array("id" => $code)));
+        echo json_encode(array("data"=> array("code" => $code)));
     } else  if($_SERVER["REQUEST_METHOD"] == "DELETE"){
         // $code = $_DELETE["code"];
         $code = $_GET["code"];
         
-        $sql = "delete from packingset where id = :id";
+        $sql = "delete from packingset where code = :code";
         $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'id' => $code ])){
+        if (!$stmt->execute([ 'code' => $code ])){
             $error = $conn->errorInfo();
             throw new PDOException("Remove data error => $error");
         }            
         
-        $sql = "delete from packingset_detail where packingsetid = :id";
+        $sql = "delete from packingset_detail where packingsetcode = :code";
         $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'id' => $code ])){
+        if (!$stmt->execute([ 'code' => $code ])){
             $error = $conn->errorInfo();
             throw new PDOException("Remove data error => $error");
         }
@@ -175,27 +184,26 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.pocode,a.podate,a.supcode,c.supname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district) as address,a.deldate,a.payment,a.poqua,a.remark ";
-        $sql .= " FROM `pomaster` as a ";
-        $sql .= " inner join `supplier` as c on (a.supcode)=(c.supcode)";
-        $sql .= " where a.pocode = :id";
-        
+        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,c.cuscode,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district) as cusaddress
+        ,a.cuscontact,a.custel,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
+        $sql .= " FROM `qtmaster` as a ";
+        $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";
+        $sql .= " where a.qtcode = :code";
+
         $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'id' => $code ])){
+        if (!$stmt->execute([ 'code' => $code ])){
             $error = $conn->errorInfo(); 
             http_response_code(404);
             throw new PDOException("Geting data error => $error");
         }
         $header = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT a.pocode,b.stcode,d.stname,b.amount,b.price,b.unit,b.discount ";
-        $sql .= " FROM `pomaster` as a inner join `podetail` as b on (a.pocode)=(b.pocode)";
-        $sql .= " inner join `supplier` as c on (a.supcode)=(c.supcode)";
-        $sql .= " inner join `items` as d on (b.stcode)=(d.stcode)";
-        $sql .= " where a.pocode = :id";
+        $sql = "SELECT qtcode,stcode,stname,qty,price,discount ";
+        $sql .= " FROM `qtdetail`  ";        
+        $sql .= " where qtcode = :code";
         
         $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'id' => $code ])){
+        if (!$stmt->execute([ 'code' => $code ])){
             $error = $conn->errorInfo(); 
             http_response_code(404);
             throw new PDOException("Geting data error => $error");

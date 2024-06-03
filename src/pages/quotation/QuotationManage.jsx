@@ -68,13 +68,13 @@ function QuotationManage() {
           .get(config?.code)
           .catch((error) => message.error("get Quotation data fail."));
         const {
-          data: { head, detail },
+          data: { header, detail },
         } = res.data;
-        const { quotcode, quotdate } = head;
-        setFormDetail(head);
+        const { qtcode, qtdate } = header;
+        setFormDetail(header);
         setListDetail(detail);
-        setQuotCode(quotcode);
-        form.setFieldsValue({ ...head, quotdate: dayjs(quotdate) });
+        setQuotCode(qtcode);
+        form.setFieldsValue({ ...header, qtdate: dayjs(qtdate) });
 
         // setTimeout( () => {  handleCalculatePrice(head?.valid_price_until, head?.dated_price_until) }, 200);
         // handleChoosedCustomer(head);
@@ -90,9 +90,11 @@ function QuotationManage() {
           qtcode: code,
           qtdate: dayjs(new Date()),
         };
+        handleSummaryPrice(listDetail);
         setFormDetail(ininteial_value);
         form.setFieldsValue(ininteial_value);
-        handleSummaryPrice(listDetail);
+        
+        
       }
     };
 
@@ -118,8 +120,8 @@ function QuotationManage() {
     const vat = (total_price * formDetail.vat) / 100;
     const grand_total_price = total_price + vat;
 
-    setFormDetail((state) => ({
-      ...state,
+    setFormDetail(() => ({
+      ...formDetail,
       total_price,
       vat,
       grand_total_price,
@@ -178,14 +180,13 @@ function QuotationManage() {
       .then((v) => {
         if (listDetail.length < 1) throw new Error("Detail required");
 
-        const head = {
+        const header = {
           ...formDetail,
-          ...v,
-          quotdate: dayjs(v.quotdate).format("YYYY-MM-DD"),
         };
         const detail = listDetail;
-
-        const parm = { head, detail };
+        
+        const parm = { header, detail };
+        console.log(parm)
         const actions =
           config?.action !== "create" ? quservice.update : quservice.create;
         actions(parm)
@@ -573,7 +574,7 @@ function QuotationManage() {
                         <Typography.Title level={3} className="m-0">
                           QUOTATION DATE :{" "}
                         </Typography.Title>
-                        <Form.Item name="quotdate" className="!m-0">
+                        <Form.Item name="qtdate" className="!m-0">
                           <DatePicker
                             className="input-40"
                             allowClear={false}

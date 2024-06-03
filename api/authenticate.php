@@ -5,7 +5,7 @@ use Firebase\JWT\JWT;
 try{ 
     $isAuth = preg_match('/Bearer\s(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $matches) == 1;
     $jwt = $matches[1]; 
-    $secretKey =  "A3ZjYzAyYmNiLTQwMjM=Jaroon";// ?? 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew='; 
+    $secretKey =  "A3ZjYzAyYmNiLTQxMjM=Jaroon";// ?? 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew='; 
     if (!$isAuth) {
         // 
         // http_response_code(400);
@@ -27,7 +27,7 @@ try{
     $token = JWT::decode($jwt, $secretKey, ['HS512']);
     // var_dump($token);  exit;
     $now = new DateTimeImmutable();
-    $serverName = "nsf";
+    $serverName = "vr";
 
     if ($token->iss !== $serverName ||
         $token->nbf > $now->getTimestamp() ||

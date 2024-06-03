@@ -212,8 +212,8 @@ export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
   }); 
 }
 export const quotationForm = {
-  quotcode: null,
-  quotdate: null,
+  qtcode: null,
+  qtdate: null,
   cuscode: null,
   cusname: null,
   contact: null,
@@ -223,33 +223,15 @@ export const quotationForm = {
   total_price: 0,
   vat: 7,
   grand_total_price: 0,
-  acc_no: null,
-  dated_price_until: null,
 }
 
 export const quotationDetailForm = {  
-  quotcode : null,
-  spcode : null,
-  spname : null,
+  qtcode : null,
   stcode : null,
-  packingset_id : null,
-  packingsetid : null,
-  packingset_name : null,
-  exworkcost_carton : 0,
-  exworksell_price : 0,
-  margin : null,
-  loadingtype_id : null,
-  loadingtype_name : null,
-  loadingtype_qty : 0,
-  shippingtype_name : null,
-  shippingtype_price : 0,
-  insurance : null,
-  commission : null,
-  price : 0,
-  total_amount : 0,
-  unit_carton : 0,
+  stname : null,  
+  discount : 0,
   qty : 0,
-  price_per_carton : 0,
+  price : 0,
 }
 
 

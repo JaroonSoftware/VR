@@ -43,11 +43,11 @@ if ($stmt->execute()) {
 				$_SESSION['lastname'] = $lastname;
 				$_SESSION['type'] = $type;
 				$_SESSION['skey'] = "{$sKey}Jaroon";
-				$secretKey = "A3ZjYzAyYmNiLTQwMjM=Jaroon"; // ?? 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew=';   
+				$secretKey = "A3ZjYzAyYmNiLTQxMjM=Jaroon"; // ?? 'bGS6lzFqvvSQ8ALbOxatm7/Vk7mLQyzqaS34Q4oR1ew=';   
 				$issuedAt = new DateTimeImmutable(); 
 				
 				$expire = $issuedAt->modify('+1 day');      // Add 60 seconds
-				$serverName = "nsf";
+				$serverName = "vr";
 				$username = $_POST['username'];
 				$userid = $code;
 				$data = [

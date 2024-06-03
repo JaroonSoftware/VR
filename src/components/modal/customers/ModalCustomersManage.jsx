@@ -5,7 +5,7 @@ import { Row, Col, Space } from "antd";
 
 import { SaveFilled } from  "@ant-design/icons";
 
-import { customers } from '../../../pages/customers/customers.model.js';  
+// import { customers } from '../../../pages/customers/customers.model.js';  
 
 import CustomerService from '../../../service/Customer.Service.js'; 
 import OptionService from '../../../service/Options.service';
