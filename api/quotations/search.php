@@ -10,26 +10,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $_POST = json_decode($rest_json, true);
 
     extract($_POST, EXTR_OVERWRITE, "_");  
-    $quotcode = !empty($quotcode) ? "and a.quotcode like '%$quotcode%'" : "";
+    $qtcode = !empty($qtcode) ? "and a.qtcode like '%$qtcode%'" : "";
     $cuscode = !empty($cuscode) ? "and a.cuscode like '%$cuscode%'" : "";
     $cusname = !empty($cusname) ? "and a.cusname like '%$cusname%'" : "";
     // $spcode_cdt = !empty($spcode) ? "and e.spcode like '%$spcode%'" : "";
     // $spname_cdt = !empty($spname) ? "and e.spname like '%$spname%'" : "";
     $created_by = !empty($created_by) ? "and ( u.firstname like '%$created_by%' or u.lastname like '%$created_by%' )" : "";
-    $quotdate = "";
+    $qtdate = "";
     if( !empty($quotdate_form) && !empty($quotdate_to) ) {
-        $quotdate = "and date_format( a.quotdate, '%Y-%m-%d' ) >= '$quotdate_form' and date_format( a.quotdate, '%Y-%m-%d' ) <= '$quotdate_to' ";
+        $qtdate = "and date_format( a.qtdate, '%Y-%m-%d' ) >= '$quotdate_form' and date_format( a.qtdate, '%Y-%m-%d' ) <= '$quotdate_to' ";
     } 
     
     try {   
         $sql = " 
         select 
         a.*,
+        b.*,
         concat(u.firstname, ' ', u.lastname) created_name
-        from quotations a
+        from qtmaster a
+        inner join qtdetail b on (a.qtcode=b.qtcode)
         left join user u on a.created_by = u.code
         where 1 = 1 and a.active_status = 'Y'
-        $quotcode
+        $qtcode
         $cuscode
         $cusname
         $created_by

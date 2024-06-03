@@ -33,12 +33,12 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Code' name='quotcode'>
+                <Form.Item label='Quotation Code' name='qtcode'>
                     <Input placeholder='Enter Quotation Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Date.' name='quotdate'>
+                <Form.Item label='Quotation Date.' name='qtdate'>
                     <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
@@ -48,7 +48,7 @@ const QuotationAccess = () => {
                 </Form.Item>
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Product' name='product_name'>
+                <Form.Item label='Product' name='stname'>
                     <Input placeholder='Enter Product Name.' />
                 </Form.Item>                            
             </Col>
@@ -127,7 +127,7 @@ const QuotationAccess = () => {
 
     const handleEdit = (data) => {
         // setManageConfig({...manageConfig, title:"แก้ไข Sample Request", action:"edit", code:data?.srcode});
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"Edit Quotation", action:"edit", code:data?.quotcode} }, replace:true } );
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"Edit Quotation", action:"edit", code:data?.qtcode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 

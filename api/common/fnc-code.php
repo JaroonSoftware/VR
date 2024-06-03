@@ -65,7 +65,7 @@ function update_estcode($pdo){
     }
 }
 
-function update_quotcode($pdo){
+function update_qtcode($pdo){
     $year = date("Y");
     $month = date("m");
     $sql = "update options set quotcode = quotcode + 1 where year = :y and month = :m";
@@ -213,12 +213,12 @@ function request_quotcode($pdo){
     while(true){
         $code = sprintf("%05s", ( $number + 1) );
         $format = $prefix.$code;
-        $sql = "SELECT 1 r FROM quotations where quotcode = '$format'"; 
+        $sql = "SELECT 1 r FROM qtmaster where qtcode = '$format'"; 
         $stmt = $pdo->prepare($sql); 
         $stmt->execute(); 
         if ($stmt->rowCount() > 0){
             $number += 1;
-            update_quotcode($pdo);
+            update_qtcode($pdo);
             continue;
         } else break;
     } 

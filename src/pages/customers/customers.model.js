@@ -107,5 +107,5 @@ export const customers = {
     fax: null,
     taxnumber: null,
     email: null,
-    status: "Y",
+    active_status: "Y",
 }

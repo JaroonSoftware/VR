@@ -13,14 +13,14 @@ export const columns = ()=>{
       key: "stname",
     },
     {
-      title: "ชื่อสินค้า(EN)",
-      dataIndex: "stnameEN",
-      key: "stnameEN",
+      title: "ราคา",
+      dataIndex: "price",
+      key: "price",
     },
     {
-      title: "ชนิดสินค้า",
-      dataIndex: "typename",
-      key: "typename",
+      title: "หน่วย",
+      dataIndex: "unit",
+      key: "unit",
       render: (h)=><TagItemTypes data={h} />,
     },
   ]

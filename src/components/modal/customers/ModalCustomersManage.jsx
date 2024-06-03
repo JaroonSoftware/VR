@@ -6,17 +6,15 @@ import { Row, Col, Space } from "antd";
 import { SaveFilled } from  "@ant-design/icons";
 
 import { customers } from '../../../pages/customers/customers.model.js';  
-// import { delay } from '../../../utils/util';
-// import OptionService from '../../service/Options.service';
+
 import CustomerService from '../../../service/Customer.Service.js'; 
 import OptionService from '../../../service/Options.service';
 import { CreateInput } from 'thai-address-autocomplete-react';
 
 
 const InputThaiAddress = CreateInput();
-const ctmService = {...CustomerService};
+const ctmService = CustomerService();
 const opservice = OptionService();
-// const opservice = OptionService();
 
 const THAICOUNTRY = "ไทย";
 const ModalCustomersManage = ({submit}) => { 

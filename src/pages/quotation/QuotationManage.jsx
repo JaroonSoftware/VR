@@ -87,8 +87,8 @@ function QuotationManage() {
         setQuotCode(code);
         const ininteial_value = {
           ...formDetail,
-          quotcode: code,
-          quotdate: dayjs(new Date()),
+          qtcode: code,
+          qtdate: dayjs(new Date()),
         };
         setFormDetail(ininteial_value);
         form.setFieldsValue(ininteial_value);
@@ -163,8 +163,9 @@ function QuotationManage() {
     ];
     const customer = {
       ...val,
-      address: addr.join(""),
-      tel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
+      cusaddress: addr.join(""),
+      cuscontact:val.contact,
+      custel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
     };
 
     setFormDetail((state) => ({ ...state, ...val }));
@@ -306,7 +307,7 @@ function QuotationManage() {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Form.Item
-              name="address"
+              name="cusaddress"
               label="Customer Address"
               className="!mb-1"
             >
@@ -315,7 +316,7 @@ function QuotationManage() {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name="contact"
+              name="cuscontact"
               label="Customer Contact"
               className="!mb-1"
             >
@@ -323,7 +324,7 @@ function QuotationManage() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="tel" label="Customer Tel" className="!mb-1">
+            <Form.Item name="custel" label="Customer Tel" className="!mb-1">
               <Input placeholder="Customer Tel." readOnly />
             </Form.Item>
           </Col>

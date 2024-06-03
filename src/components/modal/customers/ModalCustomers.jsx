@@ -9,7 +9,11 @@ import { useForm } from 'antd/es/form/Form';
 import { ModalCustomersManage } from './modal-customers.js';
 
 import { customersColumn } from "./modal-customers.model";
-import CustomerService from '../../../service/Customer.Service.js';
+import CustomerService from '../../../service/Customer.Service.js'; 
+import OptionService from '../../../service/Options.service';
+
+const ctmService = CustomerService();
+const opservice = OptionService();
 
 export default function ModalCustomers({show, close, values, selected}) {
     const [form] = useForm(); 
@@ -28,13 +32,6 @@ export default function ModalCustomers({show, close, values, selected}) {
         
         //setTimeout( () => close(false), 200 );
     }
-
-    // const handleConfirm = () => {
-    //     // console.log(itemsList); 
-    //     // values([...itemsList, ...selected]);
-    //     // setItemsList([]);
-    //     setOpenModel(false);
-    // }
 
     const handleSearch = (value) => {
         if(!!value){    
@@ -58,7 +55,7 @@ export default function ModalCustomers({show, close, values, selected}) {
     const manageSubmit = ( v ) => {
         setOpenManage(false);
         setLoading(true); 
-        const action = CustomerService.create;
+        const action = ctmService.create;
 
         action({...v}).then( _ =>  {
             search();
@@ -77,8 +74,8 @@ export default function ModalCustomers({show, close, values, selected}) {
     const column = customersColumn({handleChoose});
     const search = () =>{
         setLoading(true);
-        CustomerService.getAllCustomer().then((res) => {
-            let { data } = res; 
+        opservice.optionsCustomer().then((res) => {
+            let { data } = res.data; 
             setCustomersData(data);
             setCustomersDataWrap(data);
             // console.log(modalData, data) 
@@ -91,20 +88,6 @@ export default function ModalCustomers({show, close, values, selected}) {
         })
         .finally( () => setTimeout( () => { setLoading(false) }, 400));
     }
-    // const onload = () =>{
-    //     CustomerService.getAllCustomer()
-    //     .then((res) => {
-    //       let { status, data } = res;
-    //       if (status === 200) {
-    //         setCustomersData(data);
-    //         setCustomersDataWrap(data);
-    //       }
-    //     })
-    //     .catch((err) => { 
-    //         message.error("Request error!")
-    //     })
-    //     .finally( () => setTimeout( () => { setLoading(false) }, 400));
-    // }
 
     useEffect( () => {
         if( !!openModal ){

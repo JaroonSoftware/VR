@@ -8,133 +8,100 @@ $conn = $db->connect();
 $conn->beginTransaction();
 http_response_code(400);
 try {
-    $action_datetime = date("Y-m-d H:i:s");
-    $action_username = $token->userid; 
+    $action_date = date("Y-m-d H:i:s"); 
+    $action_user = $token->userid;
+
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $rest_json = file_get_contents("php://input");
-        $_POST = json_decode($rest_json, true);  
+        $_POST = json_decode($rest_json, true); 
         extract($_POST, EXTR_OVERWRITE, "_");
-        
-        // var_dump($_POST);
-        $sql = "insert customer (
-            cuscode,cusname,prename,
-            idno,road,subdistrict,district,province,zipcode,
-            tel,fax,taxnumber,email, contact, remark, 
-            status,created_date,created_by,updated_date,updated_by,
-            delidno, delroad, delsubdistrict, deldistrict, delprovince, delzipcode
-        ) values (
-            :cuscode, :cusname, :prename,
-            :idno, :road, :subdistrict, :district, :province, :zipcode, 
-            :tel, :fax, :taxnumber, :email, :contact, :remark, 
-            :status, CURRENT_TIMESTAMP(), :created_by, CURRENT_TIMESTAMP(), :updated_by,
-            :delidno, :delroad, :delsubdistrict, :deldistrict, :delprovince, :delzipcode
-        )";
 
+        // var_dump($_POST);
+        
+        $sql = "INSERT INTO customer (`cuscode`, `title_name`, `firstname`, `lastname`, `citizen_id`, `address`, `province`, `zipcode`, `tel`, `email`,`remark`, `active_status`, created_by, created_date) 
+        values (:cuscode,:title_name,:firstname,:lastname,:citizen_id,:address,:province,:zipcode,:tel,:email,:remark,'Y',:action_user,:action_date)";
+        
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
- 
+        
         $stmt->bindParam(":cuscode", $cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":cusname", $cusname, PDO::PARAM_STR);
-        $stmt->bindParam(":prename", $prename, PDO::PARAM_STR);
-        $stmt->bindParam(":idno", $idno, PDO::PARAM_STR);
-        $stmt->bindParam(":road", $road, PDO::PARAM_STR);
-        $stmt->bindParam(":subdistrict", $subdistrict, PDO::PARAM_STR);
-        $stmt->bindParam(":district", $district, PDO::PARAM_STR);
-        $stmt->bindParam(":province", $province, PDO::PARAM_STR);
+        $stmt->bindParam(":title_name", $title_name, PDO::PARAM_STR);
+        $stmt->bindParam(":firstname", $firstname, PDO::PARAM_STR);        
+        $stmt->bindParam(":lastname", $lastname, PDO::PARAM_STR);
+        $stmt->bindParam(":citizen_id", $citizen_id, PDO::PARAM_STR);
+        $stmt->bindParam(":address", $address, PDO::PARAM_STR); 
+        $stmt->bindParam(":province", $province, PDO::PARAM_STR);        
         $stmt->bindParam(":zipcode", $zipcode, PDO::PARAM_STR);
         $stmt->bindParam(":tel", $tel, PDO::PARAM_STR);
-        $stmt->bindParam(":fax", $fax, PDO::PARAM_STR);
-        $stmt->bindParam(":taxnumber", $taxnumber, PDO::PARAM_STR);
-        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->bindParam(":contact", $contact, PDO::PARAM_STR); 
-        $stmt->bindParam(":status", $status, PDO::PARAM_STR); 
-        $stmt->bindParam(":remark", $remark, PDO::PARAM_STR); 
-        $stmt->bindParam(":created_by", $action_username, PDO::PARAM_INT);
-        $stmt->bindParam(":updated_by", $action_username, PDO::PARAM_INT);
-        $stmt->bindParam(":delidno", $delidno, PDO::PARAM_STR);
-        $stmt->bindParam(":delroad", $delroad, PDO::PARAM_STR);
-        $stmt->bindParam(":delsubdistrict", $delsubdistrict, PDO::PARAM_STR);
-        $stmt->bindParam(":deldistrict", $deldistrict, PDO::PARAM_STR);
-        $stmt->bindParam(":delprovince", $delprovince, PDO::PARAM_STR);
-        $stmt->bindParam(":delzipcode", $delzipcode, PDO::PARAM_STR);
-        
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);        
+        $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);        
+        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT); 
+        $stmt->bindParam(":action_date", $action_date, PDO::PARAM_INT);  
+
         if(!$stmt->execute()) {
             $error = $conn->errorInfo();
-            throw new PDOException("Insert data error => $error"); 
-        }   
- 
-        $stmt = $conn->prepare("update cuscode set number = number + 1"); 
-        if (!$stmt->execute()){
-            $error = $conn->errorInfo(); 
-            http_response_code(401);
-            throw new PDOException("Update code error => $error");
+            throw new PDOException("Insert data error => $error");
+            die;
         }
 
         $conn->commit();
-        http_response_code(200);
-        echo json_encode(array("data"=> "ok"));
+        $strSQL = "UPDATE cuscode SET ";
+        $strSQL .= " number= number+1 ";
+        $strSQL .= " order by id desc LIMIT 1 ";
+
+        $stmt3 = $conn->prepare($strSQL);
+        if ($stmt3->execute()) {
+            http_response_code(200);
+            echo json_encode(array("data"=> array("id" => "ok", 'message' => 'เพิ่มลูกค้าสำเร็จ')));
+        }
+        else
+        {
+            $error = $conn->errorInfo();
+            throw new PDOException("Insert data error => $error");
+            die;
+        }    
 
     } else  if($_SERVER["REQUEST_METHOD"] == "PUT"){
         $rest_json = file_get_contents("php://input");
         $_PUT = json_decode($rest_json, true); 
-        extract($_PUT, EXTR_OVERWRITE, "_"); 
-
+        extract($_PUT, EXTR_OVERWRITE, "_");
         // var_dump($_POST);
         $sql = "
         update customer
-        set 
-        cusname = :cusname,
-        prename = :prename,
-        idno = :idno,
-        road = :road,
-        subdistrict = :subdistrict,
-        district = :district,
+        set
+        cuscode = :cuscode,
+        title_name = :title_name,
+        firstname = :firstname,
+        lastname = :lastname,
+        citizen_id = :citizen_id,
+        address = :address,
         province = :province,
         zipcode = :zipcode,
-        delidno = :delidno,
-        delroad = :delroad,
-        delsubdistrict = :delsubdistrict,
-        deldistrict = :deldistrict,
-        delprovince = :delprovince,
-        delzipcode = :delzipcode,
-        contact = :contact,
         tel = :tel,
-        fax = :fax,
-        taxnumber = :taxnumber,
         email = :email,
-        status = :status,
         remark = :remark,
-        updated_date = CURRENT_TIMESTAMP(), 
-        updated_by = :updated_by
+        active_status = :active_status,
+        updated_date = CURRENT_TIMESTAMP(),
+        updated_by = :action_user
         where cuscode = :cuscode";
-
+        
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
 
-        // $master->srstatus = "Y"; 
+        
         $stmt->bindParam(":cuscode", $cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":cusname", $cusname, PDO::PARAM_STR);
-        $stmt->bindParam(":prename", $prename, PDO::PARAM_STR);
-        $stmt->bindParam(":idno", $idno, PDO::PARAM_STR);
-        $stmt->bindParam(":road", $road, PDO::PARAM_STR);
-        $stmt->bindParam(":subdistrict", $subdistrict, PDO::PARAM_STR);
-        $stmt->bindParam(":district", $district, PDO::PARAM_STR);
+        $stmt->bindParam(":title_name", $title_name, PDO::PARAM_STR);
+        $stmt->bindParam(":firstname", $firstname, PDO::PARAM_STR);
+        $stmt->bindParam(":lastname", $lastname, PDO::PARAM_STR);
+        $stmt->bindParam(":citizen_id", $citizen_id, PDO::PARAM_STR);
+        $stmt->bindParam(":address", $address, PDO::PARAM_STR);
         $stmt->bindParam(":province", $province, PDO::PARAM_STR);
         $stmt->bindParam(":zipcode", $zipcode, PDO::PARAM_STR);
-        $stmt->bindParam(":delidno", $delidno, PDO::PARAM_STR);
-        $stmt->bindParam(":delroad", $delroad, PDO::PARAM_STR);
-        $stmt->bindParam(":delsubdistrict", $delsubdistrict, PDO::PARAM_STR);
-        $stmt->bindParam(":deldistrict", $deldistrict, PDO::PARAM_STR);
-        $stmt->bindParam(":delprovince", $delprovince, PDO::PARAM_STR);
-        $stmt->bindParam(":delzipcode", $delzipcode, PDO::PARAM_STR);
         $stmt->bindParam(":tel", $tel, PDO::PARAM_STR);
-        $stmt->bindParam(":fax", $fax, PDO::PARAM_STR);
-        $stmt->bindParam(":taxnumber", $taxnumber, PDO::PARAM_STR);
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->bindParam(":status", $status, PDO::PARAM_STR);
-        $stmt->bindParam(":contact", $contact, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);
-        $stmt->bindParam(":updated_by", $action_username, PDO::PARAM_INT);
+        $stmt->bindParam(":active_status", $active_status, PDO::PARAM_STR);        
+        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);   
 
         if(!$stmt->execute()) {
             $error = $conn->errorInfo();
@@ -145,17 +112,17 @@ try {
         $conn->commit();
         http_response_code(200);
         echo json_encode(array("data"=> array("id" => $_PUT)));
-
-    } else if($_SERVER["REQUEST_METHOD"] == "DELETE"){ 
-        // ignore
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
-        $code = $_GET["code"];
+        $cuscode = $_GET["cuscode"]; 
+        $sql = "SELECT `cuscode`, `title_name`, `firstname`, `lastname`, `citizen_id`, `address`,`province`, `zipcode`, `tel`, `email`, `remark`, `active_status` ";
+        $sql .= " FROM `customer` ";
+        $sql .= " where cuscode = :cuscode";
         
-        $sql = "select p.* from customer p where p.cuscode = :id";
-        $stmt = $conn->prepare($sql);  
-        if (!$stmt->execute([ 'id' => $code ])){
-            $error = $conn->errorInfo();
-            throw new PDOException("Remove data error => $error");
+        $stmt = $conn->prepare($sql); 
+        if (!$stmt->execute([ 'cuscode' => $cuscode ])){
+            $error = $conn->errorInfo(); 
+            http_response_code(404);
+            throw new PDOException("Geting data error => $error");
         }
         $res = $stmt->fetch(PDO::FETCH_ASSOC);  
 
