@@ -57,7 +57,7 @@ const Sidenav = () => {
                 <Notification title={item?.title} />
               </MenuItem>
             ) : (
-              <MenuItem key={idx} className="nav-group-title">
+              <MenuItem  type="primary" danger key={idx} className="nav-group-title">
                 {item?.title}
               </MenuItem>
             )

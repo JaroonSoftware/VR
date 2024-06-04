@@ -51,6 +51,7 @@ let _nav = [
   },
   {
     title: "หน่วยสินค้า",
+    disabled: true,
     icon: <RiBox3Fill className="nav-ico" />,
     to: "/unit",
   },
