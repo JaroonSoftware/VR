@@ -86,9 +86,9 @@ const ItemsManage = () => {
           rules={[{ required: true, message: "โปรดกรอกข้อมูล" }]}
         >
           <Input
+                    disabled={config.action === "edit"}
             placeholder="กรอกรหัสสินค้า"
-            className="!bg-zinc-300"
-            readOnly
+         
           />
         </Form.Item>
       </Col>
