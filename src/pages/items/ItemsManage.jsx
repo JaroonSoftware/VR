@@ -9,9 +9,12 @@ import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
 import Itemservice from "../../service/Items.Service";
+import OptionService from "../../service/Options.service";
+
+
 
 const itemservice = Itemservice();
-// const opservice = OptionService();
+const opService = OptionService();
 const from = "/items";
 const ItemsManage = () => {
   const navigate = useNavigate();
@@ -21,11 +24,15 @@ const ItemsManage = () => {
   const [form] = Form.useForm();
 
   const [formDetail, setFormDetail] = useState(Items);
+  const [optionUnit, setOptionUnit] = useState([]);
+  const [optionType, setOptionType] = useState([]);  
 
-  // const [packageTypeOption, setPackageTypeOption] = useState([]);
   
   useEffect(() => {
     // setLoading(true);
+    GetItemsUnit();
+    GetItemsType();    
+
     if (config?.action !== "create") {
       getsupData(config.code);
     }
@@ -35,6 +42,24 @@ const ItemsManage = () => {
       form.resetFields();
     };
   }, []);
+
+  const GetItemsType = () => {
+    opService.optionsItemstype().then((res) => {
+      let { data } = res.data;
+      setOptionType(data);
+    });
+  };
+
+  const GetItemsUnit = () => {
+    opService.optionsUnit().then((res) => {
+      let { data } = res.data;
+      setOptionUnit(data);
+    });
+  };
+
+  const filterOption = (input, option) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
   const getsupData = (v) => {
     itemservice
       .get(v)
@@ -86,7 +111,7 @@ const ItemsManage = () => {
           rules={[{ required: true, message: "โปรดกรอกข้อมูล" }]}
         >
           <Input
-                    disabled={config.action === "edit"}
+            disabled={config.action === "edit"}
             placeholder="กรอกรหัสสินค้า"
          
           />
@@ -103,16 +128,28 @@ const ItemsManage = () => {
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
         <Form.Item label="หน่วยสินค้า" name="stunit">
-          <Select size="large" placeholder="เลือกประเภทสินค้า" />
+          <Select size="large" showSearch
+              filterOption={filterOption}
+              placeholder="เลือกหน่วยสินค้า"
+              options={optionUnit.map((item) => ({
+                value: item.unitcode,
+                label: item.unitname,
+              }))}/>
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
         <Form.Item label="ประเภทสินค้า" name="typecode">
-          <Select size="large" placeholder="เลือกประเภทสินค้า" />
+          <Select size="large" showSearch
+              filterOption={filterOption}
+              placeholder="เลือกประเภทสินค้า"
+              options={optionType.map((item) => ({
+                value: item.typecode,
+                label: item.typename,
+              }))} />
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
-        <Form.Item label="ราคาขาย" name="">
+        <Form.Item label="ราคาขาย" name="price">
           <Input placeholder="กรอกราคาขาย" />
         </Form.Item>
       </Col>
