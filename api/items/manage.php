@@ -19,7 +19,7 @@ try {
         // var_dump($_POST);
         
         $sql = "INSERT INTO items (stcode, stname,typecode,remark, price,created_by,created_date) 
-        values (:stcode,:stname,:typecode,:remark,:price_A,:price_B,:price_online,:action_user,:action_date)";
+        values (:stcode,:stname,:typecode,:remark,:price,:action_user,:action_date)";
 
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
