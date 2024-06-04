@@ -36,7 +36,7 @@ const ItemsManage = () => {
     if (config?.action !== "create") {
       getsupData(config.code);
     }
-    console.log(config);
+    // console.log(config);
 
     return () => {
       form.resetFields();

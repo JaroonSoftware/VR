@@ -91,10 +91,9 @@ function QuotationManage() {
           qtcode: code,
           qtdate: dayjs(new Date()),
         };
-        handleSummaryPrice(listDetail);
+        // handleSummaryPrice(listDetail);
         setFormDetail(ininteial_value);
-        form.setFieldsValue(ininteial_value);
-        
+        form.setFieldsValue(ininteial_value);        
         
       }
     };
@@ -103,30 +102,39 @@ function QuotationManage() {
     return () => {};
   }, []);
 
-  useEffect(() => {
-    if(listDetail) handleSummaryPrice(listDetail)
-  }, [listDetail]);
+  // useEffect(() => {
+  //   if(listDetail) handleSummaryPrice(listDetail)
+  // }, [listDetail]);
 
   const handleSummaryPrice = (record) => {
-    const newData = [...record];
+    if( form.getFieldValue("vat") === undefined ) form.setFieldValue("vat", formDetail.vat);
+    const vat = form.getFieldValue("vat");
+    
+    const total_price = record?.reduce( (ac, v) => ac += Number( v?.total_amount || 0), 0);
+    const grand_total_price = parseFloat((total_price / ( 1 - ( Number( vat || 0) / 100 ))).toFixed(2));
+    
+    const newData = {...formDetail, vat, total_price, grand_total_price};
+     
+    setFormDetail( newData );
+    // const newData = [...record];
 
-    const total_price = newData.reduce(
-      (a, v) =>
-        (a +=
-          Number(v.qty || 0) *
-          Number(v?.price || 0) *
-          (1 - Number(v?.discount || 0) / 100)),
-      0
-    );
-    const vat = form.getFieldValue('vat');
-    const grand_total_price = total_price + (total_price *  form.getFieldValue('vat')) / 100;
+    // const total_price = newData.reduce(
+    //   (a, v) =>
+    //     (a +=
+    //       Number(v.qty || 0) *
+    //       Number(v?.price || 0) *
+    //       (1 - Number(v?.discount || 0) / 100)),
+    //   0
+    // );
+    // const vat = form.getFieldValue('vat');
+    // const grand_total_price = total_price + (total_price *  form.getFieldValue('vat')) / 100;
 
-    setFormDetail(() => ({
-      ...formDetail,
-      total_price,
-      vat,
-      grand_total_price,
-    }));
+    // setFormDetail(() => ({
+    //   ...formDetail,
+    //   total_price,
+    //   vat,
+    //   grand_total_price,
+    // }));
     // console.log(formDetail)
   };
 
@@ -171,6 +179,13 @@ function QuotationManage() {
     form.setFieldsValue({ ...fvalue, ...customer });
   };
 
+  const handleItemsChoosed = (value) => {
+    setFormDetail(value);
+    
+    // setListDetail(value);
+    handleSummaryPrice(value);
+  };
+
   const handleConfirm = () => {
     form
       .validateFields()
@@ -183,7 +198,7 @@ function QuotationManage() {
         const detail = listDetail;
         
         const parm = { header, detail };
-        console.log(parm)
+        // console.log(parm)
         const actions =
           config?.action !== "create" ? quservice.update : quservice.create;
         actions(parm)
@@ -258,11 +273,6 @@ function QuotationManage() {
     setListDetail([...newData(row)]);
   };
 
-  const handleItemsChoosed = (value) => {
-    // setFormDetail(value);
-    // setListDetail(value);
-    // handleSummaryPrice(value);
-  };
 
   /** setting column table */
   const prodcolumns = columnsParametersEditable(handleEditCell, {

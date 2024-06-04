@@ -12,7 +12,7 @@ const CustomerService = () => {
   const update = (parm = {}) => api.put(`${API_URL.API_MANAGE}`, parm);
   const deleted = (code) => api.delete(`${API_URL.API_MANAGE}?cuscode=${code}`);
   const get = (code) => api.get(`${API_URL.API_MANAGE}?cuscode=${code}`);
-  const getcode = () => api.get(`${API_URL.API_GETCODE}`);
+  const getcode = () => api.get(`${API_URL.API_GETCODE}`, { ignoreLoading : true });
   const search = (parm = {}, config = {}) => api.post(`${API_URL.API_SEARCH}`, parm, {...config, cancle: true});
 
   return {
