@@ -7,9 +7,9 @@ import { Input, Button, Table, Typography } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { accessColumn } from "./unit.model";
-import Itemservice from "../../service/Items.Service";
+import Unitservice from "../../service/Unit.service";
 
-const itemservice = Itemservice();
+const unitservice = Unitservice();
 const mngConfig = {
   title: "",
   textOk: null,
@@ -26,7 +26,7 @@ const ItemsAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      itemservice
+      unitservice
         .getAllitem(data)
         .then((res) => {
           const { data } = res.data;
@@ -96,7 +96,7 @@ const ItemsAccess = () => {
   }, []);
 
   const getData = (data) => {
-    itemservice
+    unitservice
       .search(data)
       .then((res) => {
         const { data } = res.data;
@@ -219,7 +219,7 @@ const ItemsAccess = () => {
               <Table
                 title={() => TitleTable}
                 size="small"
-                rowKey="typecode"
+                rowKey="unitcode"
                 columns={column}
                 dataSource={accessData}
               />

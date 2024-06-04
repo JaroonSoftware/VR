@@ -154,7 +154,7 @@ const ItemsAccess = () => {
                   <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                     <Form.Item
                       label="ประเภทสินค้า"
-                      name="type"
+                      name="typename"
                       onChange={handleSearch}
                     >
                       <Input placeholder="กรอกประเภทสินค้า" />

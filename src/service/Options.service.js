@@ -13,9 +13,9 @@ const OptionService = () => {
   const optionsItems = (parm = {}) => api.get(`${API_URL.OPTION_ITEMS}?${getParmeter(parm)}`, { ignoreLoading : true });
   const optionsSupplier = () => api.get(`${API_URL.OPTION_SUPPLIER}`, { ignoreLoading : true });
   const optionsCustomer = () => api.get(`${API_URL.OPTION_CUSTOMER}`, { ignoreLoading : true });
-  const optionsQuotation = (parm = {}) => api.get(`${API_URL.OPTION_QUOTATION}?${getParmeter(parm)}`, { ignoreLoading : true });
-  const optionsItemstype = (parm = {}) => api.get(`${API_URL.OPTION_ITEMSTYPE}?${getParmeter(parm)}`, { ignoreLoading : true });
-  const optionsUnit = (parm = {}) => api.get(`${API_URL.OPTION_UNIT}?${getParmeter(parm)}`, { ignoreLoading : true });
+  const optionsQuotation = () => api.get(`${API_URL.OPTION_QUOTATION}`, { ignoreLoading : true });
+  const optionsItemstype = () => api.get(`${API_URL.OPTION_ITEMSTYPE}`, { ignoreLoading : true });
+  const optionsUnit = () => api.get(`${API_URL.OPTION_UNIT}`, { ignoreLoading : true });
 
   return {
     optionsItems,
