@@ -8,9 +8,9 @@ import { Items } from "./itemtype.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
-import Itemservice from "../../service/Items.Service";
+import Itemtypservice from "../../service/Itemstype.Service";
 
-const itemservice = Itemservice();
+const itemtypeservice = Itemtypservice();
 // const opservice = OptionService();
 const from = "/itemtype";
 const ItemsManage = () => {
@@ -36,7 +36,7 @@ const ItemsManage = () => {
     };
   }, []);
   const getsupData = (v) => {
-    itemservice
+    itemtypeservice
       .get(v)
       .then(async (res) => {
         const { data } = res.data;
@@ -59,8 +59,8 @@ const ItemsManage = () => {
       const source = { ...formDetail, ...v };
       const actions =
         config?.action !== "create"
-          ? itemservice.update(source)
-          : itemservice.create(source);
+          ? itemtypeservice.update(source)
+          : itemtypeservice.create(source);
 
       actions
         .then(async (r) => {
@@ -115,6 +115,9 @@ const ItemsManage = () => {
           />
         </Form.Item>
       </Col>
+      <Form.Item name="typecode">
+          <Input type="hidden" disabled />
+        </Form.Item>
     </Row>
   );
 

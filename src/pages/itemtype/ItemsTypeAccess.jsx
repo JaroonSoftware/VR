@@ -7,9 +7,9 @@ import { Input, Button, Table, Typography } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { accessColumn } from "./itemtype.model";
-import Itemservice from "../../service/Items.Service";
+import ItemTypeService from "../../service/Itemstype.Service";
 
-const itemservice = Itemservice();
+const itemtypeservice = ItemTypeService();
 const mngConfig = {
   title: "",
   textOk: null,
@@ -26,7 +26,7 @@ const ItemsAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      itemservice
+      itemtypeservice
         .getAllitem(data)
         .then((res) => {
           const { data } = res.data;
@@ -96,7 +96,7 @@ const ItemsAccess = () => {
   }, []);
 
   const getData = (data) => {
-    itemservice
+    itemtypeservice
       .search(data)
       .then((res) => {
         const { data } = res.data;

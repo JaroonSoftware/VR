@@ -22,9 +22,9 @@ export const accessColumn = ({ handleEdit, handleDelete, handleView }) => [
   },
   {
     title: "ประเภทสินค้า",
-    dataIndex: "typecode",
-    key: "typecode",
-    sorter: (a, b) => (a?.country || "").localeCompare(b?.type || ""),
+    dataIndex: "typename",
+    key: "typename",
+    sorter: (a, b) => (a?.typename || "").localeCompare(b?.typename || ""),
     width: 140,
   },
   {

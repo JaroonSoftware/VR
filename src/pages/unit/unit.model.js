@@ -11,14 +11,14 @@ export const accessColumn = ({ handleEdit, handleDelete, handleView }) => [
     dataIndex: "unitcode",
     align: "left",
     hidden: true,
-    sorter: (a, b) => (a?.typecode || "").localeCompare(b?.typecode || ""),
+    sorter: (a, b) => (a?.unitcode || "").localeCompare(b?.unitcode || ""),
   },
   {
     title: "ชื่อหน่วยสินค้า",
-    dataIndex: "unit",
-    key: "unit",
+    dataIndex: "unitname",
+    key: "unitname",
     width: "60%",
-    sorter: (a, b) => (a?.typename || "").localeCompare(b?.typename || ""),
+    sorter: (a, b) => (a?.unitname || "").localeCompare(b?.unitname || ""),
   },
   {
     title: "สถานะ",

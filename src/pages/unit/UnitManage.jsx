@@ -8,12 +8,12 @@ import { Items } from "./unit.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
-import Itemservice from "../../service/Items.Service";
+import Unitservice from "../../service/Unit.service";
 
-const itemservice = Itemservice();
+const unitervice = Unitservice();
 // const opservice = OptionService();
 const from = "/unit";
-const ItemsManage = () => {
+const UnitManage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,7 +23,7 @@ const ItemsManage = () => {
   const [formDetail, setFormDetail] = useState(Items);
 
   // const [packageTypeOption, setPackageTypeOption] = useState([]);
-  
+
   useEffect(() => {
     // setLoading(true);
     if (config?.action !== "create") {
@@ -36,7 +36,7 @@ const ItemsManage = () => {
     };
   }, []);
   const getsupData = (v) => {
-    itemservice
+    unitervice
       .get(v)
       .then(async (res) => {
         const { data } = res.data;
@@ -59,8 +59,8 @@ const ItemsManage = () => {
       const source = { ...formDetail, ...v };
       const actions =
         config?.action !== "create"
-          ? itemservice.update(source)
-          : itemservice.create(source);
+          ? unitervice.update(source)
+          : unitervice.create(source);
 
       actions
         .then(async (r) => {
@@ -157,4 +157,4 @@ const ItemsManage = () => {
   );
 };
 
-export default ItemsManage;
+export default UnitManage;
