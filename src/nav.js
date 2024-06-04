@@ -44,6 +44,17 @@ let _nav = [
     icon: <GiDatabase className="nav-ico" />,
     to: "/items",
   },
+ 
+  {
+    title: "ผู้ใช้งาน",
+    icon: <FaUserCircle className="nav-ico" />,
+    to: "/users",
+  },
+
+  {
+    title: "กำลังปรับปรุง",
+    type: "group",
+  },
   {
     title: "ประเภทสินค้า",
     icon: <TiThLarge className="nav-ico" />,
@@ -51,7 +62,6 @@ let _nav = [
   },
   {
     title: "หน่วยสินค้า",
-    disabled: true,
     icon: <RiBox3Fill className="nav-ico" />,
     to: "/unit",
   },
@@ -59,11 +69,6 @@ let _nav = [
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
     to: "/customers",
-  },
-  {
-    title: "ผู้ใช้งาน",
-    icon: <FaUserCircle className="nav-ico" />,
-    to: "/users",
   },
 ];
 
