@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stname = !empty($stname) ? "and a.stname like '%$stname%'" : "";
 
     try {
-        $sql = "SELECT a.stcode, a.stname, b.typename,a.brand, a.price ,a.active_status FROM `items` as a
+        $sql = "SELECT a.stcode, a.stname, b.typename, a.price ,a.active_status FROM `items` as a
         left outer join `itemtype` as b on (a.typecode=b.typecode)      
         $stcode
         $stname

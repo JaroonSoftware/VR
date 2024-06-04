@@ -18,14 +18,8 @@ try {
 
         // var_dump($_POST);
         
-        $sql = "INSERT INTO items (stcode, stname,material_code,typecode,categorycode, count_stock,stname_vat, brand,stname_per,stfront,
-        stseries, stborder,stload, stspeed,sttw, stweight,min,
-        stwidth, price,stlong, sthigh,stcar_brand, stock_by_product,stchange_round,
-        stchange_time, stcar_model,remark, price_A,price_B, price_online,created_by,created_date) 
-        values (:stcode,:stname,:material_code,:typecode,:categorycode,:count_stock,:stname_vat,:brand,:stname_per,:stfront,
-        :stseries,:stborder,:stload,:stspeed,:sttw,:stweight,:min,
-        :stwidth,:price,:stlong,:sthigh,:stcar_brand,:stock_by_product,:stchange_round,
-        :stchange_time,:stcar_model,:remark,:price_A,:price_B,:price_online,:action_user,:action_date)";
+        $sql = "INSERT INTO items (stcode, stname,typecode,remark, price,created_by,created_date) 
+        values (:stcode,:stname,:typecode,:remark,:price_A,:price_B,:price_online,:action_user,:action_date)";
 
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
@@ -33,34 +27,9 @@ try {
         
         $stmt->bindParam(":stcode", $stcode, PDO::PARAM_STR);
         $stmt->bindParam(":stname", $stname, PDO::PARAM_STR);
-        $stmt->bindParam(":material_code", $material_code, PDO::PARAM_STR);
-        $stmt->bindParam(":typecode", $typecode, PDO::PARAM_STR);      
-        $stmt->bindParam(":categorycode", $categorycode, PDO::PARAM_STR);      
-        $stmt->bindParam(":count_stock", $count_stock, PDO::PARAM_STR);
-        $stmt->bindParam(":stname_vat", $stname_vat, PDO::PARAM_STR);
-        $stmt->bindParam(":brand", $brand, PDO::PARAM_STR);
-        $stmt->bindParam(":stname_per", $stname_per, PDO::PARAM_STR);        
-        $stmt->bindParam(":stfront", $stfront, PDO::PARAM_STR);
-        $stmt->bindParam(":stseries", $stseries, PDO::PARAM_STR);
-        $stmt->bindParam(":stborder", $stborder, PDO::PARAM_STR);
-        $stmt->bindParam(":stload", $stload, PDO::PARAM_STR);
-        $stmt->bindParam(":stspeed", $stspeed, PDO::PARAM_STR);
-        $stmt->bindParam(":sttw", $sttw, PDO::PARAM_STR);
-        $stmt->bindParam(":stweight", $stweight, PDO::PARAM_STR);
-        $stmt->bindParam(":min", $min, PDO::PARAM_STR);
-        $stmt->bindParam(":stwidth", $stwidth, PDO::PARAM_STR);
-        $stmt->bindParam(":price", $price, PDO::PARAM_STR);
-        $stmt->bindParam(":stlong", $stlong, PDO::PARAM_STR);
-        $stmt->bindParam(":sthigh", $sthigh, PDO::PARAM_STR);
-        $stmt->bindParam(":stcar_brand", $stcar_brand, PDO::PARAM_STR);
-        $stmt->bindParam(":stock_by_product", $stock_by_product, PDO::PARAM_STR);
-        $stmt->bindParam(":stchange_round", $stchange_round, PDO::PARAM_STR);
-        $stmt->bindParam(":stchange_time", $stchange_time, PDO::PARAM_STR);
-        $stmt->bindParam(":stcar_model", $stcar_model, PDO::PARAM_STR);
+        $stmt->bindParam(":typecode", $typecode, PDO::PARAM_STR);     
         $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);
-        $stmt->bindParam(":price_A", $price_A, PDO::PARAM_STR);
-        $stmt->bindParam(":price_B", $price_B, PDO::PARAM_STR);
-        $stmt->bindParam(":price_online", $price_online, PDO::PARAM_STR);
+        $stmt->bindParam(":price", $price, PDO::PARAM_STR);
         $stmt->bindParam(":action_date", $action_date, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT); 
 
@@ -84,34 +53,9 @@ try {
         update items 
         set
         stname = :stname,
-        material_code = :material_code,
         typecode = :typecode,
-        categorycode = :categorycode,
-        count_stock = :count_stock,
-        stname_vat = :stname_vat,
-        brand = :brand,
-        stname_per = :stname_per,
-        stfront = :stfront,
-        stseries = :stseries,
-        stborder = :stborder,
-        stload = :stload,
-        stspeed = :stspeed,
-        sttw = :sttw,
-        stweight = :stweight,
-        min = :min,
-        stwidth = :stwidth,
-        price = :price,
-        stlong = :stlong,        
-        sthigh = :sthigh,
-        stcar_brand = :stcar_brand,
-        stock_by_product = :stock_by_product,
-        stchange_round = :stchange_round,
-        stchange_time = :stchange_time,
-        stcar_model = :stcar_model,
         remark = :remark,
-        price_A = :price_A,
-        price_B = :price_B,
-        price_online = :price_online,
+        price = :price,
         active_status = :active_status,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
@@ -122,34 +66,9 @@ try {
 
 
         $stmt->bindParam(":stname", $stname, PDO::PARAM_STR);
-        $stmt->bindParam(":material_code", $material_code, PDO::PARAM_STR);
         $stmt->bindParam(":typecode", $typecode, PDO::PARAM_STR);
-        $stmt->bindParam(":categorycode", $categorycode, PDO::PARAM_STR);
-        $stmt->bindParam(":count_stock", $count_stock, PDO::PARAM_STR);
-        $stmt->bindParam(":stname_vat", $stname_vat, PDO::PARAM_STR);
-        $stmt->bindParam(":brand", $brand, PDO::PARAM_STR);
-        $stmt->bindParam(":stname_per", $stname_per, PDO::PARAM_STR);
-        $stmt->bindParam(":stfront", $stfront, PDO::PARAM_STR);
-        $stmt->bindParam(":stseries", $stseries, PDO::PARAM_STR);
-        $stmt->bindParam(":stborder", $stborder, PDO::PARAM_STR);
-        $stmt->bindParam(":stload", $stload, PDO::PARAM_STR);   
-        $stmt->bindParam(":stspeed", $stspeed, PDO::PARAM_STR);
-        $stmt->bindParam(":sttw", $sttw, PDO::PARAM_STR);
-        $stmt->bindParam(":stweight", $stweight, PDO::PARAM_STR);
-        $stmt->bindParam(":min", $min, PDO::PARAM_STR);
-        $stmt->bindParam(":stwidth", $stwidth, PDO::PARAM_STR); 
         $stmt->bindParam(":price", $price, PDO::PARAM_STR);
-        $stmt->bindParam(":stlong", $stlong, PDO::PARAM_STR);        
-        $stmt->bindParam(":sthigh", $sthigh, PDO::PARAM_STR);
-        $stmt->bindParam(":stcar_brand", $stcar_brand, PDO::PARAM_STR);
-        $stmt->bindParam(":stock_by_product", $stock_by_product, PDO::PARAM_STR);
-        $stmt->bindParam(":stchange_round", $stchange_round, PDO::PARAM_STR); 
-        $stmt->bindParam(":stchange_time", $stchange_time, PDO::PARAM_STR);
-        $stmt->bindParam(":stcar_model", $stcar_model, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);
-        $stmt->bindParam(":price_A", $price_A, PDO::PARAM_STR);
-        $stmt->bindParam(":price_B", $price_B, PDO::PARAM_STR);
-        $stmt->bindParam(":price_online", $price_online, PDO::PARAM_STR);
         $stmt->bindParam(":active_status", $active_status, PDO::PARAM_STR);   
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);  
         $stmt->bindParam(":stcode", $stcode, PDO::PARAM_STR); 

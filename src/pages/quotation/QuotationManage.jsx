@@ -85,6 +85,7 @@ function QuotationManage() {
           })
         ).data;
         setQuotCode(code);
+        form.setFieldValue('vat',7)
         const ininteial_value = {
           ...formDetail,
           qtcode: code,
@@ -103,7 +104,7 @@ function QuotationManage() {
   }, []);
 
   useEffect(() => {
-    if (listDetail) handleSummaryPrice(listDetail);
+    if(listDetail) handleSummaryPrice(listDetail)
   }, [listDetail]);
 
   const handleSummaryPrice = (record) => {
@@ -117,8 +118,8 @@ function QuotationManage() {
           (1 - Number(v?.discount || 0) / 100)),
       0
     );
-    const vat = (total_price * formDetail.vat) / 100;
-    const grand_total_price = total_price + vat;
+    const vat = form.getFieldValue('vat');
+    const grand_total_price = total_price + (total_price *  form.getFieldValue('vat')) / 100;
 
     setFormDetail(() => ({
       ...formDetail,
@@ -127,10 +128,6 @@ function QuotationManage() {
       grand_total_price,
     }));
     // console.log(formDetail)
-  };
-
-  const handleVat = (e) => {
-    handleSummaryPrice(listDetail);
   };
 
   const handleCalculatePrice = (day, date) => {
@@ -262,9 +259,9 @@ function QuotationManage() {
   };
 
   const handleItemsChoosed = (value) => {
-    setFormDetail(value);
-    setListDetail(value);
-    handleSummaryPrice(listDetail);
+    // setFormDetail(value);
+    // setListDetail(value);
+    // handleSummaryPrice(value);
   };
 
   /** setting column table */
@@ -427,7 +424,7 @@ function QuotationManage() {
                             onFocus={(e) => {
                               e.target.select();
                             }}
-                            onChange={handleVat}
+                            onChange={handleSummaryPrice(listDetail)}
                           />
                         </Form.Item>
                       </Table.Summary.Cell>
@@ -436,7 +433,7 @@ function QuotationManage() {
                         style={{ borderRigth: "0px solid" }}
                       >
                         <Typography.Text type="danger">
-                          {comma(Number(formDetail?.vat || 0))}
+                          {comma(Number((formDetail.total_price *  formDetail?.vat) / 100))}                          
                         </Typography.Text>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell>Baht</Table.Summary.Cell>
