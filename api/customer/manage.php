@@ -1,7 +1,7 @@
-<?php 
-ob_start(); 
-include_once(dirname(__FILE__, 2)."/onload.php");
-include_once(dirname(__FILE__, 2)."/common/fnc-code.php");
+<?php
+ob_start();
+include_once(dirname(__FILE__, 2) . "/onload.php");
+include_once(dirname(__FILE__, 2) . "/common/fnc-code.php");
 
 $db = new DbConnect;
 $conn = $db->connect();
@@ -73,84 +73,68 @@ try {
             die;
         }    
 
-    } else  if($_SERVER["REQUEST_METHOD"] == "PUT"){
+    } else  if ($_SERVER["REQUEST_METHOD"] == "PUT") {
         $rest_json = file_get_contents("php://input");
-        $_PUT = json_decode($rest_json, true); 
+        $_PUT = json_decode($rest_json, true);
         extract($_PUT, EXTR_OVERWRITE, "_");
         // var_dump($_POST);
+
         $sql = "
-        update customer
+        update customer 
         set
         cuscode = :cuscode,
-        prename = :prename,
         cusname = :cusname,
-        taxnumber = :taxnumber,
-        idno = :idno,
-        province = :province,
-        zipcode = :zipcode,
-        tel = :tel,
-        email = :email,
-        remark = :remark,
         active_status = :active_status,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
         where cuscode = :cuscode";
-        
+
         $stmt = $conn->prepare($sql);
-        if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
+        if (!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
-        
-        $stmt->bindParam(":cuscode", $cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":prename", $prename, PDO::PARAM_STR);
+
         $stmt->bindParam(":cusname", $cusname, PDO::PARAM_STR);
-        $stmt->bindParam(":taxnumber", $taxnumber, PDO::PARAM_STR);
-        $stmt->bindParam(":idno", $idno, PDO::PARAM_STR);
-        $stmt->bindParam(":province", $province, PDO::PARAM_STR);
-        $stmt->bindParam(":zipcode", $zipcode, PDO::PARAM_STR);
-        $stmt->bindParam(":tel", $tel, PDO::PARAM_STR);
-        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);
-        $stmt->bindParam(":active_status", $active_status, PDO::PARAM_STR);        
-        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);   
+        $stmt->bindParam(":active_status", $active_status, PDO::PARAM_STR);
+        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);
+        $stmt->bindParam(":cuscode", $typecode, PDO::PARAM_STR);
 
-        if(!$stmt->execute()) {
+        if (!$stmt->execute()) {
             $error = $conn->errorInfo();
             throw new PDOException("Insert data error => $error");
             die;
-        } 
-        
+        }
+
         $conn->commit();
         http_response_code(200);
-        echo json_encode(array("data"=> array("id" => $_PUT)));
-    } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
-        $cuscode = $_GET["cuscode"]; 
-        $sql = "SELECT `cuscode`, `prename`, `cusname`,`taxnumber`, `idno`,`province`, `zipcode`, `tel`, `email`, `remark`, `active_status` ";
-        $sql .= " FROM `customer` ";
-        $sql .= " where cuscode = :cuscode";
-        
-        $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'cuscode' => $cuscode ])){
-            $error = $conn->errorInfo(); 
+        echo json_encode(array("data" => array("id" => $_PUT)));
+    } else  if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $code = $_GET["code"];
+        $sql = " SELECT a.* ";
+        $sql .= " FROM `customer` as a ";
+        $sql .= " where cuscode = :code";
+
+        $stmt = $conn->prepare($sql);
+        if (!$stmt->execute(['code' => $code])) {
+            $error = $conn->errorInfo();
             http_response_code(404);
             throw new PDOException("Geting data error => $error");
         }
-        $res = $stmt->fetch(PDO::FETCH_ASSOC);  
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $conn->commit();
         http_response_code(200);
-        echo json_encode(array("data"=> $res));
+        echo json_encode(array("data" => $res));
     }
-
-} catch (PDOException $e) { 
+} catch (PDOException $e) {
     $conn->rollback();
     http_response_code(400);
     echo json_encode(array('status' => '0', 'message' => $e->getMessage()));
-} catch (Exception $e) { 
+} catch (Exception $e) {
     $conn->rollback();
     http_response_code(400);
     echo json_encode(array('status' => '0', 'message' => $e->getMessage()));
-} finally{
+} finally {
     $conn = null;
-}  
-ob_end_flush(); 
+}
+ob_end_flush();
 exit;

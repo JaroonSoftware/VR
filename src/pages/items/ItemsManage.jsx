@@ -127,12 +127,12 @@ const ItemsManage = () => {
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={4}>
-        <Form.Item label="หน่วยสินค้า" name="stunit">
+        <Form.Item label="หน่วยสินค้า" name="unit">
           <Select size="large" showSearch
               filterOption={filterOption}
               placeholder="เลือกหน่วยสินค้า"
               options={optionUnit.map((item) => ({
-                value: item.unitcode,
+                value: item.unitname,
                 label: item.unitname,
               }))}/>
         </Form.Item>

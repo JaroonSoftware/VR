@@ -7,9 +7,9 @@ import { Input, Button, Table, Typography } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { accessColumn } from "./customer.model";
-import Itemservice from "../../service/Items.Service";
+import Customerservice from "../../service/Customer.Service";
 
-const itemservice = Itemservice();
+const customerservice = Customerservice();
 const mngConfig = {
   title: "",
   textOk: null,
@@ -26,7 +26,7 @@ const ItemsAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      itemservice
+      customerservice
         .getAllitem(data)
         .then((res) => {
           const { data } = res.data;
@@ -96,7 +96,7 @@ const ItemsAccess = () => {
   }, []);
 
   const getData = (data) => {
-    itemservice
+    customerservice
       .search(data)
       .then((res) => {
         const { data } = res.data;
@@ -134,7 +134,7 @@ const ItemsAccess = () => {
                 <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                     <Form.Item
                       label="รหัสลูกค้า"
-                      name="cusname"
+                      name="cuscode"
                       onChange={handleSearch}
                     >
                       <Input placeholder="กรอกรหัสลูกค้า" />
@@ -238,7 +238,7 @@ const ItemsAccess = () => {
               <Table
                 title={() => TitleTable}
                 size="small"
-                rowKey="typecode"
+                rowKey="cuscode"
                 columns={column}
                 dataSource={accessData}
               />

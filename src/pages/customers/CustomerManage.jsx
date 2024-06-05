@@ -14,13 +14,12 @@ import {
 import { Row, Col, Space } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
-import { Items } from "./customer.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
-import Itemservice from "../../service/Items.Service";
+import Customerservice from "../../service/Customer.Service";
 const { TextArea } = Input;
-const itemservice = Itemservice();
+const customerservice = Customerservice();
 // const opservice = OptionService();
 const from = "/customers";
 const ItemsManage = () => {
@@ -30,9 +29,7 @@ const ItemsManage = () => {
   const { config } = location.state || { config: null };
   const [form] = Form.useForm();
 
-  const [formDetail, setFormDetail] = useState(Items);
-
-  // const [packageTypeOption, setPackageTypeOption] = useState([]);
+  const [formDetail, setFormDetail] = useState({});
 
   useEffect(() => {
     // setLoading(true);
@@ -46,7 +43,7 @@ const ItemsManage = () => {
     };
   }, []);
   const getsupData = (v) => {
-    itemservice
+    customerservice
       .get(v)
       .then(async (res) => {
         const { data } = res.data;
@@ -69,8 +66,8 @@ const ItemsManage = () => {
       const source = { ...formDetail, ...v };
       const actions =
         config?.action !== "create"
-          ? itemservice.update(source)
-          : itemservice.create(source);
+          ? customerservice.update(source)
+          : customerservice.create(source);
 
       actions
         .then(async (r) => {
@@ -97,20 +94,20 @@ const ItemsManage = () => {
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Form.Item
-            name="firstname"
-            rules={[{ required: true, message: "กรุณาใส่ชื่อจริง!" }]}
-            label="ชื่อจริง"
+            name="prename"
+            rules={[{ required: true, message: "กรุณาระบุคำนำหน้าชื่อ!" }]}
+            label="คำนำหน้าชื่อ"
           >
-            <Input placeholder="กรอกชื่อจริง" />
+            <Select style={{ height: 40 }} placeholder="เลือกคำนำหน้าชื่อ" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
           <Form.Item
-            name="lastname"
-            rules={[{ required: true, message: "กรุณาใส่ชื่อนามสกุล!" }]}
-            label="นามสกุล"
+            name="firstname"
+            rules={[{ required: true, message: "กรุณาใส่ชื่อจริง!" }]}
+            label="ชื่อจริง-นามสกุล"
           >
-            <Input placeholder="กรอกนามสกุล" />
+            <Input placeholder="กรอกชื่อจริง" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -140,10 +137,7 @@ const ItemsManage = () => {
       <Divider></Divider>
       <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            name="lastname"
-            label="ที่อยู่"
-          >
+          <Form.Item name="lastname" label="ที่อยู่">
             <TextArea rows={4} placeholder="กรอกที่อยู่" />
           </Form.Item>
         </Col>
@@ -153,10 +147,7 @@ const ItemsManage = () => {
             rules={[{ required: true, message: "กรุณาระบุจังหวัด!" }]}
             label="จังหวัด"
           >
-            <Select
-              style={{ height: 40 }}
-              placeholder="เลือกจังหวัด"
-            />
+            <Select style={{ height: 40 }} placeholder="เลือกจังหวัด" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -192,10 +183,6 @@ const ItemsManage = () => {
             />
           </Form.Item>
         </Col>
-
-        <Form.Item name="code">
-          <Input type="hidden" disabled />
-        </Form.Item>
       </Row>
     </>
   );

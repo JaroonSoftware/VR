@@ -4,7 +4,6 @@ import { Form, Input, Button, Flex, message, Badge, Card, Select } from "antd";
 import { Row, Col, Space } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
-import { Items } from "./itemtype.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
@@ -16,14 +15,13 @@ const from = "/itemtype";
 const ItemsManage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const { config } = location.state || { config: null };
   const [form] = Form.useForm();
 
-  const [formDetail, setFormDetail] = useState(Items);
+  const [formDetail, setFormDetail] = useState({});
 
   // const [packageTypeOption, setPackageTypeOption] = useState([]);
-  
+
   useEffect(() => {
     // setLoading(true);
     if (config?.action !== "create") {
@@ -116,8 +114,8 @@ const ItemsManage = () => {
         </Form.Item>
       </Col>
       <Form.Item name="typecode">
-          <Input type="hidden" disabled />
-        </Form.Item>
+        <Input type="hidden" disabled />
+      </Form.Item>
     </Row>
   );
 

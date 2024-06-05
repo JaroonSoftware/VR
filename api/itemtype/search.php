@@ -11,14 +11,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     extract($_POST, EXTR_OVERWRITE, "_");
 
 
-    $stcode = !empty($stcode) ? "and a.stcode like '%$stcode%'" : "";
-    $stname = !empty($stname) ? "and a.stname like '%$stname%'" : "";
+    $typecode = !empty($typecode) ? "and a.typecode like '%$typecode%'" : "";
+    $typename = !empty($typename) ? "and a.typename like '%$typename%'" : "";
 
     try {
-        $sql = "SELECT a.stcode, a.stname, b.typename, a.price ,a.active_status FROM `items` as a
-        left outer join `itemtype` as b on (a.typecode=b.typecode)      
-        $stcode
-        $stname
+        $sql = "SELECT a.typecode, a.typename, a.active_status FROM `itemtype` as a     
+        $typecode
+        $typename
         order by a.created_date desc";
 
         $stmt = $conn->prepare($sql);

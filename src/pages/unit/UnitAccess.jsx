@@ -67,7 +67,7 @@ const ItemsAccess = () => {
           ...mngConfig,
           title: "แก้ไขหน่วยสินค้า",
           action: "edit",
-          code: data?.typecode,
+          code: data?.unitcode,
         },
       },
       replace: true,
