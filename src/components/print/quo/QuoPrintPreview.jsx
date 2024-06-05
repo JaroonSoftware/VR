@@ -33,19 +33,15 @@ function QuoPrintPreview() {
 
     const [hData, setHData] = useState({});
     const [details, setDetails] = useState([]);
-    const [banks, setBanks] = useState([]);
 
-    // const [packingCostSource, setPackingCostSource] = useState([]); 
     
-    const [newPageContent, setNewPageContent] = useState([]);
     const columnDesc = column; 
 
     const [loading] = useState(false);
 
     const handleAfterPrint = () => { 
-        setNewPageContent([]);
+        // setNewPageContent([]);
 
-        console.log( banks, newPageContent );
     }
     const handleBeforePrint = (e) => {
         console.log("before printing...")
@@ -63,17 +59,15 @@ function QuoPrintPreview() {
 
     useEffect( () =>  {
         const init = () => {
-            // quoservice.get( code ).then( async res => {
-            //   const { data : { head, detail, bank } } = res.data; 
+            quoservice.get( code ).then( async res => {
+              const { data : { header, detail } } = res.data; 
            
-            // //   console.log({ head, detail, bank } ); 
-            //   setHData( head );
-            //   setDetails( detail );
-            //   setBanks( bank );
-            // }).catch( err => {
-            //   console.log(err);
-            //   message.error("Error getting infomation Estimation.")
-            // }) 
+              setHData( header );
+              setDetails( detail );
+            }).catch( err => {
+              console.log(err);
+              message.error("Error getting infomation Estimation.")
+            }) 
         }
 
         init();
@@ -89,7 +83,7 @@ function QuoPrintPreview() {
                     </div>
                     <div className='flex grow-0 justify-end items-center' style={{width: 278}}>
                         <Flex className='mb-0 '>
-                            <Typography.Title level={3} align='end' className='m-0 min-w-28 text-end'>QUOTATION</Typography.Title> 
+                            <Typography.Title level={3} align='end' className='m-0 min-w-28 text-end'>ใบเสนอราคา</Typography.Title> 
                         </Flex> 
                     </div> 
                 </div> 
@@ -123,14 +117,6 @@ function QuoPrintPreview() {
                             <Typography.Text className='tx-title' strong>Payment Condition</Typography.Text>
                             <Typography.Text className='tx-info'>{hData?.payment_condition}</Typography.Text> 
                         </Flex>
-                        <Flex vertical gap={2}>
-                            <Typography.Text className='tx-title' strong>Banks</Typography.Text>
-                            {banks?.map( (bnk, ix) => (
-                                <Flex key={ix} gap={4}>
-                                    <Typography.Text className='tx-info'>{bnk?.acc_no} {bnk?.acc_name} {bnk?.bank_name}</Typography.Text> 
-                                </Flex>
-                            ))}
-                        </Flex> 
                     </Flex>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell className='text-summary text-end !align-top' >
@@ -224,15 +210,31 @@ function QuoPrintPreview() {
         return ( 
         <div className='content-head in-sample flex flex-col'> 
             <div className='print-title flex pb-2'>
-                <div className='flex ps-3 grow-0' style={{width:300}}>
+                <div className='flex ps-3 grow-0' style={{width:600}}>
                     <Flex className='mb-1.5' vertical >
-                        <Typography.Text className='tx-title min-w-48 weight600' strong>Quotation By</Typography.Text>
-                        <Typography.Text className='tx-info' >Nine Star Food Co., Ltd.</Typography.Text> 
-                        <Typography.Text className='tx-info' >99/9 Moo8, Tambon Kongdkin, Amphoe Klaneng, Rayong 22160 (Thailand)</Typography.Text> 
-                        <Typography.Text className='tx-info' >Tax ID 0225556000121 Branch 00001</Typography.Text> 
+                        <Typography.Text className='tx-title min-w-48 weight600' strong>บริษัท วีระ ไดรคัทติ้ง จำกัด</Typography.Text>
+                        {/* <Typography.Text className='tx-info' >บริษัท วีระ ไดรคัทติ้ง จำกัด</Typography.Text>  */}
+                        <Typography.Text className='tx-info' strong>VEERA DRYCUTTING CO., LTD</Typography.Text> 
+                        <Typography.Text className='tx-info' >102  หมู่  1  ถนนโพธิ์พระยาท่าเรือ  ตำบลบางนา</Typography.Text> 
+                        <Typography.Text className='tx-info' >อำเภอมหาราช  จังหวัดพระนครศรีอยุธยา 13150</Typography.Text> 
+                        <Typography.Text className='tx-info' >โทร. 081-948-3963 E-mail :gtopgta@gmail.com</Typography.Text> 
+                        <Typography.Text className='tx-info' >เลขประจำตัวผู้เสียภาษี     0145546001142 (สำนักงานใหญ่)</Typography.Text> 
                     </Flex> 
+                </div>                 
+                <div className='flex ps-3 grow'>
+                    <Flex className='mb-1.5' vertical>
+                        {/* <Typography.Text className='tx-title min-w-48' strong>Info</Typography.Text> */}
+                        <Flex justify='space-between'>
+                            <Typography.Text className='tx-info' strong>เลขที่</Typography.Text> 
+                            <Typography.Text className='tx-info'>&nbsp; {hData?.qtcode}</Typography.Text>  
+                        </Flex>
+                        <Flex justify='space-between'>
+                            <Typography.Text className='tx-info' strong>วันที่</Typography.Text> 
+                            <Typography.Text className='tx-info'>{dayjs(hData?.qtdate).format("DD/MM/YYYY")}</Typography.Text>  
+                        </Flex>
+                    </Flex>
                 </div> 
-                <div className='flex ps-3 grow-0' style={{width:300}}>
+                {/* <div className='flex ps-3 grow-0' style={{width:300}}>
                     <Flex className='mb-1.5' vertical>
                         <Typography.Text className='tx-title min-w-48 weight600' strong>Quotation To</Typography.Text>
                         <Typography.Text className='tx-info'>{hData?.cusname}</Typography.Text> 
@@ -241,32 +243,7 @@ function QuoPrintPreview() {
                         { hData?.email && <Typography.Text className='tx-info'>E-mail {hData?.email}</Typography.Text> }
                         { hData?.contact && <Typography.Text className='tx-info'>Contact {hData?.contact}</Typography.Text> }
                     </Flex> 
-                </div> 
-                <div className='flex ps-3 grow'>
-                    <Flex className='mb-1.5' vertical>
-                        <Typography.Text className='tx-title min-w-48' strong>Info</Typography.Text>
-                        <Flex justify='space-between'>
-                            <Typography.Text className='tx-info' strong>Quotation No</Typography.Text> 
-                            <Typography.Text className='tx-info'>{hData?.quotcode}</Typography.Text>  
-                        </Flex>
-                        <Flex justify='space-between'>
-                            <Typography.Text className='tx-info' strong>Quotation Date</Typography.Text> 
-                            <Typography.Text className='tx-info'>{dayjs(hData?.quotdate).format("DD/MM/YYYY")}</Typography.Text>  
-                        </Flex>
-                        <Flex justify='space-between'>
-                            <Typography.Text className='tx-info' strong>Valid price until</Typography.Text> 
-                            <Typography.Text className='tx-info'>{dayjs(hData?.dated_price_until).format("DD/MM/YYYY")}</Typography.Text>  
-                        </Flex>
-                        <Flex justify='space-between'>
-                            <Typography.Text className='tx-info' strong>Price term</Typography.Text> 
-                            <Typography.Text className='tx-info'>{hData?.price_terms}</Typography.Text>  
-                        </Flex>
-                        <Flex justify='space-between'>
-                            <Typography.Text className='tx-info' strong>Currency</Typography.Text> 
-                            <Typography.Text className='tx-info'>{hData?.currency}</Typography.Text>  
-                        </Flex>
-                    </Flex>
-                </div> 
+                </div>  */}
             </div>  
         </div>
         )

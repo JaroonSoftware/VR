@@ -13,14 +13,14 @@ export const column = [
         }} ),
         render:(_,record, ind) =>(<>
             <Flex vertical>
-                <Typography.Text className="tx-info">{ind + 1}. {record?.spname}</Typography.Text>
+                <Typography.Text className="tx-info">{ind + 1}. {record?.stname}</Typography.Text>
                 <Flex vertical>
-                    {record?.quotations_list.map( (item, ix)=>(
+                    {/* {record?.quotations_list.map( (item, ix)=>(
                         <Flex key={ix} gap={6}>
                             <Typography.Text className="pl-4 tx-sub text-nowrap">{ind + 1}.{ix+1} {item?.detail_name}:</Typography.Text>
                             <Typography.Text className="tx-sub">{item?.detail_value}</Typography.Text> 
                         </Flex>
-                    ))}
+                    ))} */}
                 </Flex>
             </Flex>
         </>)
