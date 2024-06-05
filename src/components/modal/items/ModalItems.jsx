@@ -62,7 +62,9 @@ export default function ModalItems({show, close, values, selected}) {
         // const trans = selected.filter( (item) =>  item?.stcode === "" );
         // const rawdt = selected.filter( (item) =>  item?.stcode !== "" );
         // console.log(itemsChoose, rawdt, trans); 
+
         values([...selected, ...itemsChoose]);
+        
         setItemsList([]);
         close(false);
     }
@@ -130,7 +132,7 @@ export default function ModalItems({show, close, values, selected}) {
             onload();
             // console.log("modal-select-items");          
         } 
-    }, [selected, show]);
+    }, [show]);
 
     /** setting child component */
     const ButtonModal = (
