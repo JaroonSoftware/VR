@@ -48,11 +48,12 @@ try {
         $sql = "
         update unit 
         set
+        unitcode = :unitcode,
         unitname = :unitname,
         active_status = :active_status,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
-        where stcode = :stcode";
+        where unitcode = :unitcode";
 
         $stmt = $conn->prepare($sql);
         if (!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
@@ -73,13 +74,13 @@ try {
         http_response_code(200);
         echo json_encode(array("data" => array("id" => $_PUT)));
     } else  if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $unitcode = $_GET["unitcode"];
+        $code = $_GET["code"];
         $sql = " SELECT a.* ";
         $sql .= " FROM `unit` as a ";
-        $sql .= " where unitcode = :unitcode";
+        $sql .= " where unitcode = :code";
 
         $stmt = $conn->prepare($sql);
-        if (!$stmt->execute(['unitcode' => $unitcode])) {
+        if (!$stmt->execute(['code' => $code])) {
             $error = $conn->errorInfo();
             http_response_code(404);
             throw new PDOException("Geting data error => $error");

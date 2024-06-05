@@ -18,7 +18,7 @@ try {
 
         // var_dump($_POST);
 
-        $sql = "INSERT INTO items (typecode, typename ,created_by,created_date) 
+        $sql = "INSERT INTO itemtype (typecode, typename,created_by,created_date) 
         values (:typecode,:typename,:action_user,:action_date)";
 
         $stmt = $conn->prepare($sql);
@@ -46,23 +46,23 @@ try {
         // var_dump($_POST);
 
         $sql = "
-        update items 
+        update itemtype 
         set
         typecode = :typecode,
         typename = :typename,
         active_status = :active_status,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
-        where stcode = :stcode";
+        where typecode = :typecode";
 
         $stmt = $conn->prepare($sql);
         if (!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
 
-        $stmt->bindParam(":typename", $stname, PDO::PARAM_STR);
-        $stmt->bindParam(":typecode", $typecode, PDO::PARAM_STR);
+        $stmt->bindParam(":typename", $typename, PDO::PARAM_STR);
         $stmt->bindParam(":active_status", $active_status, PDO::PARAM_STR);
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);
+        $stmt->bindParam(":typecode", $typecode, PDO::PARAM_STR);
 
         if (!$stmt->execute()) {
             $error = $conn->errorInfo();
@@ -74,13 +74,13 @@ try {
         http_response_code(200);
         echo json_encode(array("data" => array("id" => $_PUT)));
     } else  if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $stcode = $_GET["stcode"];
+        $code = $_GET["code"];
         $sql = " SELECT a.* ";
-        $sql .= " FROM `items` as a ";
-        $sql .= " where stcode = :stcode";
+        $sql .= " FROM `itemtype` as a ";
+        $sql .= " where typecode = :code";
 
         $stmt = $conn->prepare($sql);
-        if (!$stmt->execute(['stcode' => $stcode])) {
+        if (!$stmt->execute(['code' => $code])) {
             $error = $conn->errorInfo();
             http_response_code(404);
             throw new PDOException("Geting data error => $error");

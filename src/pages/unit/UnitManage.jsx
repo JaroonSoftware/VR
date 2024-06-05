@@ -4,7 +4,6 @@ import { Form, Input, Button, Flex, message, Badge, Card, Select } from "antd";
 import { Row, Col, Space } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
-import { Items } from "./unit.model";
 import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
@@ -20,7 +19,7 @@ const UnitManage = () => {
   const { config } = location.state || { config: null };
   const [form] = Form.useForm();
 
-  const [formDetail, setFormDetail] = useState(Items);
+  const [formDetail, setFormDetail] = useState({});
 
   // const [packageTypeOption, setPackageTypeOption] = useState([]);
 
@@ -82,7 +81,7 @@ const UnitManage = () => {
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
         <Form.Item
           label="ชื่อหน่วยสินค้า"
-          name="unit"
+          name="unitname"
           rules={[{ required: true, message: "โปรดกรอกข้อมูล" }]}
         >
           <Input placeholder="กรอกชื่อหน่วยสินค้า" />
@@ -113,6 +112,9 @@ const UnitManage = () => {
               },
             ]}
           />
+        </Form.Item>
+        <Form.Item name="unitcode">
+          <Input type="hidden" disabled />
         </Form.Item>
       </Col>
     </Row>

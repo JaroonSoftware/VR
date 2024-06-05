@@ -62,7 +62,7 @@ export const accessColumn = ({ handleEdit, handleDelete, handleView }) => [
 
 export const Items = {
   id: null,
-  stcode: null,
+  unitcode: null,
   stname: null,
   prename: null,
   idno: null,
