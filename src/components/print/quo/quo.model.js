@@ -1,5 +1,5 @@
 import { Flex, Typography } from "antd";
-import { formatCommaNumber } from "../../../utils/util";
+import { comma } from "../../../utils/util";
 
 export const column = [
     {
@@ -51,7 +51,7 @@ export const column = [
         width: 120,
         key: "qty",
         dataIndex: "qty",
-        render:(v) => <Typography.Text className="tx-info">{formatCommaNumber(Number(v))}</Typography.Text>
+        render:(v) => <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
     },
     {
         title: <>Price per carton</>,
@@ -59,7 +59,7 @@ export const column = [
         width: 160,
         key: "amount",
         dataIndex: "amount",
-        render:(_,record) => <Typography.Text className="tx-info">{formatCommaNumber( Number(record.price_per_carton || 0), 2, 2)}</Typography.Text>
+        render:(_,record) => <Typography.Text className="tx-info">{comma( Number(record.price_per_carton || 0), 2, 2)}</Typography.Text>
     },
     {
         title: <>Total Amount</>,
@@ -70,6 +70,6 @@ export const column = [
         onCell: () => ( { style:{ 
             borderRight:'1px solid var(---color--1)', 
         }} ),
-        render:(_,record) => <Typography.Text className="tx-info">{formatCommaNumber(Number(record.total_amount), 2, 2)}</Typography.Text>
+        render:(_,record) => <Typography.Text className="tx-info">{comma(Number(record.total_amount), 2, 2)}</Typography.Text>
     },
 ]

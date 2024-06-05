@@ -6,10 +6,10 @@ import { Card } from 'antd';
 import { Collapse, Form, Flex, Row, Col, Space } from 'antd';
 import { Input, Button, Table, message, DatePicker, Typography } from 'antd';
 import { SearchOutlined, ClearOutlined, FileAddOutlined } from '@ant-design/icons'; 
-import { accessColumn } from "./quotation.model";
+import { accessColumn } from "./model";
 
 import dayjs from 'dayjs';
-import QuotationService from '../../service/Quotation.service';
+import QuotationService from '../../service/Receipt.service';
 
 import { delay } from '../../utils/util';
 
@@ -33,12 +33,12 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Code' name='qtcode'>
-                    <Input placeholder='Enter Quotation Code.' />
+                <Form.Item label='Receipt Code' name='qtcode'>
+                    <Input placeholder='Enter Receipt Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Date.' name='qtdate'>
+                <Form.Item label='Receipt Date.' name='qtdate'>
                     <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
@@ -122,12 +122,12 @@ const QuotationAccess = () => {
     }
     // console.log(form);
     const hangleAdd = () => {  
-        navigate("manage/create", { state: { config: {...mngConfig, title:"Create Quotation", action:"create"} } }); 
+        navigate("manage/create", { state: { config: {...mngConfig, title:"Create Receipt", action:"create"} } }); 
     }
 
     const handleEdit = (data) => {
         // setManageConfig({...manageConfig, title:"แก้ไข Sample Request", action:"edit", code:data?.srcode});
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"Edit Quotation", action:"edit", code:data?.qtcode} }, replace:true } );
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"Edit Receipt", action:"edit", code:data?.qtcode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 
@@ -183,7 +183,7 @@ const QuotationAccess = () => {
         <Flex className='width-100' align='center'>
             <Col span={12} className='p-0'>
                 <Flex gap={4} justify='start' align='center'>
-                  <Typography.Title className='m-0 !text-zinc-800' level={3}>List of Quotation</Typography.Title>
+                  <Typography.Title className='m-0 !text-zinc-800' level={3}>List of Receipt</Typography.Title>
                 </Flex>
             </Col>
             <Col span={12} style={{paddingInline:0}}>
@@ -193,14 +193,14 @@ const QuotationAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          Request Quotation
+                          Request Receipt
                       </Button>
                 </Flex>
             </Col>  
         </Flex>
     );    
     return mounted && (
-    <div className='quotation-access' id="area">
+    <div className='receipt-access' id="area">
         <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative' }} >
             <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch(true)}}>
                 {FormSearch}

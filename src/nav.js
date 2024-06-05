@@ -24,17 +24,7 @@ let _nav = [
     title: "ใบเสนอราคา",
     icon: <FileTextFilled className="nav-ico" />,
     to: "/quotation",
-  },
-  {
-    title: "ใบขายสินค้า",
-    icon: <ReconciliationFilled className="nav-ico" />,
-    to: "/1",
-  },
-  {
-    title: "ใบเสร็จรับเงิน",
-    icon: <TbReportMoney className="nav-ico" />,
-    to: "/2",
-  },
+  },  
   {
     title: "DATA",
     type: "group",
@@ -69,6 +59,16 @@ let _nav = [
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
     to: "/customers",
+  },
+  {
+    title: "ใบขายสินค้า",
+    icon: <ReconciliationFilled className="nav-ico" />,
+    to: "/so",
+  },
+  {
+    title: "ใบเสร็จรับเงิน",
+    icon: <TbReportMoney className="nav-ico" />,
+    to: "/receipt",
   },
 ];
 

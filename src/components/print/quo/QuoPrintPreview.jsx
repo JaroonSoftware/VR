@@ -11,7 +11,7 @@ import { Button, Flex,  Table, Typography, message } from 'antd';
 import { column} from './quo.model';
 
 import dayjs from "dayjs";
-import { formatCommaNumber } from "../../../utils/util";
+import { comma } from "../../../utils/util";
 import { PiPrinterFill } from 'react-icons/pi';
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from 'antd';
@@ -63,17 +63,17 @@ function QuoPrintPreview() {
 
     useEffect( () =>  {
         const init = () => {
-            quoservice.get( code ).then( async res => {
-              const { data : { head, detail, bank } } = res.data; 
+            // quoservice.get( code ).then( async res => {
+            //   const { data : { head, detail, bank } } = res.data; 
            
-            //   console.log({ head, detail, bank } ); 
-              setHData( head );
-              setDetails( detail );
-              setBanks( bank );
-            }).catch( err => {
-              console.log(err);
-              message.error("Error getting infomation Estimation.")
-            }) 
+            // //   console.log({ head, detail, bank } ); 
+            //   setHData( head );
+            //   setDetails( detail );
+            //   setBanks( bank );
+            // }).catch( err => {
+            //   console.log(err);
+            //   message.error("Error getting infomation Estimation.")
+            // }) 
         }
 
         init();
@@ -137,7 +137,7 @@ function QuoPrintPreview() {
                     <Typography.Text className='text-sm text-end'>Total</Typography.Text>
                 </Table.Summary.Cell> 
                 <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end'>{formatCommaNumber( Number(hData?.total_price || 0), 2, 2 )}</Typography.Text>
+                    <Typography.Text className='text-sm text-end'>{comma( Number(hData?.total_price || 0), 2, 2 )}</Typography.Text>
                 </Table.Summary.Cell> 
             </Table.Summary.Row>  
 
@@ -149,7 +149,7 @@ function QuoPrintPreview() {
                     <Typography.Text className='text-sm text-end'>Vat</Typography.Text>
                 </Table.Summary.Cell> 
                 <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end'>{formatCommaNumber( Number(hData?.vat || 0 ))}%</Typography.Text>
+                    <Typography.Text className='text-sm text-end'>{comma( Number(hData?.vat || 0 ))}%</Typography.Text>
                 </Table.Summary.Cell> 
             </Table.Summary.Row>    
 
@@ -161,7 +161,7 @@ function QuoPrintPreview() {
                     <Typography.Text className='text-sm text-end !text-white'>Grand Total</Typography.Text>
                 </Table.Summary.Cell> 
                 <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end !text-white'>{formatCommaNumber( Number(hData?.grand_total_price || 0), 2, 2 )}</Typography.Text>
+                    <Typography.Text className='text-sm text-end !text-white'>{comma( Number(hData?.grand_total_price || 0), 2, 2 )}</Typography.Text>
                 </Table.Summary.Cell> 
             </Table.Summary.Row>
 

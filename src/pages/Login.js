@@ -5,7 +5,7 @@ import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Layout, Button, Typography, Card, Form, Input, Space, Flex, Modal } from "antd";
 import { message } from "antd";
 import logo4 from "../assets/images/logo.png";
-import SystemService from "../service/SystemService";
+import SystemService from "../service/System.service";
 import { Authenticate } from "../service/Authenticate.service";
 
 const { Title } = Typography;
