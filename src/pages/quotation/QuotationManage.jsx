@@ -150,6 +150,7 @@ function QuotationManage() {
 
   /** Function modal handle */
   const handleChoosedCustomer = (val) => {
+    // console.log(val)
     const fvalue = form.getFieldsValue();
     const addr = [
       !!val?.idno ? `${val.idno} ` : "",
@@ -166,8 +167,8 @@ function QuotationManage() {
       cuscontact:val.contact,
       custel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
     };
-
-    setFormDetail((state) => ({ ...state, ...val }));
+    // console.log(val.contact)
+    setFormDetail((state) => ({ ...state, ...customer }));
     form.setFieldsValue({ ...fvalue, ...customer });
   };
 

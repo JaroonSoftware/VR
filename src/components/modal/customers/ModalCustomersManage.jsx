@@ -261,35 +261,35 @@ const ModalCustomersManage = ({ submit }) => {
     </Row>
   );
 
-  // const ContactDetail = () => (
-  //     <Row gutter={[8,8]} className='px-2 sm:px-4 md:px-4 lg:px-4'>
-  //         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
-  //             <Form.Item label='ติดต่อ' name='contact' >
-  //               <Input placeholder='Enter Contact.' />
-  //             </Form.Item>
-  //         </Col>
-  //         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
-  //             <Form.Item label='อีเมล' name='email' >
-  //               <Input placeholder='Enter Email.' />
-  //             </Form.Item>
-  //         </Col>
-  //         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
-  //             <Form.Item label='เบอร์โทรศัพท์' name='tel'  >
-  //               <Input placeholder='Enter Tel Number.'  />
-  //             </Form.Item>
-  //         </Col>
-  //         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
-  //             <Form.Item label='เบอร์แฟ็ค' name='fax'  >
-  //               <Input placeholder='Enter Fax Number.' />
-  //             </Form.Item>
-  //         </Col>
-  //         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24} >
-  //             <Form.Item label='หมายเหตุ' name='remark'  >
-  //               <Input.TextArea placeholder='Enter Remark.' rows={4} />
-  //             </Form.Item>
-  //         </Col>
-  //     </Row>
-  // );
+  const ContactDetail = () => (
+      <Row gutter={[8,8]} className='px-2 sm:px-4 md:px-4 lg:px-4'>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
+              <Form.Item label='ติดต่อ' name='contact' >
+                <Input placeholder='Enter Contact.' />
+              </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
+              <Form.Item label='อีเมล' name='email' >
+                <Input placeholder='Enter Email.' />
+              </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
+              <Form.Item label='เบอร์โทรศัพท์' name='tel'  >
+                <Input placeholder='Enter Tel Number.'  />
+              </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12} >
+              <Form.Item label='เบอร์แฟ็ค' name='fax'  >
+                <Input placeholder='Enter Fax Number.' />
+              </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24} >
+              <Form.Item label='หมายเหตุ' name='remark'  >
+                <Input.TextArea placeholder='Enter Remark.' rows={4} />
+              </Form.Item>
+          </Col>
+      </Row>
+  );
 
   const SectionBottom = (
     <Row
@@ -340,8 +340,8 @@ const ModalCustomersManage = ({ submit }) => {
           </Divider>
           <DeliveryAddressDetail />
 
-          {/* <Divider orientation="left" plain style={{margin:10}}> Contact Detail</Divider>
-                    <ContactDetail /> */}
+          <Divider orientation="left" plain style={{margin:10}}> Contact Detail</Divider>
+                    <ContactDetail />
         </Form>
         {SectionBottom}
       </Space>

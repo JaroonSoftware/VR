@@ -44,18 +44,9 @@ function QuoPrintPreview() {
 
     }
     const handleBeforePrint = (e) => {
-        console.log("before printing...")
-        // const newElement = document.createElement('div');
-        // newElement.id = 'new-container'; // Optional: Set an ID for the new container
-        // newElement.innerHTML = 'TEST';
-        // Render the new component into the new container 
-    
-        // Replace the old container with the new container
-        // componentRef.current.innerHTML = 'TEST'; 
+        // console.log("before printing...")
     }
 
-
- 
 
     useEffect( () =>  {
         const init = () => {
@@ -76,10 +67,10 @@ function QuoPrintPreview() {
 
     const HeaderForm = () => {
         return (
-            <div className='print-head' style={{height:55}}> 
+            <div className='print-head' style={{height:90}}> 
                 <div className='print-title flex gap-5'> 
                     <div className='grow'>
-                        <img src={logo} alt="" style={{paddingInline: 6, height: '100%'}}  />  
+                        <img src={logo} alt="" style={{paddingInline: 10, height: '100%'}}  />  
                     </div>
                     <div className='flex grow-0 justify-end items-center' style={{width: 278}}>
                         <Flex className='mb-0 '>
@@ -104,108 +95,7 @@ function QuoPrintPreview() {
         )
     }
 
-    const QuotationSummary = (rec) => {
-        return <>
-            <Table.Summary.Row style={{height:24}}>
-                <Table.Summary.Cell index={0} colSpan={6} className='!align-top'></Table.Summary.Cell>
-            </Table.Summary.Row>
-
-            <Table.Summary.Row className='r-sum'>
-                <Table.Summary.Cell index={0} colSpan={4} rowSpan={4} className='!align-top !ps-0'>
-                    <Flex vertical gap={12}>
-                        <Flex vertical gap={2}>
-                            <Typography.Text className='tx-title' strong>Payment Condition</Typography.Text>
-                            <Typography.Text className='tx-info'>{hData?.payment_condition}</Typography.Text> 
-                        </Flex>
-                    </Flex>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end'>Total</Typography.Text>
-                </Table.Summary.Cell> 
-                <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end'>{comma( Number(hData?.total_price || 0), 2, 2 )}</Typography.Text>
-                </Table.Summary.Cell> 
-            </Table.Summary.Row>  
-
-            <Table.Summary.Row className='r-sum'>
-                {/* <Table.Summary.Cell index={0} colSpan={4} rowSpan={4} className='!align-top'>
-                    <Typography.Title level={5}>Note.</Typography.Title>
-                </Table.Summary.Cell> */}
-                <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end'>Vat</Typography.Text>
-                </Table.Summary.Cell> 
-                <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end'>{comma( Number(hData?.vat || 0 ))}%</Typography.Text>
-                </Table.Summary.Cell> 
-            </Table.Summary.Row>    
-
-            <Table.Summary.Row className='r-sum rl'>
-                {/* <Table.Summary.Cell index={0} colSpan={4} rowSpan={4} className='!align-top'>
-                    <Typography.Title level={5}>Note.</Typography.Title>
-                </Table.Summary.Cell> */}
-                <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end !text-white'>Grand Total</Typography.Text>
-                </Table.Summary.Cell> 
-                <Table.Summary.Cell className='text-summary text-end !align-top' >
-                    <Typography.Text className='text-sm text-end !text-white'>{comma( Number(hData?.grand_total_price || 0), 2, 2 )}</Typography.Text>
-                </Table.Summary.Cell> 
-            </Table.Summary.Row>
-
-            <Table.Summary.Row>
-                <Table.Summary.Cell colSpan={2} className='!align-top'>{'\u00A0'}</Table.Summary.Cell>
-            </Table.Summary.Row>
-
-            <Table.Summary.Row>
-                <Table.Summary.Cell index={0} colSpan={4} className='!align-top !ps-0'>
-                    <Flex vertical gap={12}>
-                        <Flex vertical gap={2}>
-                            <Typography.Text className='tx-title' strong>Remarks</Typography.Text> 
-                            <pre className='tx-info m-0'>{hData?.remark}</pre> 
-                        </Flex>
-                    </Flex>
-                </Table.Summary.Cell>
-            </Table.Summary.Row>              
-
-            <Table.Summary.Row>
-                <Table.Summary.Cell index={0} className='!align-top !ps-0 !pt-8'>
-                    <Flex vertical gap={8}>
-                        <Flex gap={8}>
-                            <Typography.Text className='tx-info' strong>Prepared By: </Typography.Text> 
-                            <Typography.Text className='tx-info' >{hData?.created_name}</Typography.Text>
-                        </Flex>
-                        <Flex gap={8}>
-                            <Typography.Text className='tx-info' strong>Date: </Typography.Text> 
-                            <Typography.Text className='tx-info' >{dayjs().format("DD/MM/YYYY")}</Typography.Text>
-                        </Flex>
-                        <Flex gap={12}>
-                            <Flex gap={8}>
-                                <Typography.Text className='tx-info' strong>Tel: </Typography.Text> 
-                                <Typography.Text className='tx-info' >{hData?.tel}</Typography.Text>
-                            </Flex>
-                            <Flex gap={8}>
-                                <Typography.Text className='tx-info' strong>Email: </Typography.Text> 
-                                <Typography.Text className='tx-info' >{hData?.email}</Typography.Text>
-                            </Flex>                            
-                        </Flex>
-                    </Flex>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell className='!align-top !p-0'>{'\u00A0'}</Table.Summary.Cell>
-                <Table.Summary.Cell index={2} colSpan={4} className='!align-top !ps-1 !pt-8'>
-                    <Flex vertical gap={8}>
-                        <Flex gap={2}>
-                            <Typography.Text className='tx-info' strong>Approved Buyer: </Typography.Text> 
-                            <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text>
-                        </Flex>
-                        <Flex gap={2}>
-                            <Typography.Text className='tx-info' strong>Date: </Typography.Text> 
-                            <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text>
-                        </Flex>
-                    </Flex>
-                </Table.Summary.Cell>
-            </Table.Summary.Row>              
-        </>
-    }
-
+    
     const ContentHead = () => {
         return ( 
         <div className='content-head in-sample flex flex-col'> 
@@ -213,7 +103,6 @@ function QuoPrintPreview() {
                 <div className='flex ps-3 grow-0' style={{width:600}}>
                     <Flex className='mb-1.5' vertical >
                         <Typography.Text className='tx-title min-w-48 weight600' strong>บริษัท วีระ ไดรคัทติ้ง จำกัด</Typography.Text>
-                        {/* <Typography.Text className='tx-info' >บริษัท วีระ ไดรคัทติ้ง จำกัด</Typography.Text>  */}
                         <Typography.Text className='tx-info' strong>VEERA DRYCUTTING CO., LTD</Typography.Text> 
                         <Typography.Text className='tx-info' >102  หมู่  1  ถนนโพธิ์พระยาท่าเรือ  ตำบลบางนา</Typography.Text> 
                         <Typography.Text className='tx-info' >อำเภอมหาราช  จังหวัดพระนครศรีอยุธยา 13150</Typography.Text> 
@@ -234,19 +123,138 @@ function QuoPrintPreview() {
                         </Flex>
                     </Flex>
                 </div> 
-                {/* <div className='flex ps-3 grow-0' style={{width:300}}>
-                    <Flex className='mb-1.5' vertical>
-                        <Typography.Text className='tx-title min-w-48 weight600' strong>Quotation To</Typography.Text>
-                        <Typography.Text className='tx-info'>{hData?.cusname}</Typography.Text> 
-                        <Typography.Text className='tx-info'>{hData?.address}</Typography.Text> 
-                        { hData?.tel && <Typography.Text className='tx-info'>Tel. {hData?.tel}</Typography.Text> }
-                        { hData?.email && <Typography.Text className='tx-info'>E-mail {hData?.email}</Typography.Text> }
-                        { hData?.contact && <Typography.Text className='tx-info'>Contact {hData?.contact}</Typography.Text> }
-                    </Flex> 
-                </div>  */}
-            </div>  
+            </div>              
         </div>
         )
+    }
+
+    const ContentHead2 = () => {
+        return ( 
+            <div className='content-head in-sample flex flex-col'> 
+            <div className='print-title flex pb-2'>
+                <div className='flex ps-3 grow-0' >
+                    <Flex className='mb-1.5' vertical >
+                        <Typography.Text className='tx-info' >ชื่อลูกค้า : {hData?.prename} {hData?.cusname}</Typography.Text> 
+                        <Typography.Text className='tx-info' >{hData?.address} {hData?.zipcode}</Typography.Text> 
+                        <Typography.Text className='tx-info' >โทร : {hData?.tel} แฟกซ์ : {hData?.fax}</Typography.Text> 
+                        <Typography.Text className='tx-info' >เรียน : {hData?.contact}</Typography.Text> 
+                    </Flex> 
+                </div>                 
+            </div>              
+        </div>
+        )
+    }
+
+    const QuotationSummary = (rec) => {
+        return <>
+            <Table.Summary.Row style={{height:24}}>
+                <Table.Summary.Cell index={0} colSpan={5} className='!align-top'></Table.Summary.Cell>
+            </Table.Summary.Row>
+
+            <Table.Summary.Row className='r-sum'>
+                <Table.Summary.Cell index={0} colSpan={2} rowSpan={4} className='!align-top !ps-0'>
+                    <Flex vertical gap={12}>
+                        <Flex vertical gap={2}>
+                            <Typography.Text className='tx-title' strong>Remarks</Typography.Text>
+                            <Typography.Text className='tx-info'>{hData?.remark}</Typography.Text> 
+                        </Flex>
+                    </Flex>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell colSpan={2} className='text-summary text-start !align-top' >
+                    <Typography.Text className='text-sm text-end'>รวมราคาทั้งสิ้น / Sub total</Typography.Text>
+                </Table.Summary.Cell> 
+                <Table.Summary.Cell className='text-summary text-end !align-top' >
+                    <Typography.Text className='text-sm text-end'>{comma( Number(hData?.total_price || 0), 2, 2 )}</Typography.Text>
+                </Table.Summary.Cell> 
+            </Table.Summary.Row>  
+
+            <Table.Summary.Row className='r-sum'>
+                <Table.Summary.Cell colSpan={2} className='text-summary text-start !align-top' >
+                    <Typography.Text className='text-sm text-end'>จำนวนภาษีมูลค่าเพิ่ม / VAT {comma( Number(hData?.vat || 0 ))}%</Typography.Text>
+                </Table.Summary.Cell> 
+                <Table.Summary.Cell className='text-summary text-end !align-top' >
+                    <Typography.Text className='text-sm text-end'>{comma( Number((hData?.vat*hData?.total_price)/100 || 0 ))}</Typography.Text>
+                </Table.Summary.Cell> 
+            </Table.Summary.Row>    
+
+            <Table.Summary.Row className='r-sum rl'>
+                <Table.Summary.Cell colSpan={2} className='text-summary text-start !align-top' >
+                    <Typography.Text className='text-sm text-end !text-white'>จำนวนเงินรวมภาษี / Net total</Typography.Text>
+                </Table.Summary.Cell> 
+                <Table.Summary.Cell className='text-summary text-end !align-top' >
+                    <Typography.Text className='text-sm text-end !text-white'>{comma( Number(hData?.grand_total_price || 0), 2, 2 )}</Typography.Text>
+                </Table.Summary.Cell> 
+            </Table.Summary.Row>
+
+            <Table.Summary.Row>
+                <Table.Summary.Cell colSpan={2} className='!align-top'>{'\u00A0'}</Table.Summary.Cell>
+            </Table.Summary.Row>
+
+            <Table.Summary.Row>
+                <Table.Summary.Cell colSpan={8} className='!align-top !ps-0 !pt-8'>
+                    <Flex className='w-full' gap={32} >
+                        <Flex vertical className='w-1/2' style={{ gap:10}}>
+                            <Flex justify='center' gap={2}>
+                                <Typography.Text className='tx-info' strong style={{ minWidth:48}}>ยืนยันการสั่งซื้อ </Typography.Text> 
+                                <Typography.Text className='tx-info' >{'\u00A0'}</Typography.Text>
+                            </Flex>
+                            <Flex gap={2}>
+                                <div className="w-full" style={{height: 90, border:'1px solid var(---color--1)'}}>{'\u00A0'}</div>
+                            </Flex>
+                        </Flex> 
+                        <Flex vertical className='w-1/2' style={{ gap:10}}>
+                            <Flex justify='center' gap={2}>
+                                <Typography.Text className='tx-info' strong style={{ minWidth:48}}>ผู้จัดทำ ( VDC ) </Typography.Text> 
+                                <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text>
+                            </Flex>
+                            <Flex gap={2}>
+                                <div className="w-full" style={{height: 90, border:'1px solid var(---color--1)'}}>{'\u00A0'}</div>
+                            </Flex>
+                        </Flex>
+                        <Flex vertical className='w-1/2' style={{ gap:10}}>
+                            <Flex justify='center' gap={2}>
+                                <Typography.Text className='tx-info' strong style={{ minWidth:48}}>ผู้อนุมัติ </Typography.Text> 
+                                <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text>
+                            </Flex>
+                            <Flex gap={2}>
+                                <div className="w-full" style={{height: 90, border:'1px solid var(---color--1)'}}>{'\u00A0'}</div>
+                            </Flex>
+                        </Flex>
+                    </Flex>
+                </Table.Summary.Cell>
+            </Table.Summary.Row>              
+
+            <Table.Summary.Row>
+                <Table.Summary.Cell colSpan={8} className='!align-top !ps-0 !pt-3'>
+                    <Flex className='w-full' gap={32} >
+                        <Flex vertical className='w-1/2' style={{ gap:10}}>
+                            <Flex gap={2} justify='space-between' className='w-full font-bold'> 
+                                ( <Typography.Text className='tx-info font-normal' >{hData?.created_name}</Typography.Text>  )
+                            </Flex>
+                            <Flex gap={2} justify='space-between' className='w-full font-bold'> 
+                                ( <Typography.Text className='tx-info font-normal' > {dayjs().format("DD/MM/YYYY")}</Typography.Text> )
+                            </Flex>
+                        </Flex> 
+                        <Flex vertical className='w-1/2' style={{ gap:10}}>
+                            <Flex gap={2} justify='space-between' className='w-full font-bold'> 
+                                ( <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text> )
+                            </Flex>
+                            <Flex gap={2} justify='space-between' className='w-full font-bold'> 
+                                ( <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text> )
+                            </Flex>
+                        </Flex>
+                        <Flex vertical className='w-1/2' style={{ gap:10}}>
+                            <Flex gap={2} justify='space-between' className='w-full font-bold'> 
+                                ( <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text> )
+                            </Flex>
+                            <Flex gap={2} justify='space-between' className='w-full font-bold'> 
+                                ( <Typography.Text className='tx-info' strong>{'\u00A0'}</Typography.Text> )
+                            </Flex>
+                        </Flex>
+                    </Flex>
+                </Table.Summary.Cell>
+            </Table.Summary.Row>                
+        </>
     }
 
     const ContentBody = () => {
@@ -257,7 +265,7 @@ function QuoPrintPreview() {
                     dataSource={details}
                     columns={columnDesc}
                     pagination={false}
-                    rowKey="id"
+                    rowKey="stcode"
                     bordered={false}
                     locale = {{ emptyText: <span>No data available, please add some data.</span> }}
                     onRow={(record, index)=>{ 
@@ -275,6 +283,7 @@ function QuoPrintPreview() {
         <div ref={componentRef}> 
             <ContentData> 
                 <ContentHead />
+                <ContentHead2 />
                 <ContentBody />
             </ContentData>
         </div>    

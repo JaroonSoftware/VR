@@ -20,10 +20,10 @@ try {
         
         $sql = "INSERT INTO customer (`cuscode`, `prename`, `cusname`, `taxnumber`, `idno`,`road`, `province`, 
         `subdistrict`,`district`,`zipcode`, `delidno`,`delroad`, `delprovince`, 
-        `delsubdistrict`,`deldistrict`,`delzipcode`, `tel`, `email`,`remark`, `active_status`, created_by, created_date) 
+        `delsubdistrict`,`deldistrict`,`delzipcode`, `tel`, `fax`,`contact`, `email`,`remark`, `active_status`, created_by, created_date) 
         values (:cuscode,:prename,:cusname,:taxnumber,:idno,:road,:province,:subdistrict,:district,:zipcode,
         :delidno,:delroad,:delprovince,:delsubdistrict,:deldistrict,:delzipcode,
-        :tel,:email,:remark,'Y',:action_user,:action_date)";
+        :tel,:fax,:contact,:email,:remark,'Y',:action_user,:action_date)";
         
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
@@ -45,6 +45,8 @@ try {
         $stmt->bindParam(":deldistrict", $deldistrict, PDO::PARAM_STR);                
         $stmt->bindParam(":delzipcode", $delzipcode, PDO::PARAM_STR);        
         $stmt->bindParam(":tel", $tel, PDO::PARAM_STR);
+        $stmt->bindParam(":fax", $fax, PDO::PARAM_STR);
+        $stmt->bindParam(":contact", $contact, PDO::PARAM_STR);        
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);        
         $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);        
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT); 

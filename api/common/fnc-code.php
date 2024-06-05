@@ -54,10 +54,10 @@ function request_qtcode($pdo){
     } 
     //QU240100001
     $res = $result["code"];
-    $y = date("y");
+    $y = substr( date("Y")+543, -2);
     $m = date("m");
     $number = intval($res);
-    $prefix = "QU$y$m";
+    $prefix = "QT$y$m";
     while(true){
         $code = sprintf("%03s", ( $number + 1) );
         $format = $prefix.$code;

@@ -19,8 +19,8 @@ try {
 
         // var_dump($_POST);
         $sql = "insert qtmaster (`qtcode`, `qtdate`, `cuscode`, `cusname`, `cusaddress`,
-         `cuscontact`, `custel`, `payment`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
-        values (:qtcode,:qtdate,:cuscode,:cusname,:cusaddress,:cuscontact,:custel,:payment,:total_price,:vat,:grand_total_price,
+         `cuscontact`, `custel`, `cusfax`, `payment`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
+        values (:qtcode,:qtdate,:cuscode,:cusname,:cusaddress,:cuscontact,:custel,:cusfax,:payment,:total_price,:vat,:grand_total_price,
         :remark,:action_user,:action_user)";
 
         $stmt = $conn->prepare($sql);
@@ -31,9 +31,10 @@ try {
         $stmt->bindParam(":qtdate", $header->qtdate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
         $stmt->bindParam(":cusname", $header->cusname, PDO::PARAM_STR);
-        $stmt->bindParam(":cusaddress", $header->cusaddress, PDO::PARAM_STR);
+        $stmt->bindParam(":cusaddress", $header->cusaddress, PDO::PARAM_STR);     
         $stmt->bindParam(":cuscontact", $header->cuscontact, PDO::PARAM_STR); 
         $stmt->bindParam(":custel", $header->custel, PDO::PARAM_STR);
+        $stmt->bindParam(":cusfax", $header->cusfax, PDO::PARAM_STR);        
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
@@ -97,7 +98,8 @@ try {
         cusname = :cusname,
         cusaddress = :cusaddress,
         cuscontact = :cuscontact,
-        custel = :custel,
+        custel = :custel,      
+        cusfax = :cusfax,        
         payment = :payment,
         total_price = :total_price,
         vat = :vat,
@@ -117,6 +119,7 @@ try {
         $stmt->bindParam(":cusaddress", $header->cusaddress, PDO::PARAM_STR);
         $stmt->bindParam(":cuscontact", $header->cuscontact, PDO::PARAM_STR);
         $stmt->bindParam(":custel", $header->custel, PDO::PARAM_STR);
+        $stmt->bindParam(":cusfax", $header->cusfax, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
@@ -184,8 +187,8 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,c.cuscode,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district) as cusaddress
-        ,a.cuscontact,a.custel,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
+        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,c.prename,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district) as address
+        ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
         $sql .= " FROM `qtmaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";
         $sql .= " where a.qtcode = :code";
