@@ -132,7 +132,7 @@ export default function ModalItems({show, close, values, selected}) {
             onload();
             // console.log("modal-select-items");          
         } 
-    }, [show]);
+    }, [selected,show]);
 
     /** setting child component */
     const ButtonModal = (

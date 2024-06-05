@@ -102,21 +102,13 @@ function QuotationManage() {
     return () => {};
   }, []);
 
-  // useEffect(() => {
-  //   if(listDetail) handleSummaryPrice(listDetail)
-  // }, [listDetail]);
+  useEffect(() => {
+    if(listDetail) handleSummaryPrice()
+  }, [listDetail]);
 
-  const handleSummaryPrice = (record) => {
-    // if( form.getFieldValue("vat") === undefined ) form.setFieldValue("vat", formDetail.vat);
-    // const vat = form.getFieldValue("vat");
+  const handleSummaryPrice = () => {
     
-    // const total_price = record?.reduce( (ac, v) => ac += Number( v?.total_amount || 0), 0);
-    // const grand_total_price = parseFloat((total_price / ( 1 - ( Number( vat || 0) / 100 ))).toFixed(2));
-    
-    // const newData = {...formDetail, vat, total_price, grand_total_price};
-     
-    // setFormDetail( newData );
-    const newData = [...record];
+    const newData = [...listDetail];
 
     const total_price = newData.reduce(
       (a, v) =>
@@ -180,10 +172,9 @@ function QuotationManage() {
   };
 
   const handleItemsChoosed = (value) => {
-    setFormDetail(value);
     
     setListDetail(value);
-    handleSummaryPrice(value);
+    handleSummaryPrice();
   };
 
   const handleConfirm = () => {
@@ -235,7 +226,6 @@ function QuotationManage() {
     const itemDetail = [...listDetail];
     const newData = itemDetail.filter((item) => item?.stcode !== code);
     setListDetail([...newData]);
-    setFormDetail([...newData]);
   };
 
   const handleRemove = (record) => {
@@ -267,7 +257,7 @@ function QuotationManage() {
         ...row,
       });
 
-      handleSummaryPrice(listDetail);
+      handleSummaryPrice();
       return newData;
     };
     setListDetail([...newData(row)]);
@@ -434,7 +424,9 @@ function QuotationManage() {
                             onFocus={(e) => {
                               e.target.select();
                             }}
-                            onChange={handleSummaryPrice(listDetail)}
+                            onChange ={ () => {
+                              handleSummaryPrice()
+                          } }
                           />
                         </Form.Item>
                       </Table.Summary.Cell>
@@ -641,7 +633,7 @@ function QuotationManage() {
           values={(v) => {
             handleItemsChoosed(v);
           }}
-          // selected={listDetail}
+          selected={listDetail}
         ></ModalItems>
       )}
     </div>
