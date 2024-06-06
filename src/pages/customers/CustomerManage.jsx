@@ -6,10 +6,10 @@ import {
   Button,
   Flex,
   message,
-  Badge,
-  Card,
+  Radio,
   Select,
   Divider,
+  Card,
 } from "antd";
 import { Row, Col, Space } from "antd";
 import { SaveFilled } from "@ant-design/icons";
@@ -18,7 +18,9 @@ import { useLocation, useNavigate } from "react-router";
 import { delay } from "../../utils/util";
 // import OptionService from '../../service/Options.service';
 import Customerservice from "../../service/Customer.Service";
-const { TextArea } = Input;
+import { CreateInput } from "thai-address-autocomplete-react";
+const InputThaiAddress = CreateInput();
+
 const customerservice = Customerservice();
 // const opservice = OptionService();
 const from = "/customers";
@@ -31,17 +33,33 @@ const ItemsManage = () => {
 
   const [formDetail, setFormDetail] = useState({});
 
+  const init = async () => {
+    const cuscodeRes = await customerservice
+      .getcode()
+      .catch(() => message.error("Initail failed"));
+
+    const { data: cuscode } = cuscodeRes.data;
+    const initForm = { ...formDetail, cuscode };
+    setFormDetail((state) => ({ ...state, ...initForm }));
+    form.setFieldsValue(initForm);
+  };
+
+  
   useEffect(() => {
     // setLoading(true);
+    
     if (config?.action !== "create") {
       getsupData(config.code);
+      
     }
-    console.log(config);
-
+   else {init()
     return () => {
-      form.resetFields();
-    };
+    form.resetFields();
+  };}
+
+    
   }, []);
+
   const getsupData = (v) => {
     customerservice
       .get(v)
@@ -60,7 +78,18 @@ const ItemsManage = () => {
         message.error("Error getting infomation Product.");
       });
   };
-
+  const handleSelect = (address) => {
+    const f = form.getFieldsValue();
+    const addr = {
+      ...f,
+      province: `จ.${address.province}`,
+      zipcode: `${address.zipcode}`,
+      subdistrict: `ต.${address.district}`,
+      district: `อ.${address.amphoe}`,
+    };
+    setFormDetail(addr);
+    form.setFieldsValue(addr);
+  };
   const handleConfirm = () => {
     form.validateFields().then((v) => {
       const source = { ...formDetail, ...v };
@@ -84,107 +113,231 @@ const ItemsManage = () => {
     });
   };
 
-  const Detail = (
-    <>
-      <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item name="cuscode" label="รหัสลูกค้า">
-            <Input disabled={true} size="small" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            name="prename"
-            rules={[{ required: true, message: "กรุณาระบุคำนำหน้าชื่อ!" }]}
-            label="คำนำหน้าชื่อ"
-          >
-            <Select style={{ height: 40 }} placeholder="เลือกคำนำหน้าชื่อ" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            name="firstname"
-            rules={[{ required: true, message: "กรุณาใส่ชื่อจริง!" }]}
-            label="ชื่อจริง-นามสกุล"
-          >
-            <Input placeholder="กรอกชื่อจริง" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            name="citizen_id"
-            rules={[{ required: true, message: "กรุณาใส่เลขบัตรประชาชน!" }]}
-            label="เลขบัตรประชาชน"
-          >
-            <Input placeholder="กรอเลขบัตรประชาชน" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            name="tel"
-            rules={[{ required: true, message: "กรุณาใส่เบอร์โทร!" }]}
-            label="เบอร์โทร"
-          >
-            <Input placeholder="กรอกเบอร์โทร" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item name="email" label="อีเมล">
-            <Input placeholder="กรอกอีเมล" />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Divider></Divider>
-      <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item name="lastname" label="ที่อยู่">
-            <TextArea rows={4} placeholder="กรอกที่อยู่" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            name="province"
-            rules={[{ required: true, message: "กรุณาระบุจังหวัด!" }]}
-            label="จังหวัด"
-          >
-            <Select style={{ height: 40 }} placeholder="เลือกจังหวัด" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item name="zipcode" label="รหัสไปรษณีย์">
-            <Input placeholder="กรอกรหัสไปรษณีย์" />
-          </Form.Item>
-        </Col>
-        <Col
-          xs={24}
-          sm={24}
-          md={12}
-          lg={12}
-          xl={6}
-          style={
-            config.action === "edit"
-              ? { display: "inline" }
-              : { display: "none" }
-          }
+  const handleDeliverySelect = (address) => {
+    const f = form.getFieldsValue();
+    const addr = {
+      ...f,
+      delprovince: `จ.${address.province}`,
+      delzipcode: `${address.zipcode}`,
+      delsubdistrict: `ต.${address.district}`,
+      deldistrict: `อ.${address.amphoe}`,
+    };
+    setFormDetail(addr);
+    form.setFieldsValue(addr);
+  };
+  const filterOption = (input, option) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
+  const Detail = () => (
+    <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
+      <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={4}>
+        <Form.Item
+          label="รหัสลูกค้า"
+          name="cuscode"
+          rules={[{ required: true, message: "Please enter data!" }]}
         >
-          <Form.Item label="สถานการใช้งาน" name="active_status">
-            <Select
-              size="large"
-              options={[
-                {
-                  value: "Y",
-                  label: <Badge status="success" text="เปิดการใช้งาน" />,
-                },
-                {
-                  value: "N",
-                  label: <Badge status="error" text="ปิดการใช้งาน" />,
-                },
-              ]}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-    </>
+          <Input
+            placeholder="กรอกรหัสลูกค้า"
+            className="!bg-zinc-300"
+            readOnly
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
+        <Form.Item
+          label="คำน้ำหน้า"
+          name="prename"
+          rules={[{ required: true, message: "กรุณากรอกข้อมูล!" }]}
+        >
+          <Select
+            size="large"
+            placeholder="เลือกคำนำหน้าชื่อ"
+            showSearch
+            filterOption={filterOption}
+            options={[
+              {
+                value: "คุณ",
+                label: "คุณ",
+              },
+              {
+                value: "นาย",
+                label: "นาย",
+              },
+              {
+                value: "นาง",
+                label: "นาง",
+              },
+              {
+                value: "นางสาว",
+                label: "นางสาว",
+              },
+              {
+                value: "บจก.",
+                label: "บจก.",
+              },
+              {
+                value: "หจก.",
+                label: "หจก.",
+              },
+            ]}
+          ></Select>
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={6}>
+        <Form.Item
+          label="ชื่อ-นามสกุล"
+          name="cusname"
+          rules={[{ required: true, message: "กรุณากรอกข้อมูล!" }]}
+        >
+          <Input placeholder="กรอกชื่อ-นามสกุล" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={6}>
+        <Form.Item label="เลขที่ผู้เสียภาษี" name="taxnumber">
+          <Input placeholder="กรอกเลขที่ผู้เสียภาษี" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={4}>
+        <Form.Item label="สถานะ" name="active_status">
+          <Radio.Group buttonStyle="solid">
+            <Radio.Button value="Y">อยู่ในระบบ</Radio.Button>
+            <Radio.Button value="N">ไม่อยู่ในระบบ</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+      </Col>
+    </Row>
+  );
+
+  const AddressDetail = () => (
+    <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
+      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={4}>
+        <Form.Item label="เลขที่" name="idno">
+          <Input placeholder="กรอกเลขที่อยู่" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="ถนน" name="road">
+          <Input placeholder="กรอกถนน" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="ตำบล" name="subdistrict">
+          <InputThaiAddress.District
+            onSelect={handleSelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกตำบล" }}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="อำเภอ" name="district">
+          <InputThaiAddress.Amphoe
+            onSelect={handleSelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกอำเภอ" }}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="จังหวัด" name="province">
+          <InputThaiAddress.Province
+            onSelect={handleSelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกจังหวัด" }}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="รหัสไปรษณีย์" name="zipcode">
+          <InputThaiAddress.Zipcode
+            onSelect={handleSelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกรหัสไปรษณีย์" }}
+          />
+        </Form.Item>
+      </Col>
+    </Row>
+  );
+
+  const DeliveryAddressDetail = () => (
+    <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
+      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={4}>
+        <Form.Item label="เลขที่" name="delidno">
+          <Input placeholder="กรอกเลขที่อยู่" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="ถนน" name="delroad">
+          <Input placeholder="กรอกถนน" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="ตำบล" name="delsubdistrict">
+          <InputThaiAddress.District
+            onSelect={handleDeliverySelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกตำบล" }}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="อำเภอ" name="deldistrict">
+          <InputThaiAddress.Amphoe
+            onSelect={handleDeliverySelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกอำเภอ" }}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="จังหวัด" name="delprovince">
+          <InputThaiAddress.Province
+            onSelect={handleDeliverySelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกจังหวัด" }}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={4}>
+        <Form.Item label="รหัสไปรษณีย์" name="delzipcode">
+          <InputThaiAddress.Zipcode
+            onSelect={handleDeliverySelect}
+            style={{ height: 40 }}
+            autoCompleteProps={{ placeholder: "กรอกรหัสไปรษณีย์" }}
+          />
+        </Form.Item>
+      </Col>
+    </Row>
+  );
+
+  const ContactDetail = () => (
+    <Row gutter={[8, 8]} className="px-2 sm:px-4 md:px-4 lg:px-4">
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={6}>
+        <Form.Item label="ติดต่อ" name="contact">
+          <Input placeholder="กรอกสื่อการติดต่อ" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={6}>
+        <Form.Item label="อีเมล" name="email">
+          <Input placeholder="กรอกอีเมล" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={6}>
+        <Form.Item label="เบอร์โทรศัพท์" name="tel">
+          <Input placeholder="กรอกเบอร์โทรศัพท์" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={6}>
+        <Form.Item label="เบอร์แฟ็ค" name="fax">
+          <Input placeholder="กรอกเบอร์แฟ็ค" />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+        <Form.Item label="หมายเหตุ" name="remark">
+          <Input.TextArea placeholder="กรอกหมายเหตุ" rows={4} />
+        </Form.Item>
+      </Col>
+    </Row>
   );
 
   const SectionBottom = (
@@ -215,10 +368,46 @@ const ItemsManage = () => {
   );
 
   return (
-    <div className="item-manage xs:px-0 sm:px-0 md:px-8 lg:px-8">
+    <div className="customer-manage xs:px-0 sm:px-0 md:px-8 lg:px-8">
       <Space direction="vertical" className="flex gap-2">
         <Form form={form} layout="vertical" autoComplete="off">
-          <Card title={config?.title}>{Detail}</Card>
+          <Card title={config?.title}>
+            <Divider
+              orientation="left"
+              plain
+              style={{ margin: 10, fontSize: 20, border: 20 }}
+            >
+              รายละเอียดข้อมูล
+            </Divider>
+            <Detail />
+
+            <Divider
+              orientation="left"
+              plain
+              style={{ margin: 10, fontSize: 20, border: 20 }}
+            >
+              ที่อยู่
+            </Divider>
+            <AddressDetail />
+
+            <Divider
+              orientation="left"
+              plain
+              style={{ margin: 10, fontSize: 20, border: 20 }}
+            >
+              ที่อยู่จัดส่ง
+            </Divider>
+            <DeliveryAddressDetail />
+
+            <Divider
+              orientation="left"
+              plain
+              style={{ margin: 10, fontSize: 20, border: 20 }}
+            >
+              การติดต่อ
+            </Divider>
+            <ContactDetail />
+          </Card>
         </Form>
         {SectionBottom}
       </Space>

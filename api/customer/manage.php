@@ -85,20 +85,60 @@ try {
         update customer 
         set
         cuscode = :cuscode,
+        prename = :prename,
         cusname = :cusname,
+        taxnumber = :taxnumber,
+        idno = :idno,
+        road = :road,
+        province = :province,
+        subdistrict = :subdistrict,
+        district = :district,
+        zipcode = :zipcode,
+        delidno = :delidno,
+        delroad = :delroad,
+        delprovince = :delprovince,
+        delsubdistrict = :delsubdistrict,
+        deldistrict = :deldistrict,
+        delzipcode = :delzipcode,
+        tel = :tel,
+        fax = :fax,
+        contact = :contact,
+        email = :email,
+        remark = :remark,
         active_status = :active_status,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
         where cuscode = :cuscode";
 
+        
         $stmt = $conn->prepare($sql);
         if (!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
-
-        $stmt->bindParam(":cusname", $cusname, PDO::PARAM_STR);
+        $stmt->bindParam(":cuscode", $cuscode, PDO::PARAM_STR);
+        $stmt->bindParam(":prename", $prename, PDO::PARAM_STR);
+        $stmt->bindParam(":cusname", $cusname, PDO::PARAM_STR);     
+        $stmt->bindParam(":taxnumber", $taxnumber, PDO::PARAM_STR);
+        $stmt->bindParam(":idno", $idno, PDO::PARAM_STR); 
+        $stmt->bindParam(":road", $road, PDO::PARAM_STR);         
+        $stmt->bindParam(":province", $province, PDO::PARAM_STR);   
+        $stmt->bindParam(":subdistrict", $subdistrict, PDO::PARAM_STR);   
+        $stmt->bindParam(":district", $district, PDO::PARAM_STR);                
+        $stmt->bindParam(":zipcode", $zipcode, PDO::PARAM_STR);
+        $stmt->bindParam(":delidno", $delidno, PDO::PARAM_STR); 
+        $stmt->bindParam(":delroad", $delroad, PDO::PARAM_STR);         
+        $stmt->bindParam(":delprovince", $delprovince, PDO::PARAM_STR);   
+        $stmt->bindParam(":delsubdistrict", $delsubdistrict, PDO::PARAM_STR);   
+        $stmt->bindParam(":deldistrict", $deldistrict, PDO::PARAM_STR);                
+        $stmt->bindParam(":delzipcode", $delzipcode, PDO::PARAM_STR);        
+        $stmt->bindParam(":tel", $tel, PDO::PARAM_STR);
+        $stmt->bindParam(":fax", $fax, PDO::PARAM_STR);
+        $stmt->bindParam(":contact", $contact, PDO::PARAM_STR);        
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);        
+        $stmt->bindParam(":remark", $remark, PDO::PARAM_STR);        
         $stmt->bindParam(":active_status", $active_status, PDO::PARAM_STR);
-        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);
-        $stmt->bindParam(":cuscode", $typecode, PDO::PARAM_STR);
+        $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT); 
+        $stmt->bindParam(":action_date", $action_date, PDO::PARAM_STR);  
+
 
         if (!$stmt->execute()) {
             $error = $conn->errorInfo();
