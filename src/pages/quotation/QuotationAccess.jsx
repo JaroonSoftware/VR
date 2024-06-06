@@ -211,7 +211,7 @@ const QuotationAccess = () => {
                         <Table 
                         title={()=>TitleTable} 
                         size='small' 
-                        rowKey="quotcode" 
+                        rowKey="qtcode" 
                         columns={column} 
                         dataSource={accessData} 
                         scroll={{ x: 'max-content' }} 

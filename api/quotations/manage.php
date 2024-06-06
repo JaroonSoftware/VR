@@ -18,9 +18,9 @@ try {
         extract($_POST, EXTR_OVERWRITE, "_");
 
         // var_dump($_POST);
-        $sql = "insert qtmaster (`qtcode`, `qtdate`, `cuscode`, `cusname`, `cusaddress`,
-         `cuscontact`, `custel`, `cusfax`, `payment`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
-        values (:qtcode,:qtdate,:cuscode,:cusname,:cusaddress,:cuscontact,:custel,:cusfax,:payment,:total_price,:vat,:grand_total_price,
+        $sql = "insert qtmaster (`qtcode`, `qtdate`, `cuscode`,
+        `payment`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
+        values (:qtcode,:qtdate,:cuscode,:payment,:total_price,:vat,:grand_total_price,
         :remark,:action_user,:action_user)";
 
         $stmt = $conn->prepare($sql);
@@ -30,11 +30,6 @@ try {
         $stmt->bindParam(":qtcode", $header->qtcode, PDO::PARAM_STR);
         $stmt->bindParam(":qtdate", $header->qtdate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":cusname", $header->cusname, PDO::PARAM_STR);
-        $stmt->bindParam(":cusaddress", $header->cusaddress, PDO::PARAM_STR);     
-        $stmt->bindParam(":cuscontact", $header->cuscontact, PDO::PARAM_STR); 
-        $stmt->bindParam(":custel", $header->custel, PDO::PARAM_STR);
-        $stmt->bindParam(":cusfax", $header->cusfax, PDO::PARAM_STR);        
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
@@ -61,8 +56,8 @@ try {
         $code = $conn->lastInsertId();
         // var_dump($master); exit;
         
-        $sql = "insert into qtdetail (qtcode,stcode,stname,qty,price,discount)
-        values (:qtcode,:stcode,:stname,:qty,:price,:discount)";
+        $sql = "insert into qtdetail (qtcode,stcode,stname,qty,price,unit,discount)
+        values (:qtcode,:stcode,:stname,:qty,:price,:unit,:discount)";
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
@@ -74,6 +69,7 @@ try {
             $stmt->bindParam(":stname", $val->stname, PDO::PARAM_STR);
             $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
             $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
+            $stmt->bindParam(":unit", $val->unit, PDO::PARAM_INT);            
             $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);
             
             if(!$stmt->execute()) {
@@ -95,11 +91,6 @@ try {
         update qtmaster 
         set
         cuscode = :cuscode,
-        cusname = :cusname,
-        cusaddress = :cusaddress,
-        cuscontact = :cuscontact,
-        custel = :custel,      
-        cusfax = :cusfax,        
         payment = :payment,
         total_price = :total_price,
         vat = :vat,
@@ -115,11 +106,6 @@ try {
         $header = (object)$header; 
 
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":cusname", $header->cusname, PDO::PARAM_STR);
-        $stmt->bindParam(":cusaddress", $header->cusaddress, PDO::PARAM_STR);
-        $stmt->bindParam(":cuscontact", $header->cuscontact, PDO::PARAM_STR);
-        $stmt->bindParam(":custel", $header->custel, PDO::PARAM_STR);
-        $stmt->bindParam(":cusfax", $header->cusfax, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
@@ -141,8 +127,8 @@ try {
             throw new PDOException("Remove data error => $error");
         }
 
-        $sql = "insert into qtdetail (qtcode,stcode,stname,qty,price,discount)
-        values (:qtcode,:stcode,:stname,:qty,:price,:discount)";
+        $sql = "insert into qtdetail (qtcode,stcode,unit,qty,price,discount)
+        values (:qtcode,:stcode,:unit,:qty,:price,:discount)";
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
@@ -151,7 +137,7 @@ try {
             $val = (object)$val;
             $stmt->bindParam(":qtcode", $header->qtcode, PDO::PARAM_STR);
             $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
-            $stmt->bindParam(":stname", $val->stname, PDO::PARAM_STR);
+            $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);
             $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
             $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
             $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);

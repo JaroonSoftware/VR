@@ -260,36 +260,36 @@ function DashBoard() {
         setStatistic( state => ({...state, ...data}))
     }
 
-    useEffect(() => {
-      if( mounted ) fetchSampleData( true );
-    }, [JSON.stringify(sampleListParams)]);
+    // useEffect(() => {
+    //   if( mounted ) fetchSampleData( true );
+    // }, [JSON.stringify(sampleListParams)]);
 
-    useEffect(() => {
-      if( mounted ) fetchSampleWaitingApproveData( true );
-    }, [JSON.stringify(sampleWaitingApproveParams)]);
+    // useEffect(() => {
+    //   if( mounted ) fetchSampleWaitingApproveData( true );
+    // }, [JSON.stringify(sampleWaitingApproveParams)]);
 
-    useEffect(() => {
-      if( mounted ) fetchSampleDetailData( false );
-    }, [JSON.stringify(sampleDetailParams)]);
+    // useEffect(() => {
+    //   if( mounted ) fetchSampleDetailData( false );
+    // }, [JSON.stringify(sampleDetailParams)]);
 
     // useEffect(() => {
     //   if( mounted ) fetchFilesExpireData( true );
     // }, [JSON.stringify(filesExpireParams)]);
 
-    useEffect(() => {
-        const initeial = async () => {
-            await Promise.all([
-                fetchSampleData( false ), 
-                fetchSampleWaitingApproveData( false ),
-                // fetchFilesExpireData( false ),
-                fetchStatisticData(),
-            ]); 
+    // useEffect(() => {
+    //     const initeial = async () => {
+    //         await Promise.all([
+    //             fetchSampleData( false ), 
+    //             fetchSampleWaitingApproveData( false ),
+    //             // fetchFilesExpireData( false ),
+    //             fetchStatisticData(),
+    //         ]); 
 
-            setTimeout( () =>setMounted(true) , 400);
-        } 
+    //         setTimeout( () =>setMounted(true) , 400);
+    //     } 
 
-        if( !mounted ) initeial();
-    }, []);
+    //     if( !mounted ) initeial();
+    // }, []);
 
     const handleSampleListChange = (pagination, filters, sorter) => {
       setSampleListParams({ pagination, filters, ...sorter, }); 
@@ -327,7 +327,7 @@ function DashBoard() {
         <>
         <div className='layout-content px-3 sm:px-5 md:px-5'>
             <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative', paddingInline:"1.34rem" }} className='dashboard' id='dashboard' >
-                <Row gutter={[12, 12]}>
+                {/* <Row gutter={[12, 12]}>
                     <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                         <div style={{height:'100%'}}> 
                             <CardStatistic bgColor="#8f8df9" title="Sample Daily" icon={<FiFileText />} value={statisticData.daily} />
@@ -360,11 +360,6 @@ function DashBoard() {
                             <CardSampleWaitingApprove /> 
 
                         </div>
-                    </Col>
-                </Row> 
-                {/* <Row gutter={[18, 12]}>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={24} >
-                        <CardFilesExpire />
                     </Col>
                 </Row>  */}
             </Space> 

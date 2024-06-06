@@ -25,14 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $sql = " 
         select 
         a.*,
-        b.*,
         c.*,
-        i.*,
         concat(u.firstname, ' ', u.lastname) created_name
-        from qtmaster a
-        inner join qtdetail b on (a.qtcode=b.qtcode)
-        left join customer c on a.cuscode = c.cuscode
-        inner join items i on (b.stcode=i.stcode)
+        from qtmaster a        
+        left join customer c on a.cuscode = c.cuscode        
         left join user u on a.created_by = u.code
         where 1 = 1 and a.active_status = 'Y'
         $qtcode
@@ -41,6 +37,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $created_by
         $quotdate
         order by a.created_date desc ;";
+
+        // $sql = " 
+        // select 
+        // a.*,
+        // b.*,
+        // c.*,
+        // i.*,
+        // concat(u.firstname, ' ', u.lastname) created_name
+        // from qtmaster a
+        // inner join qtdetail b on (a.qtcode=b.qtcode)
+        // left join customer c on a.cuscode = c.cuscode
+        // inner join items i on (b.stcode=i.stcode)
+        // left join user u on a.created_by = u.code
+        // where 1 = 1 and a.active_status = 'Y'
+        // $qtcode
+        // $cuscode
+        // $cusname
+        // $created_by
+        // $quotdate
+        // order by a.created_date desc ;";
 
         $stmt = $conn->prepare($sql); 
         $stmt->execute();

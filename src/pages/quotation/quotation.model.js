@@ -39,12 +39,6 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     render: (v) => dayjs(v).format("DD/MM/YYYY"),
   },
   {
-    title: "Product",
-    dataIndex: "stname",
-    key: "stname", 
-    sorter: (a, b) => (a.stname).localeCompare(b.stname),
-  },
-  {
     title: "Customer Code",
     dataIndex: "cuscode",
     key: "cuscode",
@@ -76,7 +70,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     title: "Action",
     key: "operation", 
     fixed: 'right',
-    width: 90,
+    width: 100,
     render: (text, record) => (
       <Space >
         <Button
@@ -114,7 +108,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
   }, 
 ];
 
-export const productColumn = ({handleRemove}) => [
+export const productColumn = ({handleRemove,handleSelectChange}) => [
   {
     title: "ลำดับ",
     dataIndex: "ind",
@@ -164,10 +158,10 @@ export const productColumn = ({handleRemove}) => [
     title: "หน่วยสินค้า",
     dataIndex: "unit",
     key: "unit", 
-    width: "10%",
-    align: "right",
-    className: "!pe-3",
-    editable: true,
+      align: "left", 
+      width: "15%",
+      editable: true,
+      type:'select',    
   },
   {
     title: "ส่วนลด(%)",
@@ -200,10 +194,10 @@ export const productColumn = ({handleRemove}) => [
   },
 ];
 
-export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
+export const columnsParametersEditable = (handleEditCell,optionsItems,{handleRemove} ) =>{
   const col = productColumn({handleRemove});
   return col.map((col, ind) => {
-      if (!col.editable) { return col; }
+      if (!col.editable) return col; 
       
       return {
           ...col,
@@ -214,7 +208,10 @@ export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
               editable: col.editable,
               dataIndex: col.dataIndex,
               title: col.title,
+              // required: !!col?.required,
+              type: col?.type || "input",
               handleEditCell,
+              optionsItems,
             }
           },
       };
