@@ -61,17 +61,17 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     },
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
   },
-  // {
-  //   title: "Request By",
-  //   dataIndex: "created_name",
-  //   key: "created_name", 
-  //   width: '15%',
-  //   sorter: (a, b) => (a.created_name).localeCompare(b.created_name),
-  //   ellipsis: {
-  //     showTitle: false,
-  //   },
-  //   render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
-  // },
+  { 
+    title: "Request By",
+    dataIndex: "created_name",
+    key: "created_name", 
+    width: '15%',
+    sorter: (a, b) => (a.created_name).localeCompare(b.created_name),
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
+  },
   {
     title: "Action",
     key: "operation", 
@@ -161,6 +161,15 @@ export const productColumn = ({handleRemove}) => [
     render: (_, rec) => <>{ comma( Number(rec?.price ||  0),  2, 2 )}</>,
   },
   {
+    title: "หน่วยสินค้า",
+    dataIndex: "unit",
+    key: "unit", 
+    width: "10%",
+    align: "right",
+    className: "!pe-3",
+    editable: true,
+  },
+  {
     title: "ส่วนลด(%)",
     dataIndex: "discount",
     key: "discount",
@@ -233,6 +242,7 @@ export const quotationDetailForm = {
   discount : 0,
   qty : 0,
   price : 0,
+  unit: null,
 }
 
 

@@ -91,7 +91,6 @@ function QuotationManage() {
           qtcode: code,
           qtdate: dayjs(new Date()),
         };
-        // handleSummaryPrice(listDetail);
         setFormDetail(ininteial_value);
         form.setFieldsValue(ininteial_value);        
         
@@ -182,7 +181,7 @@ function QuotationManage() {
     form
       .validateFields()
       .then((v) => {
-        if (listDetail.length < 1) throw new Error("Detail required");
+        if (listDetail.length < 1) throw new Error("กรุณาเพิ่ม รายการขาย");
 
         const header = {
           ...formDetail,
@@ -306,7 +305,7 @@ function QuotationManage() {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Form.Item
-              name="cusaddress"
+              name="address"
               label="Customer Address"
               className="!mb-1"
             >
@@ -315,7 +314,7 @@ function QuotationManage() {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name="cuscontact"
+              name="contact"
               label="Customer Contact"
               className="!mb-1"
             >
@@ -323,7 +322,7 @@ function QuotationManage() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="custel" label="Customer Tel" className="!mb-1">
+            <Form.Item name="tel" label="Customer Tel" className="!mb-1">
               <Input placeholder="Customer Tel." readOnly />
             </Form.Item>
           </Col>

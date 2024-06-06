@@ -135,7 +135,9 @@ function QuoPrintPreview() {
                 <div className='flex ps-3 grow-0' >
                     <Flex className='mb-1.5' vertical >
                         <Typography.Text className='tx-info' >ชื่อลูกค้า : {hData?.prename} {hData?.cusname}</Typography.Text> 
-                        <Typography.Text className='tx-info' >Customer : {hData?.contact}</Typography.Text> 
+                        <Typography.Text className='tx-info' >{hData?.address} {hData?.zipcode}</Typography.Text> 
+                        <Typography.Text className='tx-info' >โทร : {hData?.tel} แฟกซ์ : {hData?.fax}</Typography.Text> 
+                        <Typography.Text className='tx-info' >เรียน : {hData?.contact}</Typography.Text> 
                     </Flex> 
                 </div>                 
             </div>              

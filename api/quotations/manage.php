@@ -187,7 +187,7 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,c.prename,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district) as address
+        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,c.prename,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district,' ', c.zipcode) as address
         ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
         $sql .= " FROM `qtmaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";
@@ -201,9 +201,9 @@ try {
         }
         $header = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT qtcode,stcode,stname,qty,price,discount ";
-        $sql .= " FROM `qtdetail`  ";        
-        $sql .= " where qtcode = :code";
+        $sql = "SELECT a.*,i.* ";
+        $sql .= " FROM `qtdetail` as a inner join `items` as i on (a.stcode=i.stcode)  ";        
+        $sql .= " where a.qtcode = :code";
         
         $stmt = $conn->prepare($sql); 
         if (!$stmt->execute([ 'code' => $code ])){

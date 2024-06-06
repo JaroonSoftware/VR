@@ -26,9 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         select 
         a.*,
         b.*,
+        c.*,
+        i.*,
         concat(u.firstname, ' ', u.lastname) created_name
         from qtmaster a
         inner join qtdetail b on (a.qtcode=b.qtcode)
+        left join customer c on a.cuscode = c.cuscode
+        inner join items i on (b.stcode=i.stcode)
         left join user u on a.created_by = u.code
         where 1 = 1 and a.active_status = 'Y'
         $qtcode
