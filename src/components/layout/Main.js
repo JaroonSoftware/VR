@@ -37,7 +37,7 @@ function Main({ children }) {
       setPlacement("right");
     }
   }, [pathname]);
-
+ 
   return (
     <Layout
       className={`layout-dashboard ${
@@ -74,6 +74,7 @@ function Main({ children }) {
           </Sider>
         </Layout>
       </Drawer>
+     
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
