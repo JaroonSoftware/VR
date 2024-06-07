@@ -9,7 +9,7 @@ import { SearchOutlined, ClearOutlined, FileAddOutlined } from '@ant-design/icon
 import { accessColumn } from "./model";
 
 import dayjs from 'dayjs';
-import QuotationService from '../../service/SO.service';
+import QuotationService from '../../service/Quotation.service';
 
 import { delay } from '../../utils/util';
 
@@ -17,7 +17,7 @@ const quotService = QuotationService();
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
 
 const RangePicker = DatePicker.RangePicker;
-const QuotationAccess = () => {
+const MyAccess = () => {
     const navigate = useNavigate();
     
     const [form] = Form.useForm();
@@ -33,12 +33,12 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='SO Code' name='qtcode'>
-                    <Input placeholder='Enter SO Code.' />
+                <Form.Item label='Quotation Code' name='qtcode'>
+                    <Input placeholder='Enter Quotation Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='SO Date.' name='qtdate'>
+                <Form.Item label='Quotation Date.' name='qtdate'>
                     <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
@@ -122,12 +122,12 @@ const QuotationAccess = () => {
     }
     // console.log(form);
     const hangleAdd = () => {  
-        navigate("manage/create", { state: { config: {...mngConfig, title:"Create SO", action:"create"} } }); 
+        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบเสนอราคา", action:"create"} } }); 
     }
 
     const handleEdit = (data) => {
-        // setManageConfig({...manageConfig, title:"แก้ไข Sample Request", action:"edit", code:data?.srcode});
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"Edit SO", action:"edit", code:data?.qtcode} }, replace:true } );
+        
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบเสนอราคา", action:"edit", code:data?.qtcode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 
@@ -163,13 +163,11 @@ const QuotationAccess = () => {
     }
 
     const init = async () => {
-        
+        getData({});  
     }
             
     useEffect( () => {
         init();
-
-        getData({});  
 
 
         setMounted( true );
@@ -183,7 +181,7 @@ const QuotationAccess = () => {
         <Flex className='width-100' align='center'>
             <Col span={12} className='p-0'>
                 <Flex gap={4} justify='start' align='center'>
-                  <Typography.Title className='m-0 !text-zinc-800' level={3}>List of SO</Typography.Title>
+                  <Typography.Title className='m-0 !text-zinc-800' level={3}>หน้าจัดการใบขายสินค้า (Sales Order)</Typography.Title>
                 </Flex>
             </Col>
             <Col span={12} style={{paddingInline:0}}>
@@ -193,14 +191,14 @@ const QuotationAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          Request SO
+                          เพิ่มใบเสนอราคา
                       </Button>
                 </Flex>
             </Col>  
         </Flex>
     );    
     return mounted && (
-    <div className='so-access' id="area">
+    <div className='quotation-access' id="area">
         <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative' }} >
             <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch(true)}}>
                 {FormSearch}
@@ -211,7 +209,7 @@ const QuotationAccess = () => {
                         <Table 
                         title={()=>TitleTable} 
                         size='small' 
-                        rowKey="quotcode" 
+                        rowKey="qtcode" 
                         columns={column} 
                         dataSource={accessData} 
                         scroll={{ x: 'max-content' }} 
@@ -224,4 +222,4 @@ const QuotationAccess = () => {
     );
 }
 
-export default QuotationAccess;
+export default MyAccess;

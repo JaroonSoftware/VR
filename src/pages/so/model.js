@@ -23,7 +23,7 @@ export const componentsEditable = {
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "SO Code.",
+    title: "รหัสใบเสนอราคา",
     key: "qtcode",
     dataIndex: "qtcode",
     align: "left",
@@ -31,7 +31,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     width:140,
   },
   {
-    title: "SO Date",
+    title: "วันที่ใบเสนอราคา",
     dataIndex: "qtdate",
     key: "qtdate",
     width: 140,
@@ -39,20 +39,14 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     render: (v) => dayjs(v).format("DD/MM/YYYY"),
   },
   {
-    title: "Product",
-    dataIndex: "stname",
-    key: "stname", 
-    sorter: (a, b) => (a.stname).localeCompare(b.stname),
-  },
-  {
-    title: "Customer Code",
+    title: "รหัสลูกค้า",
     dataIndex: "cuscode",
     key: "cuscode",
     width: 120,
     sorter: (a, b) => (a.cuscode).localeCompare(b.cuscode),
   },
   {
-    title: "Customer Name",
+    title: "ชื่อลูกค้า",
     dataIndex: "cusname",
     key: "cusname", 
     sorter: (a, b) => (a.cusname).localeCompare(b.cusname),
@@ -61,22 +55,22 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     },
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
   },
-  // {
-  //   title: "Request By",
-  //   dataIndex: "created_name",
-  //   key: "created_name", 
-  //   width: '15%',
-  //   sorter: (a, b) => (a.created_name).localeCompare(b.created_name),
-  //   ellipsis: {
-  //     showTitle: false,
-  //   },
-  //   render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
-  // },
+  { 
+    title: "จัดทำโดย",
+    dataIndex: "created_name",
+    key: "created_name", 
+    width: '15%',
+    sorter: (a, b) => (a.created_name).localeCompare(b.created_name),
+    ellipsis: {
+      showTitle: false,
+    },
+    render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
+  },
   {
     title: "Action",
     key: "operation", 
     fixed: 'right',
-    width: 90,
+    width: 100,
     render: (text, record) => (
       <Space >
         <Button
@@ -114,7 +108,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
   }, 
 ];
 
-export const productColumn = ({handleRemove}) => [
+export const productColumn = ({handleRemove,handleSelectChange}) => [
   {
     title: "ลำดับ",
     dataIndex: "ind",
@@ -140,7 +134,7 @@ export const productColumn = ({handleRemove}) => [
     title: "จำนวน",
     dataIndex: "qty",
     key: "qty", 
-    width: "10%",
+    width: "8%",
     align: "right",
     className: "!pe-3",
     editable: true,
@@ -152,13 +146,22 @@ export const productColumn = ({handleRemove}) => [
     title: "ราคาขาย",
     dataIndex: "price",
     key: "price", 
-    width: "10%",
+    width: "8%",
     align: "right",
     className: "!pe-3",
     editable: true,
     required: true,
     type:'number',
     render: (_, rec) => <>{ comma( Number(rec?.price ||  0),  2, 2 )}</>,
+  },
+  {
+    title: "หน่วยสินค้า",
+    dataIndex: "unit",
+    key: "unit", 
+      align: "right", 
+      width: "8%",
+      editable: true,
+      type:'select',    
   },
   {
     title: "ส่วนลด(%)",
@@ -191,10 +194,10 @@ export const productColumn = ({handleRemove}) => [
   },
 ];
 
-export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
+export const columnsParametersEditable = (handleEditCell,optionsItems,{handleRemove} ) =>{
   const col = productColumn({handleRemove});
   return col.map((col, ind) => {
-      if (!col.editable) { return col; }
+      if (!col.editable) return col; 
       
       return {
           ...col,
@@ -205,7 +208,10 @@ export const columnsParametersEditable = (handleEditCell,{handleRemove} ) =>{
               editable: col.editable,
               dataIndex: col.dataIndex,
               title: col.title,
+              // required: !!col?.required,
+              type: col?.type || "input",
               handleEditCell,
+              optionsItems,
             }
           },
       };
@@ -217,7 +223,8 @@ export const quotationForm = {
   cuscode: null,
   cusname: null,
   contact: null,
-  address: null,
+  cuscontact: null,
+  cusaddress: null,
   tel: null,
   remark: null,
   total_price: 0,
@@ -232,6 +239,7 @@ export const quotationDetailForm = {
   discount : 0,
   qty : 0,
   price : 0,
+  unit: null,
 }
 
 

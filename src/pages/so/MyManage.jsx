@@ -13,8 +13,8 @@ import {
 } from "antd";
 import { Card, Col, Divider, Flex, Row, Space } from "antd";
 
-// import OptionService from "../../service/Options.service";
-import QuotationService from "../../service/SO.service";
+import OptionService from "../../service/Options.service";
+import QuotationService from "../../service/Quotation.service";
 import { SaveFilled, SearchOutlined } from "@ant-design/icons";
 import ModalCustomers from "../../components/modal/customers/ModalCustomers";
 
@@ -32,10 +32,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuPackageSearch } from "react-icons/lu";
 import { LuPrinter } from "react-icons/lu";
-// const opservice = OptionService();
+const opservice = OptionService();
 const quservice = QuotationService();
 
-const gotoFrom = "/so";
+const gotoFrom = "/quotation";
 
 function QuotationManage() {
   const navigate = useNavigate();
@@ -48,13 +48,15 @@ function QuotationManage() {
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
 
-  /** SO state */
+  /** Quotation state */
   const [quotCode, setQuotCode] = useState(null);
 
   /** Detail Data State */
   const [listDetail, setListDetail] = useState([]);
 
   const [formDetail, setFormDetail] = useState(quotationForm);
+
+  const [unitOption, setUnitOption] = React.useState([]);
 
   const cardStyle = {
     backgroundColor: "#f0f0f0",
@@ -66,7 +68,7 @@ function QuotationManage() {
       if (config?.action !== "create") {
         const res = await quservice
           .get(config?.code)
-          .catch((error) => message.error("get SO data fail."));
+          .catch((error) => message.error("get Quotation data fail."));
         const {
           data: { header, detail },
         } = res.data;
@@ -81,21 +83,24 @@ function QuotationManage() {
       } else {
         const { data: code } = (
           await quservice.code().catch((e) => {
-            message.error("get SO code fail.");
+            message.error("get Quotation code fail.");
           })
         ).data;
         setQuotCode(code);
-        form.setFieldValue('vat',7)
+        form.setFieldValue("vat", 7);
         const ininteial_value = {
           ...formDetail,
           qtcode: code,
           qtdate: dayjs(new Date()),
         };
-        // handleSummaryPrice(listDetail);
         setFormDetail(ininteial_value);
-        form.setFieldsValue(ininteial_value);        
-        
+        form.setFieldsValue(ininteial_value);
       }
+      const [unitOprionRes] = await Promise.all([
+        opservice.optionsUnit({ p: "unit-option" }),
+      ]);
+      // console.log(unitOprionRes.data.data)
+      setUnitOption(unitOprionRes.data.data);
     };
 
     initial();
@@ -103,11 +108,10 @@ function QuotationManage() {
   }, []);
 
   useEffect(() => {
-    if(listDetail) handleSummaryPrice()
+    if (listDetail) handleSummaryPrice();
   }, [listDetail]);
 
   const handleSummaryPrice = () => {
-    
     const newData = [...listDetail];
 
     const total_price = newData.reduce(
@@ -118,8 +122,9 @@ function QuotationManage() {
           (1 - Number(v?.discount || 0) / 100)),
       0
     );
-    const vat = form.getFieldValue('vat');
-    const grand_total_price = total_price + (total_price *  form.getFieldValue('vat')) / 100;
+    const vat = form.getFieldValue("vat");
+    const grand_total_price =
+      total_price + (total_price * form.getFieldValue("vat")) / 100;
 
     setFormDetail(() => ({
       ...formDetail,
@@ -150,6 +155,7 @@ function QuotationManage() {
 
   /** Function modal handle */
   const handleChoosedCustomer = (val) => {
+    // console.log(val)
     const fvalue = form.getFieldsValue();
     const addr = [
       !!val?.idno ? `${val.idno} ` : "",
@@ -163,16 +169,16 @@ function QuotationManage() {
     const customer = {
       ...val,
       cusaddress: addr.join(""),
-      cuscontact:val.contact,
+      cuscontact: val.contact,
       custel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
     };
-
-    setFormDetail((state) => ({ ...state, ...val }));
+    // console.log(val.contact)
+    setFormDetail((state) => ({ ...state, ...customer }));
     form.setFieldsValue({ ...fvalue, ...customer });
   };
 
   const handleItemsChoosed = (value) => {
-    
+    console.log(value)
     setListDetail(value);
     handleSummaryPrice();
   };
@@ -181,13 +187,14 @@ function QuotationManage() {
     form
       .validateFields()
       .then((v) => {
-        if (listDetail.length < 1) throw new Error("Detail required");
+        if (listDetail.length < 1) throw new Error("กรุณาเพิ่ม รายการขาย");
 
         const header = {
           ...formDetail,
+          remark: form.getFieldValue("remark"),
         };
         const detail = listDetail;
-        
+
         const parm = { header, detail };
         // console.log(parm)
         const actions =
@@ -195,11 +202,11 @@ function QuotationManage() {
         actions(parm)
           .then((r) => {
             handleClose().then((r) => {
-              message.success("Request SO success.");
+              message.success("Request Quotation success.");
             });
           })
           .catch((err) => {
-            message.error("Request SO fail.");
+            message.error("Request Quotation fail.");
             console.warn(err);
           });
       })
@@ -263,11 +270,8 @@ function QuotationManage() {
     setListDetail([...newData(row)]);
   };
 
-
   /** setting column table */
-  const prodcolumns = columnsParametersEditable(handleEditCell, {
-    handleRemove,
-  });
+  const prodcolumns = columnsParametersEditable(handleEditCell,unitOption, { handleRemove});
 
   const SectionCustomer = (
     <>
@@ -305,7 +309,7 @@ function QuotationManage() {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Form.Item
-              name="cusaddress"
+              name="address"
               label="Customer Address"
               className="!mb-1"
             >
@@ -314,7 +318,7 @@ function QuotationManage() {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name="cuscontact"
+              name="contact"
               label="Customer Contact"
               className="!mb-1"
             >
@@ -322,7 +326,7 @@ function QuotationManage() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="custel" label="Customer Tel" className="!mb-1">
+            <Form.Item name="tel" label="Customer Tel" className="!mb-1">
               <Input placeholder="Customer Tel." readOnly />
             </Form.Item>
           </Col>
@@ -336,7 +340,7 @@ function QuotationManage() {
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start" align="center">
           <Typography.Title className="m-0 !text-zinc-800" level={3}>
-            List of SO
+            List of Quotation
           </Typography.Title>
         </Flex>
       </Col>
@@ -424,9 +428,9 @@ function QuotationManage() {
                             onFocus={(e) => {
                               e.target.select();
                             }}
-                            onChange ={ () => {
-                              handleSummaryPrice()
-                          } }
+                            onChange={() => {
+                              handleSummaryPrice();
+                            }}
                           />
                         </Form.Item>
                       </Table.Summary.Cell>
@@ -435,7 +439,11 @@ function QuotationManage() {
                         style={{ borderRigth: "0px solid" }}
                       >
                         <Typography.Text type="danger">
-                          {comma(Number((formDetail.total_price *  formDetail?.vat) / 100))}                          
+                          {comma(
+                            Number(
+                              (formDetail.total_price * formDetail?.vat) / 100
+                            )
+                          )}
                         </Typography.Text>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell>Baht</Table.Summary.Cell>
@@ -545,8 +553,8 @@ function QuotationManage() {
   );
 
   return (
-    <div className="so-manage">
-      <div id="so-manage" className="px-0 sm:px-0 md:px-8 lg:px-8">
+    <div className="quotation-manage">
+      <div id="quotation-manage" className="px-0 sm:px-0 md:px-8 lg:px-8">
         <Space direction="vertical" className="flex gap-4">
           {SectionTop}
           <Form
@@ -561,7 +569,7 @@ function QuotationManage() {
                   <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                       <Typography.Title level={3} className="m-0">
-                        QUOTATION NO : {quotCode}
+                      รหัสใบเสนอราคา : {quotCode}
                       </Typography.Title>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
@@ -571,7 +579,7 @@ function QuotationManage() {
                         className="justify-start sm:justify-end"
                       >
                         <Typography.Title level={3} className="m-0">
-                          QUOTATION DATE :{" "}
+                        วันที่ใบเสนอราคา :{" "}
                         </Typography.Title>
                         <Form.Item name="qtdate" className="!m-0">
                           <DatePicker

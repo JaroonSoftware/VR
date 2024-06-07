@@ -63,7 +63,7 @@ let _nav = [
   {
     title: "ใบขายสินค้า",
     icon: <ReconciliationFilled className="nav-ico" />,
-    to: "/so",
+    to: "/1",
   },
   {
     title: "ใบเสร็จรับเงิน",
