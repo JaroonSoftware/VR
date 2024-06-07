@@ -50,17 +50,31 @@ export const column = [
   {
     title: (
       <>
-        จำนวน / หน่วย
+        จำนวน
         <br />
-        Quantity/Unit
+        Quantity
       </>
     ),
     align: "right",
     key: "qty",
     dataIndex: "qty",
+    width: 100,
     render: (v) => (
       <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
     ),
+  },
+  {
+    title: (
+      <>
+        หน่วย
+        <br />
+        Unit
+      </>
+    ),
+    align: "right",
+    width: 100,
+    key: "unit",
+    dataIndex: "unit",
   },
   {
     title: (
@@ -71,13 +85,13 @@ export const column = [
       </>
     ),
     align: "right",
-    width: 160,
+    width: 100,
     key: "price",
     dataIndex: "price",
     render: (v) => (
       <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
     ),
-  },
+  },  
   {
     title: (
       <>
@@ -87,7 +101,7 @@ export const column = [
       </>
     ),
     align: "right",
-    width: 200,
+    width: 100,
     key: "amount",
     dataIndex: "amount",
     onCell: () => ({

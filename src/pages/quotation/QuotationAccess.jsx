@@ -122,12 +122,12 @@ const QuotationAccess = () => {
     }
     // console.log(form);
     const hangleAdd = () => {  
-        navigate("manage/create", { state: { config: {...mngConfig, title:"Create Quotation", action:"create"} } }); 
+        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบเสนอราคา", action:"create"} } }); 
     }
 
     const handleEdit = (data) => {
-        // setManageConfig({...manageConfig, title:"แก้ไข Sample Request", action:"edit", code:data?.srcode});
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"Edit Quotation", action:"edit", code:data?.qtcode} }, replace:true } );
+        
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบเสนอราคา", action:"edit", code:data?.qtcode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 
@@ -183,7 +183,7 @@ const QuotationAccess = () => {
         <Flex className='width-100' align='center'>
             <Col span={12} className='p-0'>
                 <Flex gap={4} justify='start' align='center'>
-                  <Typography.Title className='m-0 !text-zinc-800' level={3}>List of Quotation</Typography.Title>
+                  <Typography.Title className='m-0 !text-zinc-800' level={3}>หน้าจัดการใบเสนอราคา (Quotation)</Typography.Title>
                 </Flex>
             </Col>
             <Col span={12} style={{paddingInline:0}}>
@@ -193,7 +193,7 @@ const QuotationAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          Request Quotation
+                          เพิ่มใบเสนอราคา
                       </Button>
                 </Flex>
             </Col>  

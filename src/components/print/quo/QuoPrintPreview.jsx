@@ -146,7 +146,7 @@ function QuoPrintPreview() {
     const QuotationSummary = (rec) => {
         return <>
             <Table.Summary.Row style={{height:24}}>
-                <Table.Summary.Cell index={0} colSpan={5} className='!align-top'></Table.Summary.Cell>
+                <Table.Summary.Cell index={0} colSpan={4} className='!align-top'></Table.Summary.Cell>
             </Table.Summary.Row>
 
             <Table.Summary.Row className='r-sum'>
@@ -155,9 +155,11 @@ function QuoPrintPreview() {
                         <Flex vertical gap={2}>
                             <Typography.Text className='tx-title' strong>Remarks</Typography.Text>
                             <Typography.Text className='tx-info'>{hData?.remark}</Typography.Text> 
+                            {/* <td className='txt-l' style={{fontSize: '7.8pt'}}>{hData?.remark}</td> */}
                         </Flex>
                     </Flex>
                 </Table.Summary.Cell>
+                <Table.Summary.Cell rowSpan={3}/>
                 <Table.Summary.Cell colSpan={2} className='text-summary text-start !align-top' >
                     <Typography.Text className='text-sm text-end'>รวมราคาทั้งสิ้น / Sub total</Typography.Text>
                 </Table.Summary.Cell> 

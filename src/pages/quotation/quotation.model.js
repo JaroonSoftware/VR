@@ -23,7 +23,7 @@ export const componentsEditable = {
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "Quotation Code.",
+    title: "รหัสใบเสนอราคา",
     key: "qtcode",
     dataIndex: "qtcode",
     align: "left",
@@ -31,7 +31,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     width:140,
   },
   {
-    title: "Quotation Date",
+    title: "วันที่ใบเสนอราคา",
     dataIndex: "qtdate",
     key: "qtdate",
     width: 140,
@@ -39,14 +39,14 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     render: (v) => dayjs(v).format("DD/MM/YYYY"),
   },
   {
-    title: "Customer Code",
+    title: "รหัสลูกค้า",
     dataIndex: "cuscode",
     key: "cuscode",
     width: 120,
     sorter: (a, b) => (a.cuscode).localeCompare(b.cuscode),
   },
   {
-    title: "Customer Name",
+    title: "ชื่อลูกค้า",
     dataIndex: "cusname",
     key: "cusname", 
     sorter: (a, b) => (a.cusname).localeCompare(b.cusname),
@@ -56,7 +56,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
   },
   { 
-    title: "Request By",
+    title: "จัดทำโดย",
     dataIndex: "created_name",
     key: "created_name", 
     width: '15%',
@@ -134,7 +134,7 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     title: "จำนวน",
     dataIndex: "qty",
     key: "qty", 
-    width: "10%",
+    width: "8%",
     align: "right",
     className: "!pe-3",
     editable: true,
@@ -146,7 +146,7 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     title: "ราคาขาย",
     dataIndex: "price",
     key: "price", 
-    width: "10%",
+    width: "8%",
     align: "right",
     className: "!pe-3",
     editable: true,
@@ -158,8 +158,8 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     title: "หน่วยสินค้า",
     dataIndex: "unit",
     key: "unit", 
-      align: "left", 
-      width: "15%",
+      align: "right", 
+      width: "8%",
       editable: true,
       type:'select',    
   },

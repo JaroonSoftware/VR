@@ -57,6 +57,8 @@ export default function ModalItems({show, close, values, selected}) {
             stname:m.stname,
             price: Number(m?.price || 0),
             qty: 1,
+            unit:m.unit,
+            discount:0,
         }));
         
         // const trans = selected.filter( (item) =>  item?.stcode === "" );

@@ -132,8 +132,8 @@ const ItemsManage = () => {
               filterOption={filterOption}
               placeholder="เลือกหน่วยสินค้า"
               options={optionUnit.map((item) => ({
-                value: item.unitname,
-                label: item.unitname,
+                value: item.label,
+                label: item.label,
               }))}/>
         </Form.Item>
       </Col>

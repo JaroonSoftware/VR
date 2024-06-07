@@ -178,6 +178,7 @@ function QuotationManage() {
   };
 
   const handleItemsChoosed = (value) => {
+    console.log(value)
     setListDetail(value);
     handleSummaryPrice();
   };
@@ -190,6 +191,7 @@ function QuotationManage() {
 
         const header = {
           ...formDetail,
+          remark: form.getFieldValue("remark"),
         };
         const detail = listDetail;
 
@@ -567,7 +569,7 @@ function QuotationManage() {
                   <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                       <Typography.Title level={3} className="m-0">
-                        QUOTATION NO : {quotCode}
+                      รหัสใบเสนอราคา : {quotCode}
                       </Typography.Title>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
@@ -577,7 +579,7 @@ function QuotationManage() {
                         className="justify-start sm:justify-end"
                       >
                         <Typography.Title level={3} className="m-0">
-                          QUOTATION DATE :{" "}
+                        วันที่ใบเสนอราคา :{" "}
                         </Typography.Title>
                         <Form.Item name="qtdate" className="!m-0">
                           <DatePicker
