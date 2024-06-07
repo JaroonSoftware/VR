@@ -95,6 +95,7 @@ const Login = () => {
     <>
       { logined  ? 
       <div className="layout-default ant-layout layout-sign-up">
+
         <Header>
           <div className="header-col header-brand">
             <h5>VEERA DRYCUTTING</h5>
@@ -111,7 +112,7 @@ const Login = () => {
             </div>
           </div>
 
-          <Card className="card-signup header-solid h-full ant-card pt-0" bordered="false" >
+          <Card className="card-signup header-solid ant-card pt-0" bordered="false" >
             <Space direction="vertical" className="width-100" size={12}>
               <div className="sign-up-gateways flex justify-center">
                 <img style={{width:150}} src={logo4} alt="่ninestartfood, jaroon logo" /> 
