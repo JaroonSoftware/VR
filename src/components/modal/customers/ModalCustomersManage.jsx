@@ -7,7 +7,6 @@ import {
   Button,
   Flex,
   message,
-  Radio,
   Select,
 } from "antd";
 import { Row, Col, Space } from "antd";
@@ -141,14 +140,6 @@ const ModalCustomersManage = ({ submit }) => {
           rules={[{ required: true, message: "Please enter data!" }]}
         >
           <Input placeholder="Enter Customer Name." />
-        </Form.Item>
-      </Col>
-      <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-        <Form.Item label="สถานะ" name="status">
-          <Radio.Group buttonStyle="solid">
-            <Radio.Button value="Y">Enable</Radio.Button>
-            <Radio.Button value="N">Disable</Radio.Button>
-          </Radio.Group>
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>

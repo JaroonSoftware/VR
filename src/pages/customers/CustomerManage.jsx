@@ -44,20 +44,17 @@ const ItemsManage = () => {
     form.setFieldsValue(initForm);
   };
 
-  
   useEffect(() => {
     // setLoading(true);
-    
+
     if (config?.action !== "create") {
       getsupData(config.code);
-      
+    } else {
+      init();
+      return () => {
+        form.resetFields();
+      };
     }
-   else {init()
-    return () => {
-    form.resetFields();
-  };}
-
-    
   }, []);
 
   const getsupData = (v) => {
@@ -197,7 +194,17 @@ const ItemsManage = () => {
           <Input placeholder="กรอกเลขที่ผู้เสียภาษี" />
         </Form.Item>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={4}>
+      <Col
+        xs={24}
+        sm={24}
+        md={12}
+        lg={6}
+        xl={6}
+        xxl={4}
+        style={
+          config.action === "edit" ? { display: "inline" } : { display: "none" }
+        }
+      >
         <Form.Item label="สถานะ" name="active_status">
           <Radio.Group buttonStyle="solid">
             <Radio.Button value="Y">อยู่ในระบบ</Radio.Button>
