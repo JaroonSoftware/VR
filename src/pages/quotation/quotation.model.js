@@ -108,7 +108,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
   }, 
 ];
 
-export const productColumn = ({handleRemove,handleSelectChange}) => [
+export const productColumn = ({handleRemove},optionsItems) => [
   {
     title: "ลำดับ",
     dataIndex: "ind",
@@ -162,6 +162,10 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
       width: "8%",
       editable: true,
       type:'select',    
+      optionsItems,
+      render: (v) => {
+        return optionsItems?.find( f  => f.value === v )?.label
+      },
   },
   {
     title: "ส่วนลด(%)",
@@ -195,7 +199,7 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
 ];
 
 export const columnsParametersEditable = (handleEditCell,optionsItems,{handleRemove} ) =>{
-  const col = productColumn({handleRemove});
+  const col = productColumn({handleRemove},optionsItems);
   return col.map((col, ind) => {
       if (!col.editable) return col; 
       

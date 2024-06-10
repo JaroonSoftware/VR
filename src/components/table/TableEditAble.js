@@ -37,11 +37,7 @@ export const EditableCell = ({
   const inputRef = useRef(null);
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-  const lable = (option) => {
-    const  key = form.getFieldValue(dataIndex);  
-    // console.log( dataIndex, key,  option?.find( f  => f.value == key)?.label )
-    return option?.find( f  => f.value === key || record[dataIndex]  )?.label
-  }
+  
   type = type || "input";
   // const textAreaRef = useRef(null);
   const form = useContext(EditableContext);
@@ -214,7 +210,7 @@ export const EditableCell = ({
         }}
         onClick={toggleEdit}
       >
-        {type === 'select' ? lable(optionsItems) : children}
+        {children}
       </div>
     );
   }
