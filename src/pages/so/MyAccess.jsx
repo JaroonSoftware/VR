@@ -11,7 +11,6 @@ import { accessColumn } from "./model";
 import dayjs from 'dayjs';
 import QuotationService from '../../service/Quotation.service';
 
-import { delay } from '../../utils/util';
 
 const quotService = QuotationService(); 
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
@@ -24,8 +23,6 @@ const MyAccess = () => {
 
     const [accessData, setAccessData] = useState([]);
     const [activeSearch, setActiveSearch] = useState([]);
-
-    const [mounted, setMounted] = useState(false);
  
     let loading = false;
     
@@ -33,12 +30,12 @@ const MyAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Code' name='qtcode'>
-                    <Input placeholder='Enter Quotation Code.' />
+                <Form.Item label='Sale Order Code' name='socode'>
+                    <Input placeholder='Enter Sale Order Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Date.' name='qtdate'>
+                <Form.Item label='Sale Order Date.' name='sodate'>
                     <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
@@ -70,7 +67,7 @@ const MyAccess = () => {
           <Col xs={24} sm={8} md={12} lg={12} xl={12}>
               <Flex justify='flex-end' gap={8}>
                   <Button type="primary" size='small' className='bn-action' icon={<SearchOutlined />} onClick={() => handleSearch()}>
-                      Search
+                      Searchd
                   </Button>
                   <Button type="primary" size='small' className='bn-action' danger icon={<ClearOutlined />} onClick={() => handleClear()}>
                       Clear
@@ -102,11 +99,11 @@ const MyAccess = () => {
         loading = load;
         form.validateFields().then( v => {
             const data = {...v}; 
-            if( !!data?.quotdate ) {
+            if( !!data?.sodate ) {
                 const arr = data?.quotdate.map( m => dayjs(m).format("YYYY-MM-DD") )
-                const [quotdate_form, quotdate_to] = arr; 
+                const [sodate_form, sodate_to] = arr; 
                 //data.created_date = arr
-                Object.assign(data, {quotdate_form, quotdate_to});
+                Object.assign(data, {sodate_form, sodate_to});
             }
 
             setTimeout( () => getData(data), 80);
@@ -122,12 +119,12 @@ const MyAccess = () => {
     }
     // console.log(form);
     const hangleAdd = () => {  
-        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบเสนอราคา", action:"create"} } }); 
+        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบขายสินค้า", action:"create"} } }); 
     }
 
     const handleEdit = (data) => {
         
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบเสนอราคา", action:"edit", code:data?.qtcode} }, replace:true } );
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบขายสินค้า", action:"edit", code:data?.socode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 
@@ -169,11 +166,7 @@ const MyAccess = () => {
     useEffect( () => {
         init();
 
-
-        setMounted( true );
         return  async () => { 
-            await delay(400);
-            setMounted( false );
             //console.clear();
         }
     }, []);
@@ -191,14 +184,14 @@ const MyAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          เพิ่มใบเสนอราคา
+                          เพิ่มใบขายสินค้า
                       </Button>
                 </Flex>
             </Col>  
         </Flex>
     );    
-    return mounted && (
-    <div className='quotation-access' id="area">
+    return (
+    <div className='so-access' id="area">
         <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative' }} >
             <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch(true)}}>
                 {FormSearch}

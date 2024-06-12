@@ -35,7 +35,7 @@ import { LuPrinter } from "react-icons/lu";
 const opservice = OptionService();
 const quservice = QuotationService();
 
-const gotoFrom = "/quotation";
+const gotoFrom = "/so";
 
 function QuotationManage() {
   const navigate = useNavigate();
@@ -569,7 +569,7 @@ function QuotationManage() {
                   <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                       <Typography.Title level={3} className="m-0">
-                      รหัสใบเสนอราคา : {quotCode}
+                      รหัสใบขายสินค้า : {quotCode}
                       </Typography.Title>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
@@ -579,7 +579,7 @@ function QuotationManage() {
                         className="justify-start sm:justify-end"
                       >
                         <Typography.Title level={3} className="m-0">
-                        วันที่ใบเสนอราคา :{" "}
+                        วันที่ใบขายสินค้า :{" "}
                         </Typography.Title>
                         <Form.Item name="qtdate" className="!m-0">
                           <DatePicker

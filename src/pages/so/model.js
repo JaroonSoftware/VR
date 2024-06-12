@@ -23,7 +23,7 @@ export const componentsEditable = {
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "รหัสใบเสนอราคา",
+    title: "รหัสใบขายสินค้า",
     key: "qtcode",
     dataIndex: "qtcode",
     align: "left",
@@ -31,7 +31,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     width:140,
   },
   {
-    title: "วันที่ใบเสนอราคา",
+    title: "วันที่ใบขายสินค้า",
     dataIndex: "qtdate",
     key: "qtdate",
     width: 140,
