@@ -1,7 +1,7 @@
 import { requestService as api } from "./Request.service"  
 const API_URL = { 
   API_MANAGE: `/quotations/manage.php`, 
-  API_GETMASTER: `/quotations/search.php`, 
+  API_SEARCH: `/quotations/search.php`, 
 
   API_GETCODE: `/quotations/get-quotcode.php`, 
 };
@@ -15,7 +15,7 @@ const QuotationService = () => {
 
   const code = () => api.get(`${API_URL.API_GETCODE}`);
 
-  const search = (parm = {}) => api.post(`${API_URL.API_GETMASTER}`, parm);
+  const search = (parm = {}, config = {}) => api.post(`${API_URL.API_SEARCH}`, parm, {...config, cancle: true});
   
 
   return {
