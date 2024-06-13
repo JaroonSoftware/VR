@@ -26,19 +26,21 @@ const ItemsAccess = () => {
   const [activeSearch, setActiveSearch] = useState([]);
 
   const handleSearch = () => {
+
     form.validateFields().then((v) => {
       const data = { ...v };
       itemservice
-        .getAllitem(data)
-        .then((res) => {
-          const { data } = res.data;
-          console.log(data);
-          setAccessData(data);
-        })
-        .catch((err) => {
-          console.log(err);
-          message.error("Request error!");
-        });
+      .search(data, { ignoreLoading: Object.keys(data).length !== 0 })
+      .then((res) => {
+        const { data } = res.data;
+
+        setAccessData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Request error!");
+      });
+
     });
   };
 
@@ -94,21 +96,11 @@ const ItemsAccess = () => {
   };
 
   useEffect(() => {
-    getData({});
+    getData();
   }, []);
 
-  const getData = (data) => {
-    itemservice
-      .search(data)
-      .then((res) => {
-        const { data } = res.data;
-
-        setAccessData(data);
-      })
-      .catch((err) => {
-        console.log(err);
-        message.error("Request error!");
-      });
+  const getData = () => {
+    handleSearch()
   };
   const FormSearch = (
     <Collapse

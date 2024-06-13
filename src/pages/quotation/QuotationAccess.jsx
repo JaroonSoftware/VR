@@ -11,7 +11,6 @@ import { accessColumn } from "./quotation.model";
 import dayjs from 'dayjs';
 import QuotationService from '../../service/Quotation.service';
 
-import { delay } from '../../utils/util';
 
 const quotService = QuotationService(); 
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
@@ -24,8 +23,6 @@ const QuotationAccess = () => {
 
     const [accessData, setAccessData] = useState([]);
     const [activeSearch, setActiveSearch] = useState([]);
-
-    const [mounted, setMounted] = useState(false);
  
     let loading = false;
     
@@ -98,7 +95,7 @@ const QuotationAccess = () => {
         />         
     );
 
-    const handleSearch = (load = false) => {
+    const handleSearch = (load = true) => {
         loading = load;
         form.validateFields().then( v => {
             const data = {...v}; 
@@ -163,19 +160,15 @@ const QuotationAccess = () => {
     }
 
     const init = async () => {
-        
+        getData({});
     }
             
     useEffect( () => {
         init();
 
-        getData({});  
+          
 
-
-        setMounted( true );
         return  async () => { 
-            await delay(400);
-            setMounted( false );
             //console.clear();
         }
     }, []);
@@ -199,7 +192,7 @@ const QuotationAccess = () => {
             </Col>  
         </Flex>
     );    
-    return mounted && (
+    return (
     <div className='quotation-access' id="area">
         <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative' }} >
             <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch(true)}}>

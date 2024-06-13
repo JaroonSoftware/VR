@@ -16,7 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         $sql = "SELECT a.stcode, a.stname, b.typename, a.price ,a.active_status FROM `items` as a
-        left outer join `itemtype` as b on (a.typecode=b.typecode)      
+        left outer join `itemtype` as b on (a.typecode=b.typecode)   
+        where 1 = 1   
         $stcode
         $stname
         order by a.created_date desc";
@@ -26,7 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         http_response_code(200);
-        echo json_encode(array("data" => $res,"sql" => $sql));
+        echo json_encode(array("data" => $res));
+        // echo json_encode(array("data" => $res,"sql" => $sql));
     } catch (mysqli_sql_exception $e) {
         http_response_code(400);
         echo json_encode(array('status' => '0', 'message' => $e->getMessage()));
