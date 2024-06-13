@@ -26,29 +26,6 @@ const ItemsAccess = () => {
   const [activeSearch, setActiveSearch] = useState([]);
 
   const handleSearch = () => {
-    // itemService.search(parm, { ignoreLoading: Object.keys(parm.criteria).length !== 0 }).then((res) => {
-    //   const {
-    //     data: { source, tbparams },
-    //   } = res.data;
-
-    //   stSearch.updateSearch(parm);
-    //   setPageValue(tbparams?.pagination);
-    //   // setPaing( state => ( {...state, ...pagination }) );
-    //   setDataSource(source);
-
-    //   const { order, field } = tbparams;
-    //   setTimeout(() => {
-    //     setColumns((state) =>
-    //       !!field
-    //         ? state.map((col) => {
-    //             if (col.key === field) col["sortOrder"] = order;
-    //             else delete col["sortOrder"];
-    //             return col;
-    //           })
-    //         : state
-    //     );
-    //   }, 80);
-    // });
 
     form.validateFields().then((v) => {
       const data = { ...v };
@@ -64,17 +41,6 @@ const ItemsAccess = () => {
         message.error("Request error!");
       });
 
-      // itemservice
-      //   .getAllitem(data), { ignoreLoading: Object.keys(parm.criteria).length !== 0 }
-      //   .then((res) => {
-      //     const { data } = res.data;
-      //     console.log(data);
-      //     setAccessData(data);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //     message.error("Request error!");
-      //   });
     });
   };
 
@@ -130,22 +96,11 @@ const ItemsAccess = () => {
   };
 
   useEffect(() => {
-    getData({});
+    getData();
   }, []);
 
-  const getData = (data) => {
+  const getData = () => {
     handleSearch()
-    // itemservice
-    //   .search(data)
-    //   .then((res) => {
-    //     const { data } = res.data;
-
-    //     setAccessData(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     message.error("Request error!");
-    //   });
   };
   const FormSearch = (
     <Collapse
