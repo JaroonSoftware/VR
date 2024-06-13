@@ -24,16 +24,16 @@ export const componentsEditable = {
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
     title: "รหัสใบขายสินค้า",
-    key: "qtcode",
-    dataIndex: "qtcode",
+    key: "socode",
+    dataIndex: "socode",
     align: "left",
     sorter: (a, b) => (a.qtcode).localeCompare(b.qtcode),
     width:140,
   },
   {
     title: "วันที่ใบขายสินค้า",
-    dataIndex: "qtdate",
-    key: "qtdate",
+    dataIndex: "sodate",
+    key: "sodate",
     width: 140,
     sorter: (a, b) => (a.qtdate).localeCompare(b.qtdate),
     render: (v) => dayjs(v).format("DD/MM/YYYY"),

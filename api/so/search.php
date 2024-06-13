@@ -10,15 +10,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $_POST = json_decode($rest_json, true);
 
     extract($_POST, EXTR_OVERWRITE, "_");  
-    $qtcode = !empty($qtcode) ? "and a.qtcode like '%$qtcode%'" : "";
+    $socode = !empty($socode) ? "and a.socode like '%$socode%'" : "";
     $cuscode = !empty($cuscode) ? "and c.cuscode like '%$cuscode%'" : "";
     $cusname = !empty($cusname) ? "and c.cusname like '%$cusname%'" : "";
-    // $spcode_cdt = !empty($spcode) ? "and e.spcode like '%$spcode%'" : "";
-    // $spname_cdt = !empty($spname) ? "and e.spname like '%$spname%'" : "";
     $created_by = !empty($created_by) ? "and ( u.firstname like '%$created_by%' or u.lastname like '%$created_by%' )" : "";
-    $qtdate = "";
-    if( !empty($qtdate_form) && !empty($qtdate_to) ) {
-        $qtdate = "and date_format( a.qtdate, '%Y-%m-%d' ) >= '$qtdate_form' and date_format( a.qtdate, '%Y-%m-%d' ) <= '$qtdate_to' ";
+    $socode = "";
+    if( !empty($socode_form) && !empty($socode_to) ) {
+        $socode = "and date_format( a.socode, '%Y-%m-%d' ) >= '$socode_form' and date_format( a.socode, '%Y-%m-%d' ) <= '$socode_to' ";
     } 
     
     try {   
@@ -27,11 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         a.*,
         c.*,
         concat(u.firstname, ' ', u.lastname) created_name
-        from qtmaster a        
+        from somaster a        
         left join customer c on a.cuscode = c.cuscode        
         left join user u on a.created_by = u.code
         where 1 = 1 and a.active_status = 'Y'
-        $qtcode
+        $socode
         $cuscode
         $cusname
         $created_by

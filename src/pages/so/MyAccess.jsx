@@ -9,10 +9,10 @@ import { SearchOutlined, ClearOutlined, FileAddOutlined } from '@ant-design/icon
 import { accessColumn } from "./model";
 
 import dayjs from 'dayjs';
-import QuotationService from '../../service/Quotation.service';
+import SOService from '../../service/SO.service';
 
 
-const quotService = QuotationService(); 
+const soService = SOService(); 
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
 
 const RangePicker = DatePicker.RangePicker;
@@ -23,8 +23,7 @@ const MyAccess = () => {
 
     const [accessData, setAccessData] = useState([]);
     const [activeSearch, setActiveSearch] = useState([]);
- 
-    let loading = false;
+
     
     const CollapseItemSearch = (
         <>  
@@ -44,11 +43,11 @@ const MyAccess = () => {
                     <Input placeholder='Enter First Name or Last Name.' />
                 </Form.Item>
             </Col>
-            <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+            {/* <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                 <Form.Item label='Product' name='stname'>
                     <Input placeholder='Enter Product Name.' />
                 </Form.Item>                            
-            </Col>
+            </Col> */}
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                 <Form.Item label='Customer Code' name='cuscode'>
                     <Input placeholder='Enter Customer Code.' />
@@ -95,21 +94,28 @@ const MyAccess = () => {
         />         
     );
 
-    const handleSearch = (load = false) => {
-        loading = load;
-        form.validateFields().then( v => {
-            const data = {...v}; 
+    const handleSearch = () => {
+
+        form.validateFields().then((v) => {
+            const data = { ...v };
             if( !!data?.sodate ) {
-                const arr = data?.quotdate.map( m => dayjs(m).format("YYYY-MM-DD") )
+                const arr = data?.sodate.map( m => dayjs(m).format("YYYY-MM-DD") )
                 const [sodate_form, sodate_to] = arr; 
                 //data.created_date = arr
                 Object.assign(data, {sodate_form, sodate_to});
             }
-
-            setTimeout( () => getData(data), 80);
-        }).catch( err => {
-            console.warn(err);
-        })
+            setTimeout( () => 
+                soService.search(data, { ignoreLoading: Object.keys(data).length !== 0}).then( res => {
+                    const {data} = res.data;
+        
+                    setAccessData(data);
+                }).catch( err => {
+                    console.log(err);
+                    message.error("Request error!");
+                })
+                , 80);
+      
+          });
     }
 
     const handleClear = () => {
@@ -129,7 +135,7 @@ const MyAccess = () => {
 
     const handleDelete = (data) => { 
         // startLoading();
-        quotService.deleted(data?.quotcode).then( _ => {
+        soService.deleted(data?.quotcode).then( _ => {
             const tmp = accessData.filter( d => d.quotcode !== data?.quotcode );
 
             setAccessData([...tmp]); 
@@ -149,14 +155,7 @@ const MyAccess = () => {
     const column = accessColumn( {handleEdit, handleDelete, handlePrint });
 
     const getData = (data) => {
-        quotService.search(data, { ignoreLoading: loading}).then( res => {
-            const {data} = res.data;
-
-            setAccessData(data);
-        }).catch( err => {
-            console.log(err);
-            message.error("Request error!");
-        });
+        handleSearch()
     }
 
     const init = async () => {
