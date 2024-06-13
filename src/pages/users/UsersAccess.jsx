@@ -120,14 +120,7 @@ const UsersAccess = () => {
       items={[
         {
           key: "1",
-          label: (
-            <>
-              <Typography.Title level={5}>
-                <SearchOutlined />
-                ค้นหา
-              </Typography.Title>
-            </>
-          ),
+          label: <><SearchOutlined /><span> ค้นหา</span></>,  
           children: (
             <>
               <Form form={form} layout="vertical" autoComplete="off">

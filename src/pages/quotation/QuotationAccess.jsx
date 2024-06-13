@@ -28,18 +28,18 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Code' name='qtcode'>
-                    <Input placeholder='Enter Quotation Code.' />
+                <Form.Item label='รหัสใบเสนอราคา' name='qtcode'>
+                    <Input placeholder='กรอกรหัสใบเสนอราคา' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Date.' name='qtdate'>
+                <Form.Item label='วันที่ใบเสนอราคา' name='qtdate'>
                     <RangePicker placeholder={['เริ่มวันที่', 'ถึงวันที่']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Request By.' name='created_by'>
-                    <Input placeholder='Enter First Name or Last Name.' />
+                <Form.Item label='ร้องขอโดย' name='created_by'>
+                    <Input placeholder='กรอก ชื่อ-นามสกุล ผู้ร้องขอ' />
                 </Form.Item>
             </Col>
             {/* <Col xs={24} sm={8} md={8} lg={8} xl={8}>
@@ -48,13 +48,13 @@ const QuotationAccess = () => {
                 </Form.Item>                            
             </Col> */}
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Code' name='cuscode'>
-                    <Input placeholder='Enter Customer Code.' />
+                <Form.Item label='รหัสลูกค้า' name='cuscode'>
+                    <Input placeholder='กรอกรหัสลูกค้า' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Name' name='cusname'>
-                    <Input placeholder='Enter Customer Name.' />
+                <Form.Item label='ชื่อลูกค้า' name='cusname'>
+                    <Input placeholder='กรอกชื่อลูกค้า' />
                 </Form.Item>                            
             </Col>
         </Row>
@@ -65,10 +65,10 @@ const QuotationAccess = () => {
           <Col xs={24} sm={8} md={12} lg={12} xl={12}>
               <Flex justify='flex-end' gap={8}>
                   <Button type="primary" size='small' className='bn-action' icon={<SearchOutlined />} onClick={() => handleSearch()}>
-                      Search
+                      ค้นหา
                   </Button>
                   <Button type="primary" size='small' className='bn-action' danger icon={<ClearOutlined />} onClick={() => handleClear()}>
-                      Clear
+                      ล้าง
                   </Button>
               </Flex>
           </Col>
@@ -84,7 +84,7 @@ const QuotationAccess = () => {
         items={[
         { 
             key: '1', 
-            label: <><SearchOutlined /><span> Search</span></>,  
+            label: <><SearchOutlined /><span> ค้นหา</span></>,  
             children: <>{CollapseItemSearch}</>,
             showArrow: false, 
         } 
