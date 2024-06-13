@@ -27,10 +27,10 @@ const ItemsAccess = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
       itemtypeservice
-        .getAllitem(data)
+        .search(data, { ignoreLoading: Object.keys(data).length !== 0 })
         .then((res) => {
           const { data } = res.data;
-          console.log(data);
+
           setAccessData(data);
         })
         .catch((err) => {

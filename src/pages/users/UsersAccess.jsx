@@ -26,7 +26,17 @@ const UsersAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      getData(data);
+      userService
+      .search(data, { ignoreLoading: Object.keys(data).length !== 0 })
+      .then((res) => {
+        const { data } = res.data;
+
+        setAccessData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Request error!");
+      });
     });
   };
 
