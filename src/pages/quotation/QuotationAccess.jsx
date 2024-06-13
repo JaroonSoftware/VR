@@ -23,9 +23,7 @@ const QuotationAccess = () => {
 
     const [accessData, setAccessData] = useState([]);
     const [activeSearch, setActiveSearch] = useState([]);
- 
-    let loading = false;
-    
+     
     const CollapseItemSearch = (
         <>  
         <Row gutter={[8,8]}> 
@@ -36,7 +34,7 @@ const QuotationAccess = () => {
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                 <Form.Item label='Quotation Date.' name='qtdate'>
-                    <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
+                    <RangePicker placeholder={['เริ่มวันที่', 'ถึงวันที่']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
@@ -44,11 +42,11 @@ const QuotationAccess = () => {
                     <Input placeholder='Enter First Name or Last Name.' />
                 </Form.Item>
             </Col>
-            <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Product' name='stname'>
+            {/* <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+                <Form.Item label='ชื่อสินค้า' name='stname'>
                     <Input placeholder='Enter Product Name.' />
                 </Form.Item>                            
-            </Col>
+            </Col> */}
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                 <Form.Item label='Customer Code' name='cuscode'>
                     <Input placeholder='Enter Customer Code.' />
@@ -95,21 +93,28 @@ const QuotationAccess = () => {
         />         
     );
 
-    const handleSearch = (load = true) => {
-        loading = load;
-        form.validateFields().then( v => {
-            const data = {...v}; 
-            if( !!data?.quotdate ) {
-                const arr = data?.quotdate.map( m => dayjs(m).format("YYYY-MM-DD") )
-                const [quotdate_form, quotdate_to] = arr; 
+    const handleSearch = () => {
+        
+        form.validateFields().then((v) => {
+            const data = { ...v };
+            if( !!data?.qtdate ) {
+                const arr = data?.qtdate.map( m => dayjs(m).format("YYYY-MM-DD") )
+                const [qtdate_form, qtdate_to] = arr; 
                 //data.created_date = arr
-                Object.assign(data, {quotdate_form, quotdate_to});
+                Object.assign(data, {qtdate_form, qtdate_to});
             }
-
-            setTimeout( () => getData(data), 80);
-        }).catch( err => {
-            console.warn(err);
-        })
+            setTimeout( () => 
+                quotService.search(data, { ignoreLoading: Object.keys(data).length !== 0}).then( res => {
+                    const {data} = res.data;
+        
+                    setAccessData(data);
+                }).catch( err => {
+                    console.log(err);
+                    message.error("Request error!");
+                })
+                , 80);
+      
+          });
     }
 
     const handleClear = () => {
@@ -149,14 +154,7 @@ const QuotationAccess = () => {
     const column = accessColumn( {handleEdit, handleDelete, handlePrint });
 
     const getData = (data) => {
-        quotService.search(data, { ignoreLoading: loading}).then( res => {
-            const {data} = res.data;
-
-            setAccessData(data);
-        }).catch( err => {
-            console.log(err);
-            message.error("Request error!");
-        });
+        handleSearch()
     }
 
     const init = async () => {
