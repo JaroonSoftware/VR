@@ -61,10 +61,9 @@ let _nav = [
     type: "group",
   },
   {
-    title: "ใบขายสินค้า",
+    title: "ใบวางบิล",
     icon: <ReconciliationFilled className="nav-ico" />,
-    to: "/so",
-    // to: "/1",
+    to: "/iv",    
   },
   {
     title: "ใบเสร็จรับเงิน",

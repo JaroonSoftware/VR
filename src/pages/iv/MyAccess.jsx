@@ -9,10 +9,10 @@ import { SearchOutlined, ClearOutlined, FileAddOutlined } from '@ant-design/icon
 import { accessColumn } from "./model";
 
 import dayjs from 'dayjs';
-import SOService from '../../service/SO.service';
+import InvoiceService from '../../service/Invoice.service';
 
 
-const soService = SOService(); 
+const ivService = InvoiceService(); 
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
 
 const RangePicker = DatePicker.RangePicker;
@@ -98,14 +98,14 @@ const MyAccess = () => {
 
         form.validateFields().then((v) => {
             const data = { ...v };
-            if( !!data?.sodate ) {
-                const arr = data?.sodate.map( m => dayjs(m).format("YYYY-MM-DD") )
-                const [sodate_form, sodate_to] = arr; 
+            if( !!data?.ivdate ) {
+                const arr = data?.ivdate.map( m => dayjs(m).format("YYYY-MM-DD") )
+                const [ivdate_form, ivdate_to] = arr; 
                 //data.created_date = arr
-                Object.assign(data, {sodate_form, sodate_to});
+                Object.assign(data, {ivdate_form, ivdate_to});
             }
             setTimeout( () => 
-                soService.search(data, { ignoreLoading: Object.keys(data).length !== 0}).then( res => {
+                ivService.search(data, { ignoreLoading: Object.keys(data).length !== 0}).then( res => {
                     const {data} = res.data;
         
                     setAccessData(data);
@@ -125,17 +125,17 @@ const MyAccess = () => {
     }
     // console.log(form);
     const hangleAdd = () => {  
-        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบขายสินค้า", action:"create"} } }); 
+        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบวางบิล", action:"create"} } }); 
     }
 
     const handleEdit = (data) => {
         
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบขายสินค้า", action:"edit", code:data?.socode} }, replace:true } );
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบวางบิล", action:"edit", code:data?.ivcode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 
         // startLoading();
-        soService.deleted(data?.quotcode).then( _ => {
+        ivService.deleted(data?.quotcode).then( _ => {
             const tmp = accessData.filter( d => d.quotcode !== data?.quotcode );
 
             setAccessData([...tmp]); 
@@ -173,7 +173,7 @@ const MyAccess = () => {
         <Flex className='width-100' align='center'>
             <Col span={12} className='p-0'>
                 <Flex gap={4} justify='start' align='center'>
-                  <Typography.Title className='m-0 !text-zinc-800' level={3}>หน้าจัดการใบขายสินค้า (Sales Order)</Typography.Title>
+                  <Typography.Title className='m-0 !text-zinc-800' level={3}>หน้าจัดการใบวางบิล (Billing Note)</Typography.Title>
                 </Flex>
             </Col>
             <Col span={12} style={{paddingInline:0}}>
@@ -183,7 +183,7 @@ const MyAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          เพิ่มใบขายสินค้า
+                          เพิ่มใบวางบิล
                       </Button>
                 </Flex>
             </Col>  

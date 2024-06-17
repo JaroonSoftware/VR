@@ -23,17 +23,17 @@ export const componentsEditable = {
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "รหัสใบขายสินค้า",
-    key: "socode",
-    dataIndex: "socode",
+    title: "รหัสใบวางบิล",
+    key: "ivcode",
+    dataIndex: "ivcode",
     align: "left",
-    sorter: (a, b) => (a.qtcode).localeCompare(b.qtcode),
+    sorter: (a, b) => (a.ivcode).localeCompare(b.ivcode),
     width:140,
   },
   {
-    title: "วันที่ใบขายสินค้า",
-    dataIndex: "sodate",
-    key: "sodate",
+    title: "วันที่ใบวางบิล",
+    dataIndex: "ivdate",
+    key: "ivdate",
     width: 140,
     sorter: (a, b) => (a.qtdate).localeCompare(b.qtdate),
     render: (v) => dayjs(v).format("DD/MM/YYYY"),

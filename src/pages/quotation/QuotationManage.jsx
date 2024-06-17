@@ -168,9 +168,9 @@ function QuotationManage() {
     ];
     const customer = {
       ...val,
-      cusaddress: addr.join(""),
-      cuscontact: val.contact,
-      custel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
+      address: addr.join(""),
+      contact: val.contact,
+      tel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
     };
     // console.log(val.contact)
     setFormDetail((state) => ({ ...state, ...customer }));
@@ -340,7 +340,7 @@ function QuotationManage() {
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start" align="center">
           <Typography.Title className="m-0 !text-zinc-800" level={3}>
-            List of Quotation
+          รายการสินค้า
           </Typography.Title>
         </Flex>
       </Col>
@@ -598,13 +598,13 @@ function QuotationManage() {
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider orientation="left" className="!mb-3 !mt-1">
                     {" "}
-                    Customer{" "}
+                    ลูกค้า{" "}
                   </Divider>
                   <Card style={cardStyle}>{SectionCustomer}</Card>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider orientation="left" className="!my-0">
-                    Quotations Product
+                  รายการสินค้าใบเสนอราคา
                   </Divider>
                   <Card style={{ backgroundColor: "#f0f0f0" }}>
                     {SectionProduct}
@@ -613,7 +613,7 @@ function QuotationManage() {
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider orientation="left" className="!mb-3 !mt-1">
                     {" "}
-                    Quotations Other{" "}
+                    ข้อมูลเพิ่มเติม{" "}
                   </Divider>
                   <Card style={cardStyle}>{SectionOther}</Card>
                 </Col>
