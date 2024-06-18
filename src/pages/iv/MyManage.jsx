@@ -21,8 +21,8 @@ import {
 import OptionService from "../../service/Options.service";
 import InvoiceService from "../../service/Invoice.service";
 import { SearchOutlined,SolutionOutlined,FileSearchOutlined,FileAddOutlined } from "@ant-design/icons";
-import ModalCustomers from "../../components/modal/customers/ModalCustomers";
-import ModalQuotation from "../../components/modal/quotation/ModalQuotation";
+import FormQuotation from "../../components/form/quotation/FormQuotation";
+import FormCustomers from "../../components/form/customers/FormCustomers";
 
 import {
   quotationForm,
@@ -50,9 +50,7 @@ function InvoiceManage() {
   const [form] = Form.useForm();
 
   /** Modal handle */
-  const [openCustomer, setOpenCustomer] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
-  const [openQuotation, setOpenQuotation] = useState(false);
 
   /** Quotation state */
   const [invoiceCode, setInvoiceCode] = useState(null);
@@ -160,41 +158,6 @@ function InvoiceManage() {
   };
 
   /** Function modal handle */
-  const handleChoosedCustomer = (val) => {
-    // console.log(val)
-    const fvalue = form.getFieldsValue();
-    const addr = [
-      !!val?.idno ? `${val.idno} ` : "",
-      !!val?.road ? `${val?.road} ` : "",
-      !!val?.subdistrict ? `${val.subdistrict} ` : "",
-      !!val?.district ? `${val.district} ` : "",
-      !!val?.province ? `${val.province} ` : "",
-      !!val?.zipcode ? `${val.zipcode} ` : "",
-      !!val?.country ? `(${val.country})` : "",
-    ];
-    const customer = {
-      ...val,
-      address: addr.join(""),
-      contact: val.contact,
-      tel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
-    };
-    // console.log(val.contact)
-    setFormDetail((state) => ({ ...state, ...customer }));
-    form.setFieldsValue({ ...fvalue, ...customer });
-  };
-
-  const handleChoosedQuotation = (val) => {
-    // console.log(val)
-    const fvalue = form.getFieldsValue();
-
-    const customer = {
-      ...val,
-      qtcode: val.qtcode,
-    };
-    // console.log(val.contact)
-    setFormDetail((state) => ({ ...state, ...customer }));
-    form.setFieldsValue({ ...fvalue, ...customer });
-  };
 
   const handleItemsChoosed = (value) => {
     // console.log(value);
@@ -312,7 +275,6 @@ function InvoiceManage() {
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  onClick={() => setOpenCustomer(true)}
                   style={{ minWidth: 40 }}
                 ></Button>
               </Space.Compact>
@@ -337,7 +299,6 @@ function InvoiceManage() {
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  onClick={() => setOpenQuotation(true)}
                   style={{ minWidth: 40 }}
                 ></Button>
               </Space.Compact>
@@ -531,65 +492,20 @@ function InvoiceManage() {
     return (
       <>
       <br></br>
-          <Card
-            title={
-              <>
-                <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                    <Typography.Title level={3} className="m-0">
-                      รหัสใบวางบิล : {invoiceCode}
-                    </Typography.Title>
-                  </Col>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                    <Flex
-                      gap={10}
-                      align="center"
-                      className="justify-start sm:justify-end"
-                    >
-                      <Typography.Title level={3} className="m-0">
-                        วันที่ใบวางบิล :{" "}
-                      </Typography.Title>
-                      <Form.Item name="qtdate" className="!m-0">
-                        <DatePicker
-                          className="input-40"
-                          allowClear={false}
-                          onChange={handleQuotDate}
-                        />
-                      </Form.Item>
-                    </Flex>
-                  </Col>
-                </Row>
-              </>
-            }
-          >
-            <Row className="m-0" gutter={[12, 12]}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Divider orientation="left" className="!mb-3 !mt-1">
-                  {" "}
-                  ข้อมูลลูกค้า{" "}
-                </Divider>
-                <Card style={cardStyle}>{SectionCustomer}</Card>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Divider orientation="left" className="!my-0">
-                  รายการสินค้าใบวางบิล
-                </Divider>
-                <Card style={{ backgroundColor: "#f0f0f0" }}>
-                  {SectionProduct}
-                </Card>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Divider orientation="left" className="!mb-3 !mt-1">
-                  {" "}
-                  ข้อมูลเพิ่มเติม{" "}
-                </Divider>
-                <Card style={cardStyle}>{SectionOther}</Card>
-              </Col>
-            </Row>
-          </Card>
+      <FormCustomers />          
       </>
     );
   };
+
+  const FormStepQuotation = () => {
+    return (
+      <>
+      <br></br>
+      <FormQuotation />          
+      </>
+    );
+  };
+
 
   const FormStepInvoice = () => {
     return (
@@ -665,8 +581,8 @@ function InvoiceManage() {
     {
       step: 2,
       icon: <FileSearchOutlined />,
-      title: "เลือกใบเสนอราคา/กำหนด VAT",
-      content: <FormStepCustomer />,
+      title: "เลือกใบเสนอราคา",
+      content: <FormStepQuotation />,
     },
     {
       step: 3,
@@ -688,30 +604,10 @@ function InvoiceManage() {
           onFinish={() => {
             handleConfirm();
           }}>
-            <StepPanel steps={steps} target={gotoFrom} />
+            <StepPanel steps={steps} target={gotoFrom} values={form.getFieldsValue()}/>
           </Form>          
         </Space>
       </div>
-
-      {openCustomer && (
-        <ModalCustomers
-          show={openCustomer}
-          close={() => setOpenCustomer(false)}
-          values={(v) => {
-            handleChoosedCustomer(v);
-          }}
-        ></ModalCustomers>
-      )}
-
-      {openQuotation && (
-        <ModalQuotation
-          show={openQuotation}
-          close={() => setOpenQuotation(false)}
-          values={(v) => {
-            handleChoosedQuotation(v);
-          }}
-        ></ModalQuotation>
-      )}
 
       {openProduct && (
         <ModalItems

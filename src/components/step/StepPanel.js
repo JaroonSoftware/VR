@@ -7,7 +7,9 @@ import { ArrowLeftOutlined,ArrowRightOutlined } from '@ant-design/icons';
 const StepPanel = (props) => {
   const [activeStep, setActiveStep] = useState(0);
 
-  function next() {
+  function next(value) {
+    // if(props.cuscode)
+    console.log(value)
     const nextStep = activeStep + 1;
     setActiveStep(nextStep);
   }
@@ -42,7 +44,7 @@ const StepPanel = (props) => {
                 </Button>
               )}
               {activeStep < props.steps.length - 1 && (
-                <Button type="primary" style={{ width: 120 }} icon={ <ArrowRightOutlined /> } onClick={() => next()}>
+                <Button type="primary" style={{ width: 120 }} icon={ <ArrowRightOutlined /> } onClick={() => next(props)}>
                   Next
                 </Button>
               )}
