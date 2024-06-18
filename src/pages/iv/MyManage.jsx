@@ -10,12 +10,17 @@ import {
   Table,
   Typography,
   message,
+  Card,
+  Col,
+  Divider,
+  Flex,
+  Row,
+  Space,
 } from "antd";
-import { Card, Col, Divider, Flex, Row, Space } from "antd";
 
 import OptionService from "../../service/Options.service";
 import InvoiceService from "../../service/Invoice.service";
-import { SaveFilled, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined,SolutionOutlined,FileSearchOutlined,FileAddOutlined } from "@ant-design/icons";
 import ModalCustomers from "../../components/modal/customers/ModalCustomers";
 import ModalQuotation from "../../components/modal/quotation/ModalQuotation";
 
@@ -24,15 +29,14 @@ import {
   columnsParametersEditable,
   componentsEditable,
 } from "./model";
+import { StepPanel } from "../../components/step/StepPanel";
 import { ModalItems } from "../../components/modal/items/modal-items";
 import dayjs from "dayjs";
 import { delay, comma } from "../../utils/util";
-import { ButtonBack } from "../../components/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuPackageSearch } from "react-icons/lu";
-import { LuPrinter } from "react-icons/lu";
 const opservice = OptionService();
 const ivservice = InvoiceService();
 
@@ -49,7 +53,7 @@ function InvoiceManage() {
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
   const [openQuotation, setOpenQuotation] = useState(false);
-  
+
   /** Quotation state */
   const [invoiceCode, setInvoiceCode] = useState(null);
 
@@ -198,7 +202,7 @@ function InvoiceManage() {
     handleSummaryPrice();
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = () => {    
     form
       .validateFields()
       .then((v) => {
@@ -237,11 +241,6 @@ function InvoiceManage() {
     navigate(gotoFrom, { replace: true });
     await delay(300);
     console.clear();
-  };
-
-  const handlePrint = () => {
-    const newWindow = window.open("", "_blank");
-    newWindow.location.href = `/quo-print/${formDetail.quotcode}`;
   };
 
   const handleDelete = (code) => {
@@ -528,133 +527,169 @@ function InvoiceManage() {
     </>
   );
 
-  ///** button */
-
-  const SectionTop = (
-    <Row
-      gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
-      className="m-0"
-    >
-      <Col span={12} className="p-0">
-        <Flex gap={4} justify="start">
-          <ButtonBack target={gotoFrom} />
-        </Flex>
-      </Col>
-      <Col span={12} style={{ paddingInline: 0 }}>
-        <Flex gap={4} justify="end">
-          {!!formDetail.quotcode && (
-            <Button
-              icon={<LuPrinter />}
-              onClick={() => {
-                handlePrint();
-              }}
-              className="bn-center !bg-orange-400 !text-white !border-transparent"
-            >
-              PRINT QUOTATION{" "}
-            </Button>
-          )}
-        </Flex>
-      </Col>
-    </Row>
-  );
-
-  const SectionBottom = (
-    <Row
-      gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
-      className="m-0"
-    >
-      <Col span={12} className="p-0">
-        <Flex gap={4} justify="start">
-          <ButtonBack target={gotoFrom} />
-        </Flex>
-      </Col>
-      <Col span={12} style={{ paddingInline: 0 }}>
-        <Flex gap={4} justify="end">
-          <Button
-            className="bn-center justify-center"
-            icon={<SaveFilled style={{ fontSize: "1rem" }} />}
-            type="primary"
-            style={{ width: "9.5rem" }}
-            onClick={() => {
-              handleConfirm();
-            }}
+  const FormStepCustomer = () => {
+    return (
+      <>
+      <br></br>
+          <Card
+            title={
+              <>
+                <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                    <Typography.Title level={3} className="m-0">
+                      รหัสใบวางบิล : {invoiceCode}
+                    </Typography.Title>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                    <Flex
+                      gap={10}
+                      align="center"
+                      className="justify-start sm:justify-end"
+                    >
+                      <Typography.Title level={3} className="m-0">
+                        วันที่ใบวางบิล :{" "}
+                      </Typography.Title>
+                      <Form.Item name="qtdate" className="!m-0">
+                        <DatePicker
+                          className="input-40"
+                          allowClear={false}
+                          onChange={handleQuotDate}
+                        />
+                      </Form.Item>
+                    </Flex>
+                  </Col>
+                </Row>
+              </>
+            }
           >
-            Save
-          </Button>
-        </Flex>
-      </Col>
-    </Row>
-  );
+            <Row className="m-0" gutter={[12, 12]}>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Divider orientation="left" className="!mb-3 !mt-1">
+                  {" "}
+                  ข้อมูลลูกค้า{" "}
+                </Divider>
+                <Card style={cardStyle}>{SectionCustomer}</Card>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Divider orientation="left" className="!my-0">
+                  รายการสินค้าใบวางบิล
+                </Divider>
+                <Card style={{ backgroundColor: "#f0f0f0" }}>
+                  {SectionProduct}
+                </Card>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Divider orientation="left" className="!mb-3 !mt-1">
+                  {" "}
+                  ข้อมูลเพิ่มเติม{" "}
+                </Divider>
+                <Card style={cardStyle}>{SectionOther}</Card>
+              </Col>
+            </Row>
+          </Card>
+      </>
+    );
+  };
+
+  const FormStepInvoice = () => {
+    return (
+      <>
+      <br></br>
+          <Card
+            title={
+              <>
+                <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                    <Typography.Title level={3} className="m-0">
+                      รหัสใบวางบิล : {invoiceCode}
+                    </Typography.Title>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                    <Flex
+                      gap={10}
+                      align="center"
+                      className="justify-start sm:justify-end"
+                    >
+                      <Typography.Title level={3} className="m-0">
+                        วันที่ใบวางบิล :{" "}
+                      </Typography.Title>
+                      <Form.Item name="qtdate" className="!m-0">
+                        <DatePicker
+                          className="input-40"
+                          allowClear={false}
+                          onChange={handleQuotDate}
+                        />
+                      </Form.Item>
+                    </Flex>
+                  </Col>
+                </Row>
+              </>
+            }
+          >
+            <Row className="m-0" gutter={[12, 12]}>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Divider orientation="left" className="!mb-3 !mt-1">
+                  {" "}
+                  ข้อมูลลูกค้า{" "}
+                </Divider>
+                <Card style={cardStyle}>{SectionCustomer}</Card>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Divider orientation="left" className="!my-0">
+                  รายการสินค้าใบวางบิล
+                </Divider>
+                <Card style={{ backgroundColor: "#f0f0f0" }}>
+                  {SectionProduct}
+                </Card>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Divider orientation="left" className="!mb-3 !mt-1">
+                  {" "}
+                  ข้อมูลเพิ่มเติม{" "}
+                </Divider>
+                <Card style={cardStyle}>{SectionOther}</Card>
+              </Col>
+            </Row>
+          </Card>
+      </>
+    );
+  };
+
+  const steps = [
+    {
+      step: 1,
+      title: "เลือกลูกค้า",
+      icon: <SolutionOutlined />,
+      content: <FormStepCustomer />,      
+    },
+    {
+      step: 2,
+      icon: <FileSearchOutlined />,
+      title: "เลือกใบเสนอราคา/กำหนด VAT",
+      content: <FormStepCustomer />,
+    },
+    {
+      step: 3,
+      icon: <FileAddOutlined />,      
+      title: "สร้างใบวางบิล/ใบกำกับภาษี",
+      content: <FormStepInvoice />,
+    },
+  ];
 
   return (
     <div className="quotation-manage">
       <div id="quotation-manage" className="px-0 sm:px-0 md:px-8 lg:px-8">
         <Space direction="vertical" className="flex gap-4">
-          {SectionTop}
-          <Form
-            form={form}
-            layout="vertical"
-            className="width-100"
-            autoComplete="off"
-          >
-            <Card
-              title={
-                <>
-                  <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                      <Typography.Title level={3} className="m-0">
-                        รหัสใบวางบิล : {invoiceCode}
-                      </Typography.Title>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                      <Flex
-                        gap={10}
-                        align="center"
-                        className="justify-start sm:justify-end"
-                      >
-                        <Typography.Title level={3} className="m-0">
-                          วันที่ใบวางบิล :{" "}
-                        </Typography.Title>
-                        <Form.Item name="qtdate" className="!m-0">
-                          <DatePicker
-                            className="input-40"
-                            allowClear={false}
-                            onChange={handleQuotDate}
-                          />
-                        </Form.Item>
-                      </Flex>
-                    </Col>
-                  </Row>
-                </>
-              }
-            >
-              <Row className="m-0" gutter={[12, 12]}>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Divider orientation="left" className="!mb-3 !mt-1">
-                    {" "}
-                    ข้อมูลลูกค้า{" "}
-                  </Divider>
-                  <Card style={cardStyle}>{SectionCustomer}</Card>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Divider orientation="left" className="!my-0">
-                    รายการสินค้าใบวางบิล
-                  </Divider>
-                  <Card style={{ backgroundColor: "#f0f0f0" }}>
-                    {SectionProduct}
-                  </Card>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Divider orientation="left" className="!mb-3 !mt-1">
-                    {" "}
-                    ข้อมูลเพิ่มเติม{" "}
-                  </Divider>
-                  <Card style={cardStyle}>{SectionOther}</Card>
-                </Col>
-              </Row>
-            </Card>
-          </Form>
-          {SectionBottom}
+          <br></br>
+          <Form form={form}
+          layout="vertical"
+          className="width-100"
+          autoComplete="off"
+          onFinish={() => {
+            handleConfirm();
+          }}>
+            <StepPanel steps={steps} target={gotoFrom} />
+          </Form>          
         </Space>
       </div>
 
