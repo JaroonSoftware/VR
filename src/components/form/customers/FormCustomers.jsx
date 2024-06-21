@@ -9,8 +9,6 @@ import {
   Spin,
   Table,
   Typography,
-  Input,
-  Form,
 } from "antd";
 
 import { customersColumn } from "./form-customers.model.js";
@@ -18,7 +16,7 @@ import OptionService from "../../../service/Options.service.js";
 
 const opservice = OptionService();
 
-export default function FormCustomers(form) {
+export default function FormCustomers({values1}) {
   const [customersData, setCustomersData] = useState([]);
   const [customersDataWrap, setCustomersDataWrap] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,11 +31,17 @@ export default function FormCustomers(form) {
 
   /** handle logic component */
   const handleChoose = (value) => {
+    // console.log(value.cuscode);    
+    
     setCusCode(value.cuscode);
     setCusName(value.cusname);
-    // values(value);
-
-    // console.log(value);
+    
+    const ininteial_value = {
+      cuscode: value.cuscode,
+      cusname: value.cusname,
+    };
+    values1(ininteial_value);
+    
   };
 
   /** setting initial component */
@@ -80,14 +84,8 @@ export default function FormCustomers(form) {
                 <Row className="m-0" gutter={[12, 12]}>
                   <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
                     <Typography.Title level={3} className="m-0">
-                      รหัสลูกค้า :{" "}
+                      รหัสลูกค้า :{cusCode}
                     </Typography.Title>
-                    <Form.Item
-                      name="selectcuscode"
-                      className="!m-0"
-                    >
-                      <Input placeholder="Customer Tel." value={cusCode} />
-                    </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={18} lg={18} xl={18} xxl={18}>
                     <Typography.Title level={3} className="m-0">

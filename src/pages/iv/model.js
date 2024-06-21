@@ -232,14 +232,9 @@ export const quotationForm = {
   grand_total_price: 0,
 }
 
-export const quotationDetailForm = {  
-  qtcode : null,
-  stcode : null,
-  stname : null,  
-  discount : 0,
-  qty : 0,
-  price : 0,
-  unit: null,
+export const checkStepForm = {  
+  cuscode : null,
+  cusname : null,
 }
 
 

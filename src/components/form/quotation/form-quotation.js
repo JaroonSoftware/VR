@@ -1,5 +1,5 @@
-import FormCustomers from "./FormQuotation.jsx";
+import FormQuotation from "./FormQuotation.jsx";
 
 
 
-export { FormCustomers } 
+export { FormQuotation } 

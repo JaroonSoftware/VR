@@ -20,12 +20,18 @@ import {
 
 import OptionService from "../../service/Options.service";
 import InvoiceService from "../../service/Invoice.service";
-import { SearchOutlined,SolutionOutlined,FileSearchOutlined,FileAddOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  SolutionOutlined,
+  FileSearchOutlined,
+  FileAddOutlined,
+} from "@ant-design/icons";
 import FormQuotation from "../../components/form/quotation/FormQuotation";
 import FormCustomers from "../../components/form/customers/FormCustomers";
 
 import {
   quotationForm,
+  checkStepForm,
   columnsParametersEditable,
   componentsEditable,
 } from "./model";
@@ -57,6 +63,7 @@ function InvoiceManage() {
 
   /** Detail Data State */
   const [listDetail, setListDetail] = useState([]);
+  const [checkStep, setCheckStep] = useState(checkStepForm);
 
   const [formDetail, setFormDetail] = useState(quotationForm);
 
@@ -77,6 +84,7 @@ function InvoiceManage() {
           data: { header, detail },
         } = res.data;
         const { qtcode, qtdate } = header;
+        
         setFormDetail(header);
         setListDetail(detail);
         setInvoiceCode(qtcode);
@@ -165,7 +173,18 @@ function InvoiceManage() {
     handleSummaryPrice();
   };
 
-  const handleConfirm = () => {    
+  const handleNextStep = (vales) => {
+    // console.log(val);
+    const ininteial_value = {
+      ...checkStep,
+      ...vales,
+    };
+    setCheckStep(ininteial_value);
+    // console.log(checkStep);
+    
+  };
+
+  const handleConfirm = () => {
     form
       .validateFields()
       .then((v) => {
@@ -491,8 +510,13 @@ function InvoiceManage() {
   const FormStepCustomer = () => {
     return (
       <>
-      <br></br>
-      <FormCustomers />          
+        <br></br>
+        <FormCustomers  
+        values1={(v) => {
+          // console.log(v)
+        handleNextStep(v);
+      }}
+      />
       </>
     );
   };
@@ -500,73 +524,72 @@ function InvoiceManage() {
   const FormStepQuotation = () => {
     return (
       <>
-      <br></br>
-      <FormQuotation />          
+        <br></br>
+        <FormQuotation />
       </>
     );
   };
 
-
   const FormStepInvoice = () => {
     return (
       <>
-      <br></br>
-          <Card
-            title={
-              <>
-                <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+        <br></br>
+        <Card
+          title={
+            <>
+              <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Typography.Title level={3} className="m-0">
+                    รหัสใบวางบิล : {invoiceCode}
+                  </Typography.Title>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Flex
+                    gap={10}
+                    align="center"
+                    className="justify-start sm:justify-end"
+                  >
                     <Typography.Title level={3} className="m-0">
-                      รหัสใบวางบิล : {invoiceCode}
+                      วันที่ใบวางบิล :{" "}
                     </Typography.Title>
-                  </Col>
-                  <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                    <Flex
-                      gap={10}
-                      align="center"
-                      className="justify-start sm:justify-end"
-                    >
-                      <Typography.Title level={3} className="m-0">
-                        วันที่ใบวางบิล :{" "}
-                      </Typography.Title>
-                      <Form.Item name="qtdate" className="!m-0">
-                        <DatePicker
-                          className="input-40"
-                          allowClear={false}
-                          onChange={handleQuotDate}
-                        />
-                      </Form.Item>
-                    </Flex>
-                  </Col>
-                </Row>
-              </>
-            }
-          >
-            <Row className="m-0" gutter={[12, 12]}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Divider orientation="left" className="!mb-3 !mt-1">
-                  {" "}
-                  ข้อมูลลูกค้า{" "}
-                </Divider>
-                <Card style={cardStyle}>{SectionCustomer}</Card>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Divider orientation="left" className="!my-0">
-                  รายการสินค้าใบวางบิล
-                </Divider>
-                <Card style={{ backgroundColor: "#f0f0f0" }}>
-                  {SectionProduct}
-                </Card>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <Divider orientation="left" className="!mb-3 !mt-1">
-                  {" "}
-                  ข้อมูลเพิ่มเติม{" "}
-                </Divider>
-                <Card style={cardStyle}>{SectionOther}</Card>
-              </Col>
-            </Row>
-          </Card>
+                    <Form.Item name="qtdate" className="!m-0">
+                      <DatePicker
+                        className="input-40"
+                        allowClear={false}
+                        onChange={handleQuotDate}
+                      />
+                    </Form.Item>
+                  </Flex>
+                </Col>
+              </Row>
+            </>
+          }
+        >
+          <Row className="m-0" gutter={[12, 12]}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Divider orientation="left" className="!mb-3 !mt-1">
+                {" "}
+                ข้อมูลลูกค้า{" "}
+              </Divider>
+              <Card style={cardStyle}>{SectionCustomer}</Card>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Divider orientation="left" className="!my-0">
+                รายการสินค้าใบวางบิล
+              </Divider>
+              <Card style={{ backgroundColor: "#f0f0f0" }}>
+                {SectionProduct}
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Divider orientation="left" className="!mb-3 !mt-1">
+                {" "}
+                ข้อมูลเพิ่มเติม{" "}
+              </Divider>
+              <Card style={cardStyle}>{SectionOther}</Card>
+            </Col>
+          </Row>
+        </Card>
       </>
     );
   };
@@ -576,7 +599,7 @@ function InvoiceManage() {
       step: 1,
       title: "เลือกลูกค้า",
       icon: <SolutionOutlined />,
-      content: <FormStepCustomer />,      
+      content: <FormStepCustomer />,
     },
     {
       step: 2,
@@ -586,26 +609,42 @@ function InvoiceManage() {
     },
     {
       step: 3,
-      icon: <FileAddOutlined />,      
+      icon: <FileAddOutlined />,
       title: "สร้างใบวางบิล/ใบกำกับภาษี",
       content: <FormStepInvoice />,
     },
   ];
+  const setTest = () => {
+    alert(checkStep);
+    console.log(checkStep)
+  };
 
   return (
     <div className="quotation-manage">
+      <Button
+        type="primary"
+        icon={<SearchOutlined />}
+        onClick={() => setTest()}
+        style={{ minWidth: 40 }}
+      >Test</Button>
       <div id="quotation-manage" className="px-0 sm:px-0 md:px-8 lg:px-8">
         <Space direction="vertical" className="flex gap-4">
           <br></br>
-          <Form form={form}
-          layout="vertical"
-          className="width-100"
-          autoComplete="off"
-          onFinish={() => {
-            handleConfirm();
-          }}>
-            <StepPanel steps={steps} target={gotoFrom} values={form.getFieldsValue()}/>
-          </Form>          
+          <Form
+            form={form}
+            layout="vertical"
+            className="width-100"
+            autoComplete="off"
+            onFinish={() => {
+              handleConfirm();
+            }}
+          >
+            <StepPanel
+              steps={steps}
+              backtarget={gotoFrom}
+              dataStep={checkStep}
+            />
+          </Form>
         </Space>
       </div>
 

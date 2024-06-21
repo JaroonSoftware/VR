@@ -1,17 +1,28 @@
 import React, { useState } from "react";
-import { Button, Steps, Flex, Col, Row } from "antd";
+import { Button, Steps, Flex, Col, Row,message } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import { ButtonBack } from "../../components/button";
-import { ArrowLeftOutlined,ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const StepPanel = (props) => {
   const [activeStep, setActiveStep] = useState(0);
 
-  function next(value) {
+  function next() {
     // if(props.cuscode)
-    console.log(value)
+    // console.log(props.checkStep.cuscode)
     const nextStep = activeStep + 1;
     setActiveStep(nextStep);
+  }
+
+  function Checknext() {
+    console.log(props)
+    if (activeStep === 0) {
+      if (props.dataStep.cuscode !== null) 
+        next();
+      else
+      message.error("กรุณา เลือกลูกค้าก่อน.");
+      
+    }
   }
 
   function prev() {
@@ -26,25 +37,34 @@ const StepPanel = (props) => {
 
   return (
     <>
-      <div className="steps-action">        
+      <div className="steps-action">
         <Row
           gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
           className="m-0"
         >
           <Col span={12} className="p-0">
-          <Flex gap={4} justify="start">
-            <ButtonBack target={props.target} />
-          </Flex>
-        </Col>
+            <Flex gap={4} justify="start">
+              <ButtonBack target={props.backtarget} />
+            </Flex>
+          </Col>
           <Col span={12} style={{ paddingInline: 0 }}>
             <Flex gap={4} justify="end">
               {activeStep > 0 && (
-                <Button style={{ width: 120 }} icon={ <ArrowLeftOutlined /> } onClick={() => prev()}>
+                <Button
+                  style={{ width: 120 }}
+                  icon={<ArrowLeftOutlined />}
+                  onClick={() => prev()}
+                >
                   Previous
                 </Button>
               )}
               {activeStep < props.steps.length - 1 && (
-                <Button type="primary" style={{ width: 120 }} icon={ <ArrowRightOutlined /> } onClick={() => next(props)}>
+                <Button
+                  type="primary"
+                  style={{ width: 120 }}
+                  icon={<ArrowRightOutlined />}
+                  onClick={() => Checknext()}
+                >
                   Next
                 </Button>
               )}

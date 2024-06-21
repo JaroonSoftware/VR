@@ -182,11 +182,11 @@ const ItemsManage = () => {
       </Col>
       <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={6}>
         <Form.Item
-          label="ชื่อ-นามสกุล"
+          label="ชื่อลูกค้า"
           name="cusname"
           rules={[{ required: true, message: "กรุณากรอกข้อมูล!" }]}
         >
-          <Input placeholder="กรอกชื่อ-นามสกุล" />
+          <Input placeholder="กรอกชื่อลูกค้า" />
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={6}>
