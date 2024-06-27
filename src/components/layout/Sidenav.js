@@ -39,8 +39,8 @@ const Sidenav = () => {
   return (
     <>
       <Flex vertical className="brand width-100" justify='center' align='center' >
-        <img src={logo} alt="9star logo" style={{width:100, height:100}}  />
-        <span>VEERA DRYCUTTING</span>
+        <img src={logo} alt="9star logo" style={{width:110, height:100}}  />
+        <span>TIDMUN</span>
       </Flex>
       <hr />
 
@@ -57,7 +57,7 @@ const Sidenav = () => {
                 <Notification title={item?.title} />
               </MenuItem>
             ) : (
-              <MenuItem  type="primary" danger key={idx} className="nav-group-title">
+              <MenuItem key={idx} className="nav-group-title">
                 {item?.title}
               </MenuItem>
             )

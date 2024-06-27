@@ -5,50 +5,38 @@ import {
   DatePicker,
   Form,
   Input,
-  InputNumber,
   Modal,
   Table,
   Typography,
   message,
-  Card,
-  Col,
-  Divider,
-  Flex,
-  Row,
-  Space,
 } from "antd";
+import { Card, Col, Divider, Flex, Row, Space } from "antd";
 
 import OptionService from "../../service/Options.service";
 import InvoiceService from "../../service/Invoice.service";
-import {
-  SearchOutlined,
-  SolutionOutlined,
-  FileSearchOutlined,
-  FileAddOutlined,
-} from "@ant-design/icons";
-import FormQuotation from "../../components/form/quotation/FormQuotation";
-import FormCustomers from "../../components/form/customers/FormCustomers";
+import { SaveFilled, SearchOutlined } from "@ant-design/icons";
+import ModalSupplier from "../../components/modal/supplier/ModalSupplier";
 
 import {
   quotationForm,
-  checkStepForm,
   columnsParametersEditable,
   componentsEditable,
 } from "./model";
-import { StepPanel } from "../../components/step/StepPanel";
-import { ModalItems } from "../../components/modal/items/modal-items";
+import { ModalItems } from "../../components/modal/itemsbyPO/modal-items";
 import dayjs from "dayjs";
-import { delay, comma } from "../../utils/util";
+import { delay } from "../../utils/util";
+import { ButtonBack } from "../../components/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuPackageSearch } from "react-icons/lu";
+import { LuPrinter } from "react-icons/lu";
 const opservice = OptionService();
-const ivservice = InvoiceService();
+const quservice = InvoiceService();
 
-const gotoFrom = "/iv";
+const gotoFrom = "/goods-receipt";
 
-function InvoiceManage() {
+function GoodsReceiptManage() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -56,14 +44,14 @@ function InvoiceManage() {
   const [form] = Form.useForm();
 
   /** Modal handle */
+  const [openSupplier, setOpenSupplier] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
 
-  /** Quotation state */
-  const [invoiceCode, setInvoiceCode] = useState(null);
+  /** GoodsReceipt state */
+  const [poCode, setPoCode] = useState(null);
 
   /** Detail Data State */
   const [listDetail, setListDetail] = useState([]);
-  const [checkStep, setCheckStep] = useState(checkStepForm);
 
   const [formDetail, setFormDetail] = useState(quotationForm);
 
@@ -77,33 +65,32 @@ function InvoiceManage() {
   useEffect(() => {
     const initial = async () => {
       if (config?.action !== "create") {
-        const res = await ivservice
+        const res = await quservice
           .get(config?.code)
-          .catch((error) => message.error("get Invoice data fail."));
+          .catch((error) => message.error("get GoodsReceipt data fail."));
         const {
           data: { header, detail },
         } = res.data;
-        const { qtcode, qtdate } = header;
-        
+        const { grcode, grdate } = header;
         setFormDetail(header);
         setListDetail(detail);
-        setInvoiceCode(qtcode);
-        form.setFieldsValue({ ...header, qtdate: dayjs(qtdate) });
+        setPoCode(grcode);
+        form.setFieldsValue({ ...header, grdate: dayjs(grdate) });
 
         // setTimeout( () => {  handleCalculatePrice(head?.valid_price_until, head?.dated_price_until) }, 200);
-        // handleChoosedCustomer(head);
+        // handleChoosedSupplier(head);
       } else {
         const { data: code } = (
-          await ivservice.code().catch((e) => {
-            message.error("get Invoice code fail.");
+          await quservice.code().catch((e) => {
+            message.error("get GoodsReceipt code fail.");
           })
         ).data;
-        setInvoiceCode(code);
+        setPoCode(code);
         form.setFieldValue("vat", 7);
         const ininteial_value = {
           ...formDetail,
-          ivcode: code,
-          ivdate: dayjs(new Date()),
+          grcode: code,
+          grdate: dayjs(new Date()),
         };
         setFormDetail(ininteial_value);
         form.setFieldsValue(ininteial_value);
@@ -166,22 +153,34 @@ function InvoiceManage() {
   };
 
   /** Function modal handle */
+  const handleChoosedSupplier = (val) => {
+    // console.log(val)
+    const fvalue = form.getFieldsValue();
+    const addr = [
+      !!val?.idno ? `${val.idno} ` : "",
+      !!val?.road ? `${val?.road} ` : "",
+      !!val?.subdistrict ? `${val.subdistrict} ` : "",
+      !!val?.district ? `${val.district} ` : "",
+      !!val?.province ? `${val.province} ` : "",
+      !!val?.zipcode ? `${val.zipcode} ` : "",
+      !!val?.country ? `(${val.country})` : "",
+    ];
+    const supplier = {
+      ...val,
+      address: addr.join(""),
+      contact: val.contact,
+      tel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
+    };
+    // console.log(val.contact)
+    setFormDetail((state) => ({ ...state, ...supplier }));
+    form.setFieldsValue({ ...fvalue, ...supplier });
+    setListDetail([]);
+  };
 
   const handleItemsChoosed = (value) => {
     // console.log(value);
     setListDetail(value);
     handleSummaryPrice();
-  };
-
-  const handleNextStep = (vales) => {
-    // console.log(val);
-    const ininteial_value = {
-      ...checkStep,
-      ...vales,
-    };
-    setCheckStep(ininteial_value);
-    // console.log(checkStep);
-    
   };
 
   const handleConfirm = () => {
@@ -192,6 +191,7 @@ function InvoiceManage() {
 
         const header = {
           ...formDetail,
+          grdate: dayjs(form.getFieldValue("grdate")).format("YYYY-MM-DD"),
           remark: form.getFieldValue("remark"),
         };
         const detail = listDetail;
@@ -199,15 +199,15 @@ function InvoiceManage() {
         const parm = { header, detail };
         // console.log(parm)
         const actions =
-          config?.action !== "create" ? ivservice.update : ivservice.create;
+          config?.action !== "create" ? quservice.update : quservice.create;
         actions(parm)
           .then((r) => {
             handleClose().then((r) => {
-              message.success("Request Quotation success.");
+              message.success("Request GoodsReceipt success.");
             });
           })
           .catch((err) => {
-            message.error("Request Quotation fail.");
+            message.error("Request GoodsReceipt fail.");
             console.warn(err);
           });
       })
@@ -225,9 +225,14 @@ function InvoiceManage() {
     console.clear();
   };
 
+  const handlePrint = () => {
+    const newWindow = window.open("", "_blank");
+    newWindow.location.href = `/quo-print/${formDetail.quotcode}`;
+  };
+
   const handleDelete = (code) => {
     const itemDetail = [...listDetail];
-    const newData = itemDetail.filter((item) => item?.stcode !== code);
+    const newData = itemDetail.filter((item) => item?.code !== code);
     setListDetail([...newData]);
   };
 
@@ -241,8 +246,8 @@ function InvoiceManage() {
         icon={
           <RiDeleteBin5Line style={{ fontSize: "1rem", marginTop: "3px" }} />
         }
-        onClick={() => handleDelete(record?.stcode)}
-        disabled={!record?.stcode}
+        onClick={() => handleDelete(record?.code)}
+        disabled={!record?.code}
       />
     ) : null;
   };
@@ -252,7 +257,7 @@ function InvoiceManage() {
       const itemDetail = [...listDetail];
       const newData = [...itemDetail];
 
-      const ind = newData.findIndex((item) => r?.stcode === item?.stcode);
+      const ind = newData.findIndex((item) => r?.code === item?.code);
       if (ind < 0) return itemDetail;
       const item = newData[ind];
       newData.splice(ind, 1, {
@@ -271,79 +276,72 @@ function InvoiceManage() {
     handleRemove,
   });
 
-  const SectionCustomer = (
+  const SectionSupplier = (
     <>
       <Space size="small" direction="vertical" className="flex gap-2">
         <Row gutter={[8, 8]} className="m-0">
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name="cuscode"
-              htmlFor="cuscode-1"
-              label="รหัสลูกค้า"
+              name="supcode"
+              htmlFor="supcode-1"
+              label="Supplier Code"
               className="!mb-1"
               rules={[{ required: true, message: "Missing Loading type" }]}
             >
               <Space.Compact style={{ width: "100%" }}>
                 <Input
                   readOnly
-                  placeholder="เลือก ลูกค้า"
-                  id="cuscode-1"
-                  value={formDetail.cuscode}
+                  placeholder="เลือก ผู้ขาย"
+                  id="supcode-1"
+                  value={formDetail.supcode}
                   className="!bg-white"
                 />
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
+                  onClick={() => setOpenSupplier(true)}
                   style={{ minWidth: 40 }}
                 ></Button>
               </Space.Compact>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+            <Form.Item name="supname" label="Supplier Name" className="!mb-1">
+              <Input placeholder="Supplier Name." readOnly />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+            <Form.Item
+              name="address"
+              label="Supplier Address"
+              className="!mb-1"
+            >
+              <Input placeholder="Supplier Address." readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name="qtcode"
-              htmlFor="qtcode-1"
-              label="เลขที่ใบเสนอราคา"
+              name="contact"
+              label="Supplier Contact"
               className="!mb-1"
-              rules={[{ required: true, message: "Missing Loading type" }]}
             >
-              <Space.Compact style={{ width: "100%" }}>
-                <Input
-                  readOnly
-                  placeholder="เลือก ใบเสนอราคา"
-                  id="qtcode-1"
-                  value={formDetail.qtcode}
-                  className="!bg-white"
-                />
-                <Button
-                  type="primary"
-                  icon={<SearchOutlined />}
-                  style={{ minWidth: 40 }}
-                ></Button>
-              </Space.Compact>
+              <Input placeholder="Supplier Contact." readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="cusname" label="ชื่อลุกค้า" className="!mb-1">
-              <Input placeholder="Customer Name." readOnly />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="address" label="ที่อยู่" className="!mb-1">
-              <Input placeholder="Customer Address." readOnly />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="contact" label="ติดต่อ" className="!mb-1">
-              <Input placeholder="Customer Contact." readOnly />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="tel" label="เบอร์โทรศัพท์" className="!mb-1">
-              <Input placeholder="Customer Tel." readOnly />
+            <Form.Item name="tel" label="Supplier Tel" className="!mb-1">
+              <Input placeholder="Supplier Tel." readOnly />
             </Form.Item>
           </Col>
         </Row>
+        {/* <Row gutter={[8, 8]} className="m-0">
+        <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+            <Form.Item name="tel" label="วันที่นัดส่งของ" className="!mb-1">
+              <Input placeholder="วันที่นัดส่งของ." readOnly />
+            </Form.Item>
+          </Col>
+        </Row> */}
+        
       </Space>
     </>
   );
@@ -384,109 +382,10 @@ function InvoiceManage() {
           dataSource={listDetail}
           columns={prodcolumns}
           pagination={false}
-          rowKey="stcode"
+          rowKey="code"
           scroll={{ x: "max-content" }}
           locale={{
-            emptyText: <span>No data available, please add ivme data.</span>,
-          }}
-          summary={(record) => {
-            return (
-              <>
-                {listDetail.length > 0 && (
-                  <>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell
-                        index={0}
-                        colSpan={5}
-                      ></Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        index={4}
-                        align="end"
-                        className="!pe-4"
-                      >
-                        Total
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        className="!pe-4 text-end border-right-0"
-                        style={{ borderRigth: "0px ivlid" }}
-                      >
-                        <Typography.Text type="danger">
-                          {comma(Number(formDetail?.total_price || 0))}
-                        </Typography.Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
-                    </Table.Summary.Row>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell
-                        index={0}
-                        colSpan={4}
-                      ></Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        index={4}
-                        align="end"
-                        className="!pe-4"
-                      >
-                        Vat
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        className="!pe-4 text-end border-right-0"
-                        style={{ borderRigth: "0px ivlid" }}
-                      >
-                        <Form.Item name="vat" className="!m-0">
-                          <InputNumber
-                            className="width-100 input-30 text-end"
-                            addonAfter="%"
-                            controls={false}
-                            min={0}
-                            onFocus={(e) => {
-                              e.target.select();
-                            }}
-                            onChange={() => {
-                              handleSummaryPrice();
-                            }}
-                          />
-                        </Form.Item>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        className="!pe-4 text-end border-right-0"
-                        style={{ borderRigth: "0px ivlid" }}
-                      >
-                        <Typography.Text type="danger">
-                          {comma(
-                            Number(
-                              (formDetail.total_price * formDetail?.vat) / 100
-                            )
-                          )}
-                        </Typography.Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
-                    </Table.Summary.Row>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell
-                        index={0}
-                        colSpan={5}
-                      ></Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        index={4}
-                        align="end"
-                        className="!pe-4"
-                      >
-                        Grand Total
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        className="!pe-4 text-end border-right-0"
-                        style={{ borderRigth: "0px ivlid" }}
-                      >
-                        <Typography.Text type="danger">
-                          {comma(Number(formDetail?.grand_total_price || 0))}
-                        </Typography.Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  </>
-                )}
-              </>
-            );
+            emptyText: <span>No data available, please add some data.</span>,
           }}
         />
       </Flex>
@@ -507,151 +406,151 @@ function InvoiceManage() {
     </>
   );
 
-  const FormStepCustomer = () => {
-    return (
-      <>
-        <br></br>
-        <FormCustomers  
-        values1={(v) => {
-          // console.log(v)
-        handleNextStep(v);
-      }}
-      />
-      </>
-    );
-  };
+  ///** button */
 
-  const FormStepQuotation = () => {
-    return (
-      <>
-        <br></br>
-        <FormQuotation />
-      </>
-    );
-  };
+  const SectionTop = (
+    <Row
+      gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
+      className="m-0"
+    >
+      <Col span={12} className="p-0">
+        <Flex gap={4} justify="start">
+          <ButtonBack target={gotoFrom} />
+        </Flex>
+      </Col>
+      <Col span={12} style={{ paddingInline: 0 }}>
+        <Flex gap={4} justify="end">
+          {!!formDetail.quotcode && (
+            <Button
+              icon={<LuPrinter />}
+              onClick={() => {
+                handlePrint();
+              }}
+              className="bn-center !bg-orange-400 !text-white !border-transparent"
+            >
+              PRINT QUOTATION{" "}
+            </Button>
+          )}
+        </Flex>
+      </Col>
+    </Row>
+  );
 
-  const FormStepInvoice = () => {
-    return (
-      <>
-        <br></br>
-        <Card
-          title={
-            <>
-              <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                  <Typography.Title level={3} className="m-0">
-                    รหัสใบวางบิล : {invoiceCode}
-                  </Typography.Title>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                  <Flex
-                    gap={10}
-                    align="center"
-                    className="justify-start sm:justify-end"
-                  >
-                    <Typography.Title level={3} className="m-0">
-                      วันที่ใบวางบิล :{" "}
-                    </Typography.Title>
-                    <Form.Item name="qtdate" className="!m-0">
-                      <DatePicker
-                        className="input-40"
-                        allowClear={false}
-                        onChange={handleQuotDate}
-                      />
-                    </Form.Item>
-                  </Flex>
-                </Col>
-              </Row>
-            </>
-          }
-        >
-          <Row className="m-0" gutter={[12, 12]}>
-            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Divider orientation="left" className="!mb-3 !mt-1">
-                {" "}
-                ข้อมูลลูกค้า{" "}
-              </Divider>
-              <Card style={cardStyle}>{SectionCustomer}</Card>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Divider orientation="left" className="!my-0">
-                รายการสินค้าใบวางบิล
-              </Divider>
-              <Card style={{ backgroundColor: "#f0f0f0" }}>
-                {SectionProduct}
-              </Card>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Divider orientation="left" className="!mb-3 !mt-1">
-                {" "}
-                ข้อมูลเพิ่มเติม{" "}
-              </Divider>
-              <Card style={cardStyle}>{SectionOther}</Card>
-            </Col>
-          </Row>
-        </Card>
-      </>
-    );
-  };
-
-  const steps = [
-    {
-      step: 1,
-      title: "เลือกลูกค้า",
-      icon: <SolutionOutlined />,
-      content: <FormStepCustomer />,
-    },
-    {
-      step: 2,
-      icon: <FileSearchOutlined />,
-      title: "เลือกใบเสนอราคา",
-      content: <FormStepQuotation />,
-    },
-    {
-      step: 3,
-      icon: <FileAddOutlined />,
-      title: "สร้างใบวางบิล/ใบกำกับภาษี",
-      content: <FormStepInvoice />,
-    },
-  ];
-  const setTest = () => {
-    alert(checkStep);
-    console.log(checkStep)
-  };
+  const SectionBottom = (
+    <Row
+      gutter={[{ xs: 32, sm: 32, md: 32, lg: 12, xl: 12 }, 8]}
+      className="m-0"
+    >
+      <Col span={12} className="p-0">
+        <Flex gap={4} justify="start">
+          <ButtonBack target={gotoFrom} />
+        </Flex>
+      </Col>
+      <Col span={12} style={{ paddingInline: 0 }}>
+        <Flex gap={4} justify="end">
+          <Button
+            className="bn-center justify-center"
+            icon={<SaveFilled style={{ fontSize: "1rem" }} />}
+            type="primary"
+            style={{ width: "9.5rem" }}
+            onClick={() => {
+              handleConfirm();
+            }}
+          >
+            Save
+          </Button>
+        </Flex>
+      </Col>
+    </Row>
+  );
 
   return (
-    <div className="quotation-manage">
-      <Button
-        type="primary"
-        icon={<SearchOutlined />}
-        onClick={() => setTest()}
-        style={{ minWidth: 40 }}
-      >Test</Button>
-      <div id="quotation-manage" className="px-0 sm:px-0 md:px-8 lg:px-8">
+    <div className="goodsreceipt-manage">
+      <div id="goodsreceipt-manage" className="px-0 sm:px-0 md:px-8 lg:px-8">
         <Space direction="vertical" className="flex gap-4">
-          <br></br>
+          {SectionTop}
           <Form
             form={form}
             layout="vertical"
             className="width-100"
             autoComplete="off"
-            onFinish={() => {
-              handleConfirm();
-            }}
           >
-            <StepPanel
-              steps={steps}
-              backtarget={gotoFrom}
-              dataStep={checkStep}
-            />
+            <Card
+              title={
+                <>
+                  <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                      <Typography.Title level={3} className="m-0">
+                        รหัสใบรับสินค้า : {poCode}
+                      </Typography.Title>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                      <Flex
+                        gap={10}
+                        align="center"
+                        className="justify-start sm:justify-end"
+                      >
+                        <Typography.Title level={3} className="m-0">
+                          วันที่ใบรับสินค้า :{" "}
+                        </Typography.Title>
+                        <Form.Item name="grdate" className="!m-0">
+                          <DatePicker
+                            className="input-40"
+                            allowClear={false}
+                            onChange={handleQuotDate}
+                          />
+                        </Form.Item>
+                      </Flex>
+                    </Col>
+                  </Row>
+                </>
+              }
+            >
+              <Row className="m-0" gutter={[12, 12]}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <Divider orientation="left" className="!mb-3 !mt-1">
+                    {" "}
+                    ผู้ขาย{" "}
+                  </Divider>
+                  <Card style={cardStyle}>{SectionSupplier}</Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <Divider orientation="left" className="!mb-3 !mt-1">
+                    {" "}
+                    ข้อมูลเพิ่มเติม{" "}
+                  </Divider>
+                  <Card style={cardStyle}>{SectionOther}</Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <Divider orientation="left" className="!my-0">
+                    รายการใบสั่งซื้อสินค้า
+                  </Divider>
+                  <Card style={{ backgroundColor: "#f0f0f0" }}>
+                    {SectionProduct}
+                  </Card>
+                </Col>                
+              </Row>
+            </Card>
           </Form>
+          {SectionBottom}
         </Space>
       </div>
+
+      {openSupplier && (
+        <ModalSupplier
+          show={openSupplier}
+          close={() => setOpenSupplier(false)}
+          values={(v) => {
+            handleChoosedSupplier(v);
+          }}
+        ></ModalSupplier>
+      )}
 
       {openProduct && (
         <ModalItems
           show={openProduct}
           close={() => setOpenProduct(false)}
+          supcode={form.getFieldValue("supcode")}
           values={(v) => {
             handleItemsChoosed(v);
           }}
@@ -662,4 +561,4 @@ function InvoiceManage() {
   );
 }
 
-export default InvoiceManage;
+export default GoodsReceiptManage;

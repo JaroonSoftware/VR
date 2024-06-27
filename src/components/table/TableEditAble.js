@@ -1,5 +1,13 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { Form, Input, AutoComplete, Space, Button,InputNumber, Select } from "antd";
+import {
+  Form,
+  Input,
+  AutoComplete,
+  Space,
+  Button,
+  InputNumber,
+  Select,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { MenuOutlined } from "@ant-design/icons";
 import { useSortable } from "@dnd-kit/sortable";
@@ -37,7 +45,7 @@ export const EditableCell = ({
   const inputRef = useRef(null);
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-  
+
   type = type || "input";
   // const textAreaRef = useRef(null);
   const form = useContext(EditableContext);
@@ -81,7 +89,7 @@ export const EditableCell = ({
       handleEditCell({
         ...record,
         ...values,
-        key:dataIndex,
+        key: dataIndex,
       });
     } catch (errInfo) {
       // console.log('Save failed:', errInfo);
@@ -96,19 +104,23 @@ export const EditableCell = ({
         name={dataIndex}
         rules={[{ required: !!required, message: `${title} is required.` }]}
       >
-        {
-        (type === 'input') && (
-          <Input 
+        {type === "input" && (
+          <Input
             placeholder="Enter value"
             ref={inputRef}
             onPressEnter={save}
             onBlur={save}
-            style={{height:32,  minWidth: "none", textAlign:"end", ...restProps.style}}
-            className='ant-input'
+            style={{
+              height: 32,
+              minWidth: "none",
+              textAlign: "end",
+              ...restProps.style,
+            }}
+            className="ant-input"
             autoComplete="off"
             readOnly={readonly}
-          />)
-          }
+          />
+        )}
 
         {type === "textarea" && (
           <textarea
@@ -167,19 +179,24 @@ export const EditableCell = ({
           </Space.Compact>
         )}
 
-{(type === 'number') && (
-              <InputNumber
-                placeholder="กรอกข้อมูล"
-                ref={inputRef}
-                onPressEnter={save}
-                onBlur={save}
-                style={{height:32,  minWidth: "none", textAlign:"end", ...restProps.style}} 
-                className='width-100 input-30 !text-end'
-                autoComplete="off"
-                readOnly={readonly}
-                controls={false}
-              />
-            )}
+        {type === "number" && (
+          <InputNumber
+            placeholder="กรอกข้อมูล"
+            ref={inputRef}
+            onPressEnter={save}
+            onBlur={save}
+            style={{
+              height: 32,
+              minWidth: "none",
+              textAlign: "end",
+              ...restProps.style,
+            }}
+            className="width-100 input-30 !text-end"
+            autoComplete="off"
+            readOnly={readonly}
+            controls={false}
+          />
+        )}
 
         {type === "select" && (
           <Select
