@@ -349,12 +349,13 @@ function InvoiceManage() {
                   value={formDetail.qtcode}
                   className="!bg-white"
                 />
-                <Button
+                {config?.action !== "create" ? '' : <Button
                   type="primary"
                   icon={<SearchOutlined />}
                   onClick={() => setOpenQuotation(true)}
                   style={{ minWidth: 40 }}
-                ></Button>
+                ></Button>}
+                
               </Space.Compact>
             </Form.Item>
           </Col>
@@ -374,12 +375,12 @@ function InvoiceManage() {
                   value={formDetail.cuscode}
                   className="!bg-white"
                 />
-                <Button
+                {config?.action !== "create" ? '' : <Button
                   type="primary"
                   icon={<SearchOutlined />}
                   onClick={() => setOpenCustomers(true)}
                   style={{ minWidth: 40 }}
-                ></Button>
+                ></Button>}                
               </Space.Compact>
             </Form.Item>
           </Col>

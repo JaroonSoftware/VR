@@ -178,7 +178,7 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.ivcode,a.ivdate,a.qtcode,a.deldate,a.cuscode,c.prename,c.cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
+        $sql = "SELECT a.ivcode,a.ivdate,a.qtcode,a.deldate,a.cuscode,CONCAT(c.prename,' ',c.cusname) as cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
         ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
         $sql .= " FROM `ivmaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";

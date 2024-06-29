@@ -299,12 +299,13 @@ function QuotationManage() {
                   value={formDetail.cuscode}
                   className="!bg-white"
                 />
-                <Button
+                {config?.action !== "create" ? '' : <Button
                   type="primary"
                   icon={<SearchOutlined />}
                   onClick={() => setOpenCustomer(true)}
                   style={{ minWidth: 40 }}
-                ></Button>
+                ></Button>}    
+                
               </Space.Compact>
             </Form.Item>
           </Col>
