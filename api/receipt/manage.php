@@ -45,7 +45,15 @@ try {
             die;
         }
 
-        update_ivcode($conn);
+        $sql2 = " update options set ivcode = ivcode+1 WHERE year= '".date("Y")."' ";        
+
+        $stmt2 = $conn->prepare($sql2);
+        if(!$stmt2) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
+        if(!$stmt2->execute()) {
+            $error = $conn->errorInfo();
+            throw new PDOException("Insert data error => $error");
+            die;
+        }
 
         $code = $conn->lastInsertId();
         // var_dump($master); exit;

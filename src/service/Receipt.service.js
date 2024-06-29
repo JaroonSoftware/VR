@@ -1,9 +1,9 @@
 import { requestService as api } from "./Request.service"  
 const API_URL = { 
-  API_MANAGE: `/quotations/manage.php`, 
-  API_GETMASTER: `/quotations/search.php`, 
+  API_MANAGE: `/receipt/manage.php`, 
+  API_GETMASTER: `/receipt/search.php`, 
 
-  API_GETCODE: `/quotations/get-quotcode.php`, 
+  API_GETCODE: `/receipt/get-recode.php`, 
 };
   
 const QuotationService = () => { 
