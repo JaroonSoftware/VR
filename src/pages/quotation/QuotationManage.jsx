@@ -33,7 +33,7 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuPackageSearch } from "react-icons/lu";
 import { LuPrinter } from "react-icons/lu";
 const opservice = OptionService();
-const quservice = QuotationService();
+const qtservice = QuotationService();
 
 const gotoFrom = "/quotation";
 
@@ -66,7 +66,7 @@ function QuotationManage() {
   useEffect(() => {
     const initial = async () => {
       if (config?.action !== "create") {
-        const res = await quservice
+        const res = await qtservice
           .get(config?.code)
           .catch((error) => message.error("get Quotation data fail."));
         const {
@@ -82,7 +82,7 @@ function QuotationManage() {
         // handleChoosedCustomer(head);
       } else {
         const { data: code } = (
-          await quservice.code().catch((e) => {
+          await qtservice.code().catch((e) => {
             message.error("get Quotation code fail.");
           })
         ).data;
@@ -166,8 +166,13 @@ function QuotationManage() {
       !!val?.zipcode ? `${val.zipcode} ` : "",
       !!val?.country ? `(${val.country})` : "",
     ];
+    const cusname = [
+      !!val?.prename ? `${val.prename} ` : "",
+      !!val?.cusname ? `${val.cusname} ` : "",
+    ];
     const customer = {
       ...val,
+      cusname: cusname.join(""),
       address: addr.join(""),
       contact: val.contact,
       tel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
@@ -191,6 +196,7 @@ function QuotationManage() {
 
         const header = {
           ...formDetail,
+          qtdate: dayjs(form.getFieldValue("qtdate")).format("YYYY-MM-DD"),          
           remark: form.getFieldValue("remark"),
         };
         const detail = listDetail;
@@ -198,7 +204,7 @@ function QuotationManage() {
         const parm = { header, detail };
         // console.log(parm)
         const actions =
-          config?.action !== "create" ? quservice.update : quservice.create;
+          config?.action !== "create" ? qtservice.update : qtservice.create;
         actions(parm)
           .then((r) => {
             handleClose().then((r) => {
@@ -281,7 +287,7 @@ function QuotationManage() {
             <Form.Item
               name="cuscode"
               htmlFor="cuscode-1"
-              label="Customer Code"
+              label="รหัสลูกค้า"
               className="!mb-1"
               rules={[{ required: true, message: "Missing Loading type" }]}
             >
@@ -303,14 +309,14 @@ function QuotationManage() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="cusname" label="Customer Name" className="!mb-1">
+            <Form.Item name="cusname" label="ชื่อลูกค้า" className="!mb-1">
               <Input placeholder="Customer Name." readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Form.Item
               name="address"
-              label="Customer Address"
+              label="ที่อยู่"
               className="!mb-1"
             >
               <Input placeholder="Customer Address." readOnly />
@@ -319,14 +325,14 @@ function QuotationManage() {
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
               name="contact"
-              label="Customer Contact"
+              label="ผู้ติดต่อ"
               className="!mb-1"
             >
               <Input placeholder="Customer Contact." readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item name="tel" label="Customer Tel" className="!mb-1">
+            <Form.Item name="tel" label="เบอร์โทรลุกค้า" className="!mb-1">
               <Input placeholder="Customer Tel." readOnly />
             </Form.Item>
           </Col>
@@ -384,7 +390,7 @@ function QuotationManage() {
                     <Table.Summary.Row>
                       <Table.Summary.Cell
                         index={0}
-                        colSpan={5}
+                        colSpan={6}
                       ></Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={4}
@@ -406,7 +412,7 @@ function QuotationManage() {
                     <Table.Summary.Row>
                       <Table.Summary.Cell
                         index={0}
-                        colSpan={4}
+                        colSpan={5}
                       ></Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={4}
@@ -451,7 +457,7 @@ function QuotationManage() {
                     <Table.Summary.Row>
                       <Table.Summary.Cell
                         index={0}
-                        colSpan={5}
+                        colSpan={6}
                       ></Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={4}
@@ -485,7 +491,7 @@ function QuotationManage() {
       <Space size="small" direction="vertical" className="flex gap-2">
         <Row gutter={[8, 8]} className="m-0">
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item className="" name="remark" label="Remark">
+            <Form.Item className="" name="remark" label="หมายเหตุ">
               <Input.TextArea placeholder="Enter Remark" rows={4} />
             </Form.Item>
           </Col>
@@ -504,6 +510,21 @@ function QuotationManage() {
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start">
           <ButtonBack target={gotoFrom} />
+        </Flex>
+      </Col>
+      <Col span={12} style={{ paddingInline: 0 }}>
+        <Flex gap={4} justify="end">
+          <Button
+            className="bn-center justify-center"
+            icon={<SaveFilled style={{ fontSize: "1rem" }} />}
+            type="primary"
+            style={{ width: "9.5rem" }}
+            onClick={() => {
+              handleConfirm();
+            }}
+          >
+            Save
+          </Button>
         </Flex>
       </Col>
       <Col span={12} style={{ paddingInline: 0 }}>
@@ -569,7 +590,7 @@ function QuotationManage() {
                   <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                       <Typography.Title level={3} className="m-0">
-                      รหัสใบเสนอราคา : {quotCode}
+                      เลขที่ใบเสนอราคา : {quotCode}
                       </Typography.Title>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>

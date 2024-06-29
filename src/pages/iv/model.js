@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Space } from "antd"; 
+import { Button, Space } from "antd"; 
 import "../../assets/styles/banks.css"
 // import { Typography } from "antd"; 
 // import { Popconfirm, Button } from "antd";
@@ -6,7 +6,7 @@ import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import { EditableRow, EditableCell } from "../../components/table/TableEditAble";
 import dayjs from 'dayjs';
-import { DeleteOutlined, EditOutlined, PrinterOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import {  EditOutlined, PrinterOutlined } from "@ant-design/icons";
 import { comma } from '../../utils/util';
 
 const calTotalDiscount = (rec) => {
@@ -23,7 +23,7 @@ export const componentsEditable = {
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "รหัสใบวางบิล",
+    title: "เลขที่ใบแจ้งหนี้",
     key: "ivcode",
     dataIndex: "ivcode",
     align: "left",
@@ -31,7 +31,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     width:140,
   },
   {
-    title: "วันที่ใบวางบิล",
+    title: "วันที่ใบแจ้งหนี้",
     dataIndex: "ivdate",
     key: "ivdate",
     width: 140,
@@ -81,7 +81,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
           size="small"
         />
 
-        <Popconfirm 
+        {/* <Popconfirm 
           placement="topRight"
           title="Sure to delete?"  
           description="Are you sure to delete this packaging?"
@@ -94,7 +94,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
             style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
             size="small"
           />
-        </Popconfirm>
+        </Popconfirm> */}
         <Button
           icon={<PrinterOutlined />} 
           className='bn-warning-outline'
@@ -111,8 +111,9 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
 export const productColumn = ({handleRemove,handleSelectChange}) => [
   {
     title: "ลำดับ",
-    dataIndex: "ind",
-    key: "ind",
+    dataIndex: "code",
+    key: "code",
+    align: "center",
     width: 80, 
     render: (im, rc, index) => <>{index + 1}</>,
   },
@@ -121,7 +122,7 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     dataIndex: "stcode",
     key: "stcode",
     width: 120, 
-    align: "left",
+    align: "center",
   },
   {
     title: "ชื่อสินค้า",
@@ -140,7 +141,7 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     editable: true,
     required: true,
     type:'number',
-    render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  2, 2 )}</>,
+    render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  0, 0 )}</>,
   },
   {
     title: "ราคาขาย",
@@ -217,24 +218,16 @@ export const columnsParametersEditable = (handleEditCell,optionsItems,{handleRem
       };
   }); 
 }
-export const quotationForm = {
-  qtcode: null,
-  qtdate: null,
+export const DEFALUT_CHECK_INVOICE = {
+  ivcode: null,
+  ivdate: null,
+  qtcode: null,  
+  payment: null,
   cuscode: null,
-  cusname: null,
-  contact: null,
-  cuscontact: null,
-  cusaddress: null,
-  tel: null,
   remark: null,
   total_price: 0,
   vat: 7,
   grand_total_price: 0,
-}
-
-export const checkStepForm = {  
-  cuscode : null,
-  cusname : null,
 }
 
 

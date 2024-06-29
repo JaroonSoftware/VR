@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Space } from "antd"; 
+import { Button, Space } from "antd"; 
 import "../../assets/styles/banks.css"
 // import { Typography } from "antd"; 
 // import { Popconfirm, Button } from "antd";
@@ -6,7 +6,7 @@ import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import { EditableRow, EditableCell } from "../../components/table/TableEditAble";
 import dayjs from 'dayjs';
-import { DeleteOutlined, EditOutlined, PrinterOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { EditOutlined, PrinterOutlined } from "@ant-design/icons";
 import { comma } from '../../utils/util';
 
 const calTotalDiscount = (rec) => {
@@ -23,7 +23,7 @@ export const componentsEditable = {
 /** get sample column */
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
-    title: "รหัสใบเสนอราคา",
+    title: "เลขที่ใบเสนอราคา",
     key: "qtcode",
     dataIndex: "qtcode",
     align: "left",
@@ -81,7 +81,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
           size="small"
         />
 
-        <Popconfirm 
+        {/* <Popconfirm 
           placement="topRight"
           title="Sure to delete?"  
           description="Are you sure to delete this packaging?"
@@ -94,7 +94,7 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
             style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
             size="small"
           />
-        </Popconfirm>
+        </Popconfirm> */}
         <Button
           icon={<PrinterOutlined />} 
           className='bn-warning-outline'
@@ -140,7 +140,7 @@ export const productColumn = ({handleRemove},optionsItems) => [
     editable: true,
     required: true,
     type:'number',
-    render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  2, 2 )}</>,
+    render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  0, 0 )}</>,
   },
   {
     title: "ราคาขาย",

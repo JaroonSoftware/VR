@@ -29,32 +29,27 @@ const MyAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Sale Order Code' name='socode'>
-                    <Input placeholder='Enter Sale Order Code.' />
+                <Form.Item label='เลขที่ใบแจ้งหนี้' name='ivcode'>
+                    <Input placeholder='Enter Invoice Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Sale Order Date.' name='sodate'>
+                <Form.Item label='วันที่ใบแจ้งหนี้' name='ivdate'>
                     <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Request By.' name='created_by'>
+                <Form.Item label='จัดทำโดย' name='created_by'>
                     <Input placeholder='Enter First Name or Last Name.' />
                 </Form.Item>
             </Col>
-            {/* <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Product' name='stname'>
-                    <Input placeholder='Enter Product Name.' />
-                </Form.Item>                            
-            </Col> */}
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Code' name='cuscode'>
+                <Form.Item label='รหัสลูกค้า' name='cuscode'>
                     <Input placeholder='Enter Customer Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Name' name='cusname'>
+                <Form.Item label='ชื่อลุูกค้า' name='cusname'>
                     <Input placeholder='Enter Customer Name.' />
                 </Form.Item>                            
             </Col>
@@ -125,12 +120,12 @@ const MyAccess = () => {
     }
     // console.log(form);
     const hangleAdd = () => {  
-        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบวางบิล", action:"create"} } }); 
+        navigate("manage/create", { state: { config: {...mngConfig, title:"สร้างใบแจ้งหนี้", action:"create"} } }); 
     }
 
     const handleEdit = (data) => {
         
-        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบวางบิล", action:"edit", code:data?.ivcode} }, replace:true } );
+        navigate("manage/edit", { state: { config: {...mngConfig, title:"แก้ไขใบแจ้งหนี้", action:"edit", code:data?.ivcode} }, replace:true } );
     }; 
 
     const handleDelete = (data) => { 
@@ -173,7 +168,7 @@ const MyAccess = () => {
         <Flex className='width-100' align='center'>
             <Col span={12} className='p-0'>
                 <Flex gap={4} justify='start' align='center'>
-                  <Typography.Title className='m-0 !text-zinc-800' level={3}>หน้าจัดการใบวางบิล (Billing Note)</Typography.Title>
+                  <Typography.Title className='m-0 !text-zinc-800' level={3}>หน้าจัดการใบแจ้งหนี้ (Invoice)</Typography.Title>
                 </Flex>
             </Col>
             <Col span={12} style={{paddingInline:0}}>
@@ -183,7 +178,7 @@ const MyAccess = () => {
                       className='bn-action bn-center bn-primary-outline justify-center'  
                       icon={<FileAddOutlined  style={{fontSize:'.9rem'}} />} 
                       onClick={() => { hangleAdd() } } >
-                          เพิ่มใบวางบิล
+                          เพิ่มใบแจ้งหนี้
                       </Button>
                 </Flex>
             </Col>  

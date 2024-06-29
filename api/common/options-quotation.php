@@ -9,12 +9,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
     try { 
         $res = null;
         
-        $sql = "SELECT q.qtcode,c.cuscode, c.cusname FROM qtmaster as q inner join `customer` as c where q.active_status = 'Y'";
+        $sql = "SELECT q.qtcode,q.qtdate,c.cuscode, c.cusname,c.prename, c.idno, c.road, c.subdistrict, c.district, c.province, c.zipcode
+         FROM qtmaster as q inner join `customer` as c where q.active_status = 'Y' and q.doc_status = 'กำลังรอดำเนินการ'";
             // $type_code
             $stmt = $conn->prepare($sql); 
             $stmt->execute();
             $res = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-        
 
         http_response_code(200);
         echo json_encode(array("data"=>$res));

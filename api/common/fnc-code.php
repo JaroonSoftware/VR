@@ -59,7 +59,7 @@ function request_qtcode($pdo){
     $number = intval($res);
     $prefix = "QT$y$m";
     while(true){
-        $code = sprintf("%03s", ( $number + 1) );
+        $code = sprintf("%03s", ( $number) );
         $format = $prefix.$code;
         $sql = "SELECT 1 r FROM qtmaster where qtcode = '$format'"; 
         $stmt = $pdo->prepare($sql); 
@@ -70,14 +70,14 @@ function request_qtcode($pdo){
             continue;
         } else break;
     } 
-    return $prefix.sprintf("%03s", ( $number + 1) );   
+    return $prefix.sprintf("%03s", ( $number) );   
 }
 
 function request_ivcode($pdo){
     $year = date("Y");
     $month = date("m");
 
-    $sql = "select qtcode code from options where year = :y and month = :m";
+    $sql = "select ivcode code from options where year = :y and month = :m";
     $stmt = $pdo->prepare($sql); 
     if (!$stmt->execute([ 'y' => $year, 'm' => $month ])){
         $error = $pdo->errorInfo();
@@ -98,9 +98,9 @@ function request_ivcode($pdo){
     $number = intval($res);
     $prefix = "IV$y$m";
     while(true){
-        $code = sprintf("%03s", ( $number + 1) );
+        $code = sprintf("%03s", ( $number) );
         $format = $prefix.$code;
-        $sql = "SELECT 1 r FROM qtmaster where qtcode = '$format'"; 
+        $sql = "SELECT 1 r FROM ivmaster where ivcode = '$format'"; 
         $stmt = $pdo->prepare($sql); 
         $stmt->execute(); 
         if ($stmt->rowCount() > 0){
@@ -109,7 +109,7 @@ function request_ivcode($pdo){
             continue;
         } else break;
     } 
-    return $prefix.sprintf("%03s", ( $number + 1) );   
+    return $prefix.sprintf("%03s", ( $number) );   
 }
 
 #endregion
@@ -127,7 +127,7 @@ function create_options($pdo, $year, $month){
 
 function update_option($pdo, $option){
     $year = date("Y");
-    $month = date("m");
+    // $month = date("m");
     $sql = "update options set $option = $option + 1 where year = :y";
     $stmt = $pdo->prepare($sql);
 

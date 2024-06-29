@@ -28,32 +28,27 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Code' name='qtcode'>
+                <Form.Item label='เลขที่ใบเสนอราคา' name='qtcode'>
                     <Input placeholder='Enter Quotation Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Quotation Date.' name='qtdate'>
-                    <RangePicker placeholder={['เริ่มวันที่', 'ถึงวันที่']} style={{width:'100%', height:40}}  />
+                <Form.Item label='วันที่ใบเสนอราคา' name='qtdate'>
+                    <RangePicker placeholder={['From Date', 'To date']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Request By.' name='created_by'>
+                <Form.Item label='จัดทำโดย' name='created_by'>
                     <Input placeholder='Enter First Name or Last Name.' />
                 </Form.Item>
             </Col>
-            {/* <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='ชื่อสินค้า' name='stname'>
-                    <Input placeholder='Enter Product Name.' />
-                </Form.Item>                            
-            </Col> */}
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Code' name='cuscode'>
+                <Form.Item label='รหัสลูกค้า' name='cuscode'>
                     <Input placeholder='Enter Customer Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='Customer Name' name='cusname'>
+                <Form.Item label='ชื่อลุูกค้า' name='cusname'>
                     <Input placeholder='Enter Customer Name.' />
                 </Form.Item>                            
             </Col>

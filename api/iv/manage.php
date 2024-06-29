@@ -18,9 +18,9 @@ try {
         extract($_POST, EXTR_OVERWRITE, "_");
 
         // var_dump($_POST);
-        $sql = "insert ivmaster (`ivcode`, `ivdate`, `cuscode`,
-        `payment`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
-        values (:ivcode,:ivdate,:cuscode,:payment,:total_price,:vat,:grand_total_price,
+        $sql = "insert ivmaster (`ivcode`, `ivdate`, `cuscode`,`qtcode`,
+        `payment`,`deldate`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
+        values (:ivcode,:ivdate,:cuscode,:qtcode,:payment,:deldate,:total_price,:vat,:grand_total_price,
         :remark,:action_user,:action_user)";
 
         $stmt = $conn->prepare($sql);
@@ -30,7 +30,9 @@ try {
         $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
         $stmt->bindParam(":ivdate", $header->ivdate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
+        $stmt->bindParam(":qtcode", $header->qtcode, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
+        $stmt->bindParam(":deldate", $header->deldate, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
         $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR); 
@@ -56,8 +58,8 @@ try {
         $code = $conn->lastInsertId();
         // var_dump($master); exit;
         
-        $sql = "insert into ivdetail (ivcode,stcode,ivy,price,unit,discount)
-        values (:ivcode,:stcode,:ivy,:price,:unit,:discount)";
+        $sql = "insert into ivdetail (ivcode,stcode,qty,price,unit,discount)
+        values (:ivcode,:stcode,:qty,:price,:unit,:discount)";
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
@@ -66,7 +68,7 @@ try {
             $val = (object)$val;
             $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
             $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
-            $stmt->bindParam(":ivy", $val->ivy, PDO::PARAM_INT);
+            $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
             $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
             $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);            
             $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);
@@ -89,8 +91,10 @@ try {
         $sql = "
         update ivmaster 
         set
+        ivdate = :ivdate,
         cuscode = :cuscode,
         payment = :payment,
+        deldate = :deldate,
         total_price = :total_price,
         vat = :vat,
         grand_total_price = :grand_total_price,
@@ -104,8 +108,10 @@ try {
 
         $header = (object)$header; 
 
+        $stmt->bindParam(":ivdate", $header->ivdate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
+        $stmt->bindParam(":deldate", $header->deldate, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
         $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR);
@@ -126,8 +132,8 @@ try {
             throw new PDOException("Remove data error => $error");
         }
 
-        $sql = "insert into ivdetail (ivcode,stcode,unit,ivy,price,discount)
-        values (:ivcode,:stcode,:unit,:ivy,:price,:discount)";
+        $sql = "insert into ivdetail (ivcode,stcode,unit,qty,price,discount)
+        values (:ivcode,:stcode,:unit,:qty,:price,:discount)";
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
@@ -137,7 +143,7 @@ try {
             $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
             $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
             $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);
-            $stmt->bindParam(":ivy", $val->ivy, PDO::PARAM_INT);
+            $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
             $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
             $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);
             if(!$stmt->execute()) {
@@ -172,7 +178,7 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.ivcode,a.ivdate,a.cuscode,c.prename,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district,' ', c.zipcode) as address
+        $sql = "SELECT a.ivcode,a.ivdate,a.qtcode,a.deldate,a.cuscode,c.prename,c.cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
         ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
         $sql .= " FROM `ivmaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";
@@ -186,7 +192,7 @@ try {
         }
         $header = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT a.ivcode,a.stcode, a.price, a.discount, a.unit, a.ivy ,i.stname ";
+        $sql = "SELECT a.ivcode,a.stcode, a.price, a.discount, a.unit, a.qty ,i.stname ";
         $sql .= " FROM `ivdetail` as a inner join `items` as i on (a.stcode=i.stcode)  ";        
         $sql .= " where a.ivcode = :code";
         
