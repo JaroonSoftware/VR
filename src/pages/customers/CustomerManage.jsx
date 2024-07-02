@@ -27,6 +27,7 @@ const from = "/customers";
 const ItemsManage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { Option } = Select;
 
   const { config } = location.state || { config: null };
   const [form] = Form.useForm();
@@ -37,7 +38,9 @@ const ItemsManage = () => {
     const cuscodeRes = await customerservice
       .getcode()
       .catch(() => message.error("Initail failed"));
-
+      form.setFieldsValue({
+        business_branch: "สำนักงานใหญ่",
+      });
     const { data: cuscode } = cuscodeRes.data;
     const initForm = { ...formDetail, cuscode };
     setFormDetail((state) => ({ ...state, ...initForm }));
@@ -182,11 +185,11 @@ const ItemsManage = () => {
       </Col>
       <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={6}>
         <Form.Item
-          label="ชื่อ-นามสกุล"
+          label="ชื่อลูกค้า"
           name="cusname"
           rules={[{ required: true, message: "กรุณากรอกข้อมูล!" }]}
         >
-          <Input placeholder="กรอกชื่อ-นามสกุล" />
+          <Input placeholder="กรอกชื่อลูกค้า" />
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={6}>
@@ -207,11 +210,35 @@ const ItemsManage = () => {
       >
         <Form.Item label="สถานะ" name="active_status">
           <Radio.Group buttonStyle="solid">
-            <Radio.Button value="Y">อยู่ในระบบ</Radio.Button>
-            <Radio.Button value="N">ไม่อยู่ในระบบ</Radio.Button>
+            <Radio.Button value="Y">เปิดการใช้งาน</Radio.Button>
+            <Radio.Button value="N">ปิดใช้งาน</Radio.Button>
           </Radio.Group>
         </Form.Item>
       </Col>
+      <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+          <Form.Item label="ระบุสาขา" name="business_branch">
+            <Select size="large" placeholder="ระบุสาขา" allowClear>
+              <Option value="สำนักงานใหญ่">สำนักงานใหญ่</Option>
+              <Option value="สาขา">สาขา</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+          <Form.Item
+            noStyle
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.business_branch !== currentValues.business_branch
+            }
+          >
+            {({ getFieldValue }) =>
+              getFieldValue("business_branch") === "สาขา" ? (
+                <Form.Item name="branch_details" label="รายละเอียดสาขา">
+                  <Input />
+                </Form.Item>
+              ) : null
+            }
+          </Form.Item>
+        </Col>      
     </Row>
   );
 
@@ -378,7 +405,8 @@ const ItemsManage = () => {
     <div className="customer-manage xs:px-0 sm:px-0 md:px-8 lg:px-8">
       <Space direction="vertical" className="flex gap-2">
         <Form form={form} layout="vertical" autoComplete="off">
-          <Card title={config?.title}>
+        {SectionBottom}
+          <Card className="mt-4" title={config?.title}>
             <Divider
               orientation="left"
               plain

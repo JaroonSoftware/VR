@@ -42,11 +42,6 @@ const QuotationAccess = () => {
                     <Input placeholder='กรอก ชื่อ-นามสกุล ผู้ร้องขอ' />
                 </Form.Item>
             </Col>
-            {/* <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='ชื่อสินค้า' name='stname'>
-                    <Input placeholder='Enter Product Name.' />
-                </Form.Item>                            
-            </Col> */}
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                 <Form.Item label='รหัสลูกค้า' name='cuscode'>
                     <Input placeholder='กรอกรหัสลูกค้า' />

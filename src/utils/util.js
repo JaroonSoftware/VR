@@ -130,6 +130,12 @@ export const comma = (number, dmax = 2, dmin = 0) =>
     maximumFractionDigits: dmax,
   });
 
+  export const formatCommaNumber = (number, dmax = 2, dmin = 0) =>
+    number.toLocaleString("en-US", {
+      minimumFractionDigits: dmin,
+      maximumFractionDigits: dmax,
+    });
+
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const filterOption = (input, option) =>

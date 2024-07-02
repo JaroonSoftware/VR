@@ -7,7 +7,7 @@ import {
   QuotationManage,
 } from "../pages/quotation";
 
-import { SO, SOAccess, SOManage } from "../pages/so";
+import { IV, IVAccess, IVManage } from "../pages/iv";
 
 import { Receipt, ReceiptAccess, ReceiptManage } from "../pages/receipt";
 
@@ -18,9 +18,9 @@ export const WarehouseRouter = (
       <Route path="manage/:action" element={<QuotationManage />} />
     </Route>
 
-    <Route path="/so/" exact element={<SO />}>
-      <Route index element={<SOAccess />} />
-      <Route path="manage/:action" element={<SOManage />} />
+    <Route path="/iv/" exact element={<IV />}>
+      <Route index element={<IVAccess />} />
+      <Route path="manage/:action" element={<IVManage />} />
     </Route>
 
     <Route path="/receipt/" exact element={<Receipt />}>

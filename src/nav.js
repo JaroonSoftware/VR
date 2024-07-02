@@ -17,7 +17,7 @@ let _nav = [
     to: "/dashboard",
   },
   {
-    title: "SYSTEM",
+    title: "SELL",
     type: "group",
   },
   {
@@ -26,14 +26,18 @@ let _nav = [
     to: "/quotation",
   },
   {
-    title: "DATA",
-    type: "group",
+    title: "ใบวางบิล",
+    icon: <ReconciliationFilled className="nav-ico" />,
+    to: "/iv",    
   },
-
   {
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
     to: "/customers",
+  },
+  {
+    title: "DATA",
+    type: "group",
   },
   {
     title: "ข้อมูลสินค้า",
@@ -59,12 +63,6 @@ let _nav = [
   {
     title: "กำลังปรับปรุง",
     type: "group",
-  },
-  {
-    title: "ใบขายสินค้า",
-    icon: <ReconciliationFilled className="nav-ico" />,
-    to: "/so",
-    // to: "/1",
   },
   {
     title: "ใบเสร็จรับเงิน",

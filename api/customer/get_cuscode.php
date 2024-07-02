@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
-        $code = sprintf("CS%06s", ( intval($res["cuscode"]) + 1) );
+        $code = sprintf("CS%06s", ( intval($res["cuscode"])) );
 
         http_response_code(200);
         echo json_encode(array("data"=>$code));

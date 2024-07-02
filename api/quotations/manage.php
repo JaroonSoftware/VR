@@ -42,16 +42,8 @@ try {
             throw new PDOException("Insert data error => $error");
             die;
         }
-
-        $sql2 = " update options set qtcode = qtcode+1 WHERE year= '".date("Y")."' ";        
-
-        $stmt2 = $conn->prepare($sql2);
-        if(!$stmt2) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
-        if(!$stmt2->execute()) {
-            $error = $conn->errorInfo();
-            throw new PDOException("Insert data error => $error");
-            die;
-        }
+        
+        update_qtcode($conn);
 
         $code = $conn->lastInsertId();
         // var_dump($master); exit;
@@ -89,6 +81,7 @@ try {
         $sql = "
         update qtmaster 
         set
+        qtdate = :qtdate,
         cuscode = :cuscode,
         payment = :payment,
         total_price = :total_price,
@@ -104,6 +97,7 @@ try {
 
         $header = (object)$header; 
 
+        $stmt->bindParam(":qtdate", $header->qtdate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
@@ -172,7 +166,7 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,c.prename,c.cusname,CONCAT(c.idno ,' ', c.road,' ', c.subdistrict,' ', c.district,' ', c.zipcode) as address
+        $sql = "SELECT a.qtcode,a.qtdate,a.cuscode,CONCAT(c.prename,' ',c.cusname) as cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
         ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
         $sql .= " FROM `qtmaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";

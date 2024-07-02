@@ -4,7 +4,7 @@ import { Layout, Drawer, Affix } from "antd";
 import Sidenav from "./Sidenav";
 import Header from "./Header";
 // import Footer from "./Footer";
-import { LoadingProvider } from "../../store/context/loading-context";
+import { LoadingProvider } from "../../store/context/loading-context"
 import { AxiosInterceptor } from "./AxiosInterceptor";
 // import { useSelector } from "react-redux";
 // import { waitingApproved } from '../../store/slices/sample-preparation-approve.slices';
@@ -13,7 +13,7 @@ import { AxiosInterceptor } from "./AxiosInterceptor";
 const { Header: AntHeader, Content, Sider } = Layout;
 
 function Main({ children }) {
-  // const waitingApproveReducer = useSelector(waitingApprovedSliceSelector);
+  // const waitingApproveReducer = useSelector(waitingApprovedSliceSelector); 
   // const dispatch = useAppDispatch();
 
   const [visible, setVisible] = useState(false);
@@ -36,8 +36,10 @@ function Main({ children }) {
     } else {
       setPlacement("right");
     }
-  }, [pathname]);
- 
+
+    
+  }, [ pathname]);
+
   return (
     <Layout
       className={`layout-dashboard ${
@@ -68,19 +70,17 @@ function Main({ children }) {
             className={`sider-primary ant-layout-sider-primary ${
               sidenavType === "#fff" ? "active-route" : ""
             }`}
-            style={{ color: { sidenavColor } }}
+            style={{  color:{sidenavColor} }}
           >
             <Sidenav />
           </Sider>
         </Layout>
       </Drawer>
-     
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
         onCollapse={(collapsed, type) => {}}
         trigger={null}
-        type="primary" danger
         width={250}
         theme="light"
         className={`sider-primary ant-layout-sider-primary ${
@@ -93,20 +93,8 @@ function Main({ children }) {
       </Sider>
       <Layout>
         <LoadingProvider>
-          {fixed ? (
-            <Affix>
-              <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-                <Header
-                  onPress={openDrawer}
-                  name={pathname}
-                  subName={pathname}
-                  handleSidenavColor={handleSidenavColor}
-                  handleSidenavType={handleSidenavType}
-                  handleFixedNavbar={handleFixedNavbar}
-                />
-              </AntHeader>
-            </Affix>
-          ) : (
+        {fixed ? (
+          <Affix>
             <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
               <Header
                 onPress={openDrawer}
@@ -117,18 +105,27 @@ function Main({ children }) {
                 handleFixedNavbar={handleFixedNavbar}
               />
             </AntHeader>
-          )}
-
+          </Affix>
+        ) : (
+          <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
+            <Header
+              onPress={openDrawer}
+              name={pathname}
+              subName={pathname}
+              handleSidenavColor={handleSidenavColor}
+              handleSidenavType={handleSidenavType}
+              handleFixedNavbar={handleFixedNavbar}
+            />
+          </AntHeader>
+        )}
+        
           <AxiosInterceptor>
-            <Content
-              className="content-ant"
-              style={{ overflow: "hidden", position: "relative" }}
-            >
+            <Content className="content-ant" style={{"overflow":"hidden", "position":"relative"}}>
               {children}
-            </Content>
+            </Content>              
           </AxiosInterceptor>
 
-          {/* <Footer /> */}
+        {/* <Footer /> */}
         </LoadingProvider>
       </Layout>
     </Layout>
