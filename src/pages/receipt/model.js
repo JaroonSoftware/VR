@@ -5,6 +5,7 @@ import "../../assets/styles/banks.css"
 import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import { EditableRow, EditableCell } from "../../components/table/TableEditAble";
+import { TagReceiptStatus } from "../../components/badge-and-tag/";
 import dayjs from 'dayjs';
 import {  EditOutlined, PrinterOutlined } from "@ant-design/icons";
 import { comma } from '../../utils/util';
@@ -24,16 +25,16 @@ export const componentsEditable = {
 export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}) => [
   {
     title: "เลขที่ใบเสร็จรับเงิน",
-    key: "ivcode",
-    dataIndex: "ivcode",
+    key: "recode",
+    dataIndex: "recode",
     align: "left",
     sorter: (a, b) => (a.ivcode).localeCompare(b.ivcode),
     width:140,
   },
   {
     title: "วันที่ใบเสร็จรับเงิน",
-    dataIndex: "ivdate",
-    key: "ivdate",
+    dataIndex: "redate",
+    key: "redate",
     width: 140,
     sorter: (a, b) => (a.qtdate).localeCompare(b.qtdate),
     render: (v) => dayjs(v).format("DD/MM/YYYY"),
@@ -54,6 +55,15 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
       showTitle: false,
     },
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
+  },
+  {
+    title: "สถานะ",
+    dataIndex: "doc_status",
+    key: "doc_status", 
+    width: '13%',
+    sorter: (a, b) => a.doc_status.localeCompare(b.doc_status),
+    sortDirections: ["descend", "ascend"],
+    render: (data) => <TagReceiptStatus result={data} />,
   },
   { 
     title: "จัดทำโดย",
@@ -138,8 +148,6 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     width: "8%",
     align: "right",
     className: "!pe-3",
-    editable: true,
-    required: true,
     type:'number',
     render: (_, rec) => <>{ comma( Number(rec?.qty ||  0),  0, 0 )}</>,
   },
@@ -150,8 +158,6 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     width: "8%",
     align: "right",
     className: "!pe-3",
-    editable: true,
-    required: true,
     type:'number',
     render: (_, rec) => <>{ comma( Number(rec?.price ||  0),  2, 2 )}</>,
   },
@@ -161,7 +167,6 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     key: "unit", 
       align: "right", 
       width: "8%",
-      editable: true,
       type:'select',    
   },
   {
@@ -171,8 +176,6 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     width: "10%",
     align: "right",
     className: "!pe-3",
-    editable: true,
-    type:'number',
     render: (_, rec) => <>{ comma( Number(rec?.discount ||  0),  2, 2 )}</>,
   },
   {
@@ -183,15 +186,6 @@ export const productColumn = ({handleRemove,handleSelectChange}) => [
     align: "right",
     className: "!pe-3",
     render: (_, rec) => <>{ comma( calTotalDiscount(rec),  2, 2 )}</>,
-  },
-  {
-    title: "ตัวเลือก",
-    align: "center",
-    key: "operation",
-    dataIndex: "operation",
-    render: (_, record, idx) => handleRemove(record),
-    width: '90px',
-    fixed: 'right',
   },
 ];
 
@@ -218,16 +212,14 @@ export const columnsParametersEditable = (handleEditCell,optionsItems,{handleRem
       };
   }); 
 }
-export const DEFALUT_CHECK_INVOICE = {
+export const DEFALUT_CHECK_RECEIPT = {
   ivcode: null,
   ivdate: null,
   qtcode: null,  
-  payment: null,
   cuscode: null,
   remark: null,
-  total_price: 0,
-  vat: 7,
-  grand_total_price: 0,
+  payment_type: null,
+  price: 0,
 }
 
 

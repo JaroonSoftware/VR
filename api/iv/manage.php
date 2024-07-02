@@ -19,8 +19,8 @@ try {
 
         // var_dump($_POST);
         $sql = "insert ivmaster (`ivcode`, `ivdate`, `cuscode`,`qtcode`,
-        `payment`,`deldate`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
-        values (:ivcode,:ivdate,:cuscode,:qtcode,:payment,:deldate,:total_price,:vat,:grand_total_price,
+        `payment`,`deldate`, `total_price`, `vat`, `grand_total_price`, `balance`,`remark`,created_by,updated_by) 
+        values (:ivcode,:ivdate,:cuscode,:qtcode,:payment,:deldate,:total_price,:vat,:grand_total_price,:balance,
         :remark,:action_user,:action_user)";
 
         $stmt = $conn->prepare($sql);
@@ -36,6 +36,7 @@ try {
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
         $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR); 
+        $stmt->bindParam(":balance", $header->grand_total_price, PDO::PARAM_STR);         
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_STR); 
 
@@ -90,6 +91,7 @@ try {
         total_price = :total_price,
         vat = :vat,
         grand_total_price = :grand_total_price,
+        balance = :balance,        
         remark = :remark,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
@@ -107,6 +109,7 @@ try {
         $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
         $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
         $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR);
+        $stmt->bindParam(":balance", $header->grand_total_price, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);  
         $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR); 
@@ -171,7 +174,7 @@ try {
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
         $sql = "SELECT a.ivcode,a.ivdate,a.qtcode,a.deldate,a.cuscode,CONCAT(c.prename,' ',c.cusname) as cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
-        ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
+        ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.balance,a.remark ";
         $sql .= " FROM `ivmaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";
         $sql .= " where a.ivcode = :code";

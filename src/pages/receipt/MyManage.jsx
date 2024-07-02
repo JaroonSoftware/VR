@@ -6,24 +6,33 @@ import {
   Form,
   Input,
   Modal,
-  Table,
   Typography,
   message,
 } from "antd";
-import { Card, Col, Divider, Flex, Row, Space, Select,InputNumber } from "antd";
+import {
+  Card,
+  Col,
+  Divider,
+  Flex,
+  Row,
+  Space,
+  Select,
+  Table,
+  InputNumber,
+} from "antd";
 
 import OptionService from "../../service/Options.service";
 import ReceiptService from "../../service/Receipt.service";
-import QuotationService from "../../service/Quotation.service";
+import InvoiceService from "../../service/Invoice.service";
 import { SaveFilled, SearchOutlined } from "@ant-design/icons";
 import ModalCustomers from "../../components/modal/customers/ModalCustomers";
-import ModalQuotation from "../../components/modal/quotation/MyModal";
+import ModalInvoice from "../../components/modal/invoice/MyModal";
 import { ModalItems } from "../../components/modal/items/modal-items";
 
 import {
-  DEFALUT_CHECK_INVOICE,
-  columnsParametersEditable,
+  DEFALUT_CHECK_RECEIPT,
   componentsEditable,
+  columnsParametersEditable,
 } from "./model";
 
 import dayjs from "dayjs";
@@ -32,13 +41,12 @@ import { ButtonBack } from "../../components/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { LuPackageSearch } from "react-icons/lu";
 import { LuPrinter } from "react-icons/lu";
 const opservice = OptionService();
 const reservice = ReceiptService();
-const qtservice = QuotationService();
+const ivservice = InvoiceService();
 
-const gotoFrom = "/re";
+const gotoFrom = "/receipt";
 
 function ReceiptManage() {
   const navigate = useNavigate();
@@ -50,7 +58,9 @@ function ReceiptManage() {
   /** Modal handle */
   const [openCustomers, setOpenCustomers] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
-  const [openQuotation, setOpenQuotation] = useState(false);
+  const [openInvoice, setOpenInvoice] = useState(false);
+  const [openPayAmount, setOpenPayAmount] = useState(false);
+  const [openBalance, setOpenBalance] = useState(0);
 
   /** Receipt state */
   const [reCode, setRECode] = useState(null);
@@ -58,9 +68,9 @@ function ReceiptManage() {
   /** Detail Data State */
   const [listDetail, setListDetail] = useState([]);
 
-  const [formDetail, setFormDetail] = useState(DEFALUT_CHECK_INVOICE);
-
   const [unitOption, setUnitOption] = React.useState([]);
+
+  const [formDetail, setFormDetail] = useState(DEFALUT_CHECK_RECEIPT);
 
   const cardStyle = {
     backgroundColor: "#f0f0f0",
@@ -76,11 +86,15 @@ function ReceiptManage() {
         const {
           data: { header, detail },
         } = res.data;
-        const { recode, redate,deldate } = header;
+        const { recode, redate, deldate } = header;
         setFormDetail(header);
         setListDetail(detail);
         setRECode(recode);
-        form.setFieldsValue({ ...header, redate: dayjs(redate), deldate: dayjs(deldate) });
+        form.setFieldsValue({
+          ...header,
+          redate: dayjs(redate),
+          deldate: dayjs(deldate),
+        });
 
         // setTimeout( () => {  handleCalculatePrice(head?.valid_price_until, head?.dated_price_until) }, 200);
         // handleChoosedCustomers(head);
@@ -91,25 +105,25 @@ function ReceiptManage() {
           })
         ).data;
         setRECode(code);
-        
+
         const ininteial_value = {
           ...formDetail,
           recode: code,
           redate: dayjs(new Date()),
         };
-        
+
         setFormDetail(ininteial_value);
         form.setFieldsValue(ininteial_value);
         form.setFieldValue("vat", 7);
-        form.setFieldValue("payment", "เงินสด");
-        form.setFieldValue("deldate", dayjs(new Date()));
-        
+        form.setFieldValue("payment_method", "ชำระทั้งหมด");
+        form.setFieldValue("payment_type", "เงินโอน");
+
+        const [unitOprionRes] = await Promise.all([
+          opservice.optionsUnit({ p: "unit-option" }),
+        ]);
+        // console.log(unitOprionRes.data.data)
+        setUnitOption(unitOprionRes.data.data);
       }
-      const [unitOprionRes] = await Promise.all([
-        opservice.optionsUnit({ p: "unit-option" }),
-      ]);
-      // console.log(unitOprionRes.data.data)
-      setUnitOption(unitOprionRes.data.data);
     };
 
     initial();
@@ -181,7 +195,7 @@ function ReceiptManage() {
     ];
     const customers = {
       ...val,
-      qtcode: "",
+      ivcode: "",
       cusname: cusname.join(""),
       address: addr.join(""),
       contact: val.contact,
@@ -193,7 +207,16 @@ function ReceiptManage() {
     setListDetail([]);
   };
 
-  const handleChoosedQuotation = async (val) => {
+  const handleChoosedInvoice = async (val) => {
+    const res = await ivservice.get(val.ivcode);
+    const {
+      data: { header, detail },
+    } = res.data;
+    setListDetail(detail);
+    handleSummaryPrice();
+    // console.log(header.balance)
+    setOpenBalance(header.balance);
+
     // console.log(val)
     const fvalue = form.getFieldsValue();
     const addr = [
@@ -214,19 +237,12 @@ function ReceiptManage() {
       cusname: cusname.join(""),
       address: addr.join(""),
       contact: val.contact,
+      price: header.balance,
       tel: val?.tel?.replace(/[^(0-9, \-, \s, \\,)]/g, "")?.trim(),
     };
-    const res = await qtservice.get(val.qtcode);    
-    const {
-      data: { detail },
-    } = res.data;
-    setListDetail(detail);
-    handleSummaryPrice();
-    // console.log(quotation)
+
     setFormDetail((state) => ({ ...state, ...quotation }));
     form.setFieldsValue({ ...fvalue, ...quotation });
-
-    
   };
 
   const handleItemsChoosed = (value) => {
@@ -244,11 +260,15 @@ function ReceiptManage() {
         const header = {
           ...formDetail,
           redate: dayjs(form.getFieldValue("redate")).format("YYYY-MM-DD"),
+          payment_type: form.getFieldValue("payment_type"),
           remark: form.getFieldValue("remark"),
           deldate: dayjs(form.getFieldValue("deldate")).format("YYYY-MM-DD"),
           payment: form.getFieldValue("payment"),
+          price: form.getFieldValue("price"),          
         };
         const detail = listDetail;
+
+        // console.log(formDetail)
 
         const parm = { header, detail };
         // console.log(parm)
@@ -276,7 +296,7 @@ function ReceiptManage() {
   const handleClose = async () => {
     navigate(gotoFrom, { replace: true });
     await delay(300);
-    console.clear();
+    // console.clear();
   };
 
   const handlePrint = () => {
@@ -336,26 +356,30 @@ function ReceiptManage() {
         <Row gutter={[8, 8]} className="m-0">
           <Col xs={24} sm={24} md={6} lg={6}>
             <Form.Item
-              name="qtcode"
-              htmlFor="qtcode-1"
-              label="รหัสใบเสนอราคา"
+              name="ivcode"
+              htmlFor="ivcode-1"
+              label="เลขที่ใบแจ้งหนี้"
               className="!mb-1"
+              rules={[{ required: true, message: "Missing Invoice" }]}
             >
               <Space.Compact style={{ width: "100%" }}>
                 <Input
                   readOnly
                   placeholder="เลือกใบเสนอราคา"
-                  id="qtcode-1"
-                  value={formDetail.qtcode}
+                  id="ivcode-1"
+                  value={formDetail.ivcode}
                   className="!bg-white"
                 />
-                {config?.action !== "create" ? '' : <Button
-                  type="primary"
-                  icon={<SearchOutlined />}
-                  onClick={() => setOpenQuotation(true)}
-                  style={{ minWidth: 40 }}
-                ></Button>}
-                
+                {config?.action !== "create" ? (
+                  ""
+                ) : (
+                  <Button
+                    type="primary"
+                    icon={<SearchOutlined />}
+                    onClick={() => setOpenInvoice(true)}
+                    style={{ minWidth: 40 }}
+                  ></Button>
+                )}
               </Space.Compact>
             </Form.Item>
           </Col>
@@ -367,21 +391,7 @@ function ReceiptManage() {
               className="!mb-1"
               rules={[{ required: true, message: "Missing Customer" }]}
             >
-              <Space.Compact style={{ width: "100%" }}>
-                <Input
-                  readOnly
-                  placeholder="เลือกลูกค้า"
-                  id="cuscode-1"
-                  value={formDetail.cuscode}
-                  className="!bg-white"
-                />
-                {config?.action !== "create" ? '' : <Button
-                  type="primary"
-                  icon={<SearchOutlined />}
-                  onClick={() => setOpenCustomers(true)}
-                  style={{ minWidth: 40 }}
-                ></Button>}                
-              </Space.Compact>
+              <Input readOnly placeholder="เลือกลูกค้า" />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12}>
@@ -389,39 +399,64 @@ function ReceiptManage() {
               <Input placeholder="ชื่อลูกค้า" readOnly />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={24}>
-            <Form.Item name="address" label="ที่อยู่" className="!mb-1">
-              <Input placeholder="ที่อยู่" readOnly />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={[8, 8]} className="m-0">
           <Col xs={24} sm={24} md={6} lg={6}>
             <Form.Item
-              label="เงื่อนไขการชำระเงิน"
-              name="payment"
-              rules={[{ required: true, message: "Please input your data!" }]}
+              name="payment_method"
+              label="วิธีการชำระ"
+              className="!mb-1"
             >
               <Select
-                style={{ height: 40 }}
+                size="large"
                 options={[
-                  { value: "เงินสด", label: "เงินสด" },
-                  { value: "30 วัน", label: "30 วัน" },
-                  { value: "45 วัน", label: "45 วัน" },
-                  { value: "60 วัน", label: "60 วัน" },
-                  { value: "90 วัน", label: "90 วัน" },
-                  { value: "120 วัน", label: "120 วัน" },
+                  {
+                    value: "ชำระทั้งหมด",
+                    label: "ชำระทั้งหมด",
+                  },
+                  {
+                    value: "แบ่งชำระ",
+                    label: "แบ่งชำระ",
+                  },
                 ]}
+                onChange={(v) => {
+                  v !== "ชำระทั้งหมด"
+                    ? setOpenPayAmount(true)
+                    : setOpenPayAmount(false);
+                  form.setFieldValue("price", openBalance);
+                }}
               />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={6} lg={6}>
-            <Form.Item label="วันครบกำหนด" name="deldate">
-              <DatePicker
+            <Form.Item
+              name="price"
+              label={"( ยอดคงเหลือ " + comma(openBalance, 2, 2) + " บาท)"}
+              // className="!mb-1"
+            >
+              {openPayAmount ? (
+                <Input placeholder="ยอดเงินทั้งหมด" />
+              ) : (
+                <Input placeholder="ยอดเงินทั้งหมด"  disabled />
+              )}
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={6} lg={6}>
+            <Form.Item
+              name="payment_type"
+              label="ประเภทการชำระ"
+              className="!mb-1"
+            >
+              <Select
                 size="large"
-                placeholder="วันครบกำหนด."
-                className="input-40"
-                style={{ width: "100%" }}
+                options={[
+                  {
+                    value: "เงินโอน",
+                    label: "เงินโอน",
+                  },
+                  {
+                    value: "เงินสด",
+                    label: "เงินสด",
+                  },
+                ]}
               />
             </Form.Item>
           </Col>
@@ -430,36 +465,10 @@ function ReceiptManage() {
     </>
   );
 
-  const TitleTable = (
-    <Flex className="width-100" align="center">
-      <Col span={12} className="p-0">
-        <Flex gap={4} justify="start" align="center">
-          <Typography.Title className="m-0 !text-zinc-800" level={3}>
-            รายการสินค้า
-          </Typography.Title>
-        </Flex>
-      </Col>
-      <Col span={12} style={{ paddingInline: 0 }}>
-        <Flex justify="end">
-          <Button
-            icon={<LuPackageSearch style={{ fontSize: "1.2rem" }} />}
-            className="bn-center justify-center bn-primary-outline"
-            onClick={() => {
-              setOpenProduct(true);
-            }}
-          >
-            Choose Product
-          </Button>
-        </Flex>
-      </Col>
-    </Flex>
-  );
-
   const SectionProduct = (
     <>
       <Flex className="width-100" vertical gap={4}>
         <Table
-          title={() => TitleTable}
           components={componentsEditable}
           rowClassName={() => "editable-row"}
           bordered
@@ -493,10 +502,9 @@ function ReceiptManage() {
                         style={{ borderRigth: "0px solid" }}
                       >
                         <Typography.Text type="danger">
-                          {comma(Number(formDetail?.total_price || 0),2,2)}
+                          {comma(Number(formDetail?.total_price || 0), 2, 2)}
                         </Typography.Text>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
                     </Table.Summary.Row>
                     <Table.Summary.Row>
                       <Table.Summary.Cell
@@ -515,18 +523,7 @@ function ReceiptManage() {
                         style={{ borderRigth: "0px solid" }}
                       >
                         <Form.Item name="vat" className="!m-0">
-                          <InputNumber
-                            className="width-100 input-30 text-end"
-                            addonAfter="%"
-                            controls={false}
-                            min={0}
-                            onFocus={(e) => {
-                              e.target.select();
-                            }}
-                            onChange={() => {
-                              handleSummaryPrice();
-                            }}
-                          />
+                          <InputNumber addonAfter="%" disabled />
                         </Form.Item>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell
@@ -537,11 +534,12 @@ function ReceiptManage() {
                           {comma(
                             Number(
                               (formDetail.total_price * formDetail?.vat) / 100
-                            ),2,2
+                            ),
+                            2,
+                            2
                           )}
                         </Typography.Text>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
                     </Table.Summary.Row>
                     <Table.Summary.Row>
                       <Table.Summary.Cell
@@ -560,10 +558,13 @@ function ReceiptManage() {
                         style={{ borderRigth: "0px solid" }}
                       >
                         <Typography.Text type="danger">
-                          {comma(Number(formDetail?.grand_total_price || 0),2,2)}
+                          {comma(
+                            Number(formDetail?.grand_total_price || 0),
+                            2,
+                            2
+                          )}
                         </Typography.Text>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell>Baht</Table.Summary.Cell>
                     </Table.Summary.Row>
                   </>
                 )}
@@ -713,19 +714,19 @@ function ReceiptManage() {
                   <Card style={cardStyle}>{SectionCustomers}</Card>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <Divider orientation="left" className="!mb-3 !mt-1">
+                    {" "}
+                    ข้อมูลเพิ่มเติม{" "}
+                  </Divider>
+                  <Card style={cardStyle}>{SectionOther}</Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider orientation="left" className="!my-0">
                     รายการใบสั่งซื้อสินค้า
                   </Divider>
                   <Card style={{ backgroundColor: "#f0f0f0" }}>
                     {SectionProduct}
                   </Card>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Divider orientation="left" className="!mb-3 !mt-1">
-                    {" "}
-                    ข้อมูลเพิ่มเติม{" "}
-                  </Divider>
-                  <Card style={cardStyle}>{SectionOther}</Card>
                 </Col>
               </Row>
             </Card>
@@ -744,14 +745,14 @@ function ReceiptManage() {
         ></ModalCustomers>
       )}
 
-      {openQuotation && (
-        <ModalQuotation
-          show={openQuotation}
-          close={() => setOpenQuotation(false)}
+      {openInvoice && (
+        <ModalInvoice
+          show={openInvoice}
+          close={() => setOpenInvoice(false)}
           values={(v) => {
-            handleChoosedQuotation(v);
+            handleChoosedInvoice(v);
           }}
-        ></ModalQuotation>
+        ></ModalInvoice>
       )}
 
       {openProduct && (

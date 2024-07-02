@@ -18,24 +18,20 @@ try {
         extract($_POST, EXTR_OVERWRITE, "_");
 
         // var_dump($_POST);
-        $sql = "insert ivmaster (`ivcode`, `ivdate`, `cuscode`,`qtcode`,
-        `payment`,`deldate`, `total_price`, `vat`, `grand_total_price`,`remark`,created_by,updated_by) 
-        values (:ivcode,:ivdate,:cuscode,:qtcode,:payment,:deldate,:total_price,:vat,:grand_total_price,
+        $sql = "insert receipt (`recode`, `redate`, `ivcode`,
+        `payment_type`,`price`,`remark`,created_by,updated_by) 
+        values (:recode,:redate,:ivcode,:payment_type,:price,
         :remark,:action_user,:action_user)";
 
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
 
         $header = (object)$header;  
+        $stmt->bindParam(":recode", $header->recode, PDO::PARAM_STR);
+        $stmt->bindParam(":redate", $header->redate, PDO::PARAM_STR);
         $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
-        $stmt->bindParam(":ivdate", $header->ivdate, PDO::PARAM_STR);
-        $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":qtcode", $header->qtcode, PDO::PARAM_STR);
-        $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
-        $stmt->bindParam(":deldate", $header->deldate, PDO::PARAM_STR);
-        $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
-        $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
-        $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR); 
+        $stmt->bindParam(":payment_type", $header->payment_type, PDO::PARAM_STR);
+        $stmt->bindParam(":price", $header->price, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_STR); 
 
@@ -45,7 +41,7 @@ try {
             die;
         }
 
-        $sql2 = " update options set ivcode = ivcode+1 WHERE year= '".date("Y")."' ";        
+        $sql2 = " update options set recode = recode+1 WHERE year= '".date("Y")."' ";        
 
         $stmt2 = $conn->prepare($sql2);
         if(!$stmt2) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
@@ -54,30 +50,6 @@ try {
             throw new PDOException("Insert data error => $error");
             die;
         }
-
-        $code = $conn->lastInsertId();
-        // var_dump($master); exit;
-        
-        $sql = "insert into ivdetail (ivcode,stcode,qty,price,unit,discount)
-        values (:ivcode,:stcode,:qty,:price,:unit,:discount)";
-        $stmt = $conn->prepare($sql);
-        if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
-
-       // $detail = $detail;  
-        foreach( $detail as $ind => $val){
-            $val = (object)$val;
-            $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
-            $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
-            $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
-            $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
-            $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);            
-            $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);
-            
-            if(!$stmt->execute()) {
-                $error = $conn->errorInfo();
-                throw new PDOException("Insert data error => $error"); 
-            }
-        } 
 
         $conn->commit();
         http_response_code(200);
@@ -89,9 +61,9 @@ try {
         extract($_PUT, EXTR_OVERWRITE, "_");
         // var_dump($_POST);
         $sql = "
-        update ivmaster 
+        update remaster 
         set
-        ivdate = :ivdate,
+        redate = :redate,
         cuscode = :cuscode,
         payment = :payment,
         deldate = :deldate,
@@ -101,14 +73,14 @@ try {
         remark = :remark,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
-        where ivcode = :ivcode";
+        where recode = :recode";
 
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
 
         $header = (object)$header; 
 
-        $stmt->bindParam(":ivdate", $header->ivdate, PDO::PARAM_STR);
+        $stmt->bindParam(":redate", $header->redate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
         $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
         $stmt->bindParam(":deldate", $header->deldate, PDO::PARAM_STR);
@@ -117,7 +89,7 @@ try {
         $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);  
-        $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR); 
+        $stmt->bindParam(":recode", $header->recode, PDO::PARAM_STR); 
 
         if(!$stmt->execute()) {
             $error = $conn->errorInfo();
@@ -125,22 +97,22 @@ try {
             die;
         }
 
-        $sql = "delete from ivdetail where ivcode = :ivcode";
+        $sql = "delete from ivdetail where recode = :recode";
         $stmt = $conn->prepare($sql);
-        if (!$stmt->execute([ 'ivcode' => $header->ivcode ])){
+        if (!$stmt->execute([ 'recode' => $header->recode ])){
             $error = $conn->errorInfo();
             throw new PDOException("Remove data error => $error");
         }
 
-        $sql = "insert into ivdetail (ivcode,stcode,unit,qty,price,discount)
-        values (:ivcode,:stcode,:unit,:qty,:price,:discount)";
+        $sql = "insert into ivdetail (recode,stcode,unit,qty,price,discount)
+        values (:recode,:stcode,:unit,:qty,:price,:discount)";
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
 
        // $detail = $detail;  
         foreach( $detail as $ind => $val){
             $val = (object)$val;
-            $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
+            $stmt->bindParam(":recode", $header->recode, PDO::PARAM_STR);
             $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
             $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);
             $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
@@ -178,11 +150,11 @@ try {
         echo json_encode(array("status"=> 1));
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"]; 
-        $sql = "SELECT a.ivcode,a.ivdate,a.qtcode,a.deldate,a.cuscode,CONCAT(c.prename,' ',c.cusname) as cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
+        $sql = "SELECT a.recode,a.redate,a.qtcode,a.deldate,a.cuscode,CONCAT(c.prename,' ',c.cusname) as cusname,CONCAT(COALESCE(c.idno, '') ,' ', COALESCE(c.road, ''),' ', COALESCE(c.subdistrict, ''),' ', COALESCE(c.district, ''),' ',COALESCE(c.zipcode, '') ) as address
         ,c.zipcode,c.contact,c.tel,c.fax,a.payment,a.total_price,a.vat,a.grand_total_price,a.remark ";
-        $sql .= " FROM `ivmaster` as a ";
+        $sql .= " FROM `remaster` as a ";
         $sql .= " inner join `customer` as c on (a.cuscode)=(c.cuscode)";
-        $sql .= " where a.ivcode = :code";
+        $sql .= " where a.recode = :code";
 
         $stmt = $conn->prepare($sql); 
         if (!$stmt->execute([ 'code' => $code ])){
@@ -192,9 +164,9 @@ try {
         }
         $header = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT a.ivcode,a.stcode, a.price, a.discount, a.unit, a.qty ,i.stname ";
+        $sql = "SELECT a.recode,a.stcode, a.price, a.discount, a.unit, a.qty ,i.stname ";
         $sql .= " FROM `ivdetail` as a inner join `items` as i on (a.stcode=i.stcode)  ";        
-        $sql .= " where a.ivcode = :code";
+        $sql .= " where a.recode = :code";
         
         $stmt = $conn->prepare($sql); 
         if (!$stmt->execute([ 'code' => $code ])){

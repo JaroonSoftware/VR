@@ -338,7 +338,7 @@ function InvoiceManage() {
             <Form.Item
               name="qtcode"
               htmlFor="qtcode-1"
-              label="รหัสใบเสนอราคา"
+              label="เลขที่ใบเสนอราคา"
               className="!mb-1"
             >
               <Space.Compact style={{ width: "100%" }}>

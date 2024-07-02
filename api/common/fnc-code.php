@@ -165,7 +165,7 @@ function request_recode($pdo){
     while(true){
         $code = sprintf("%03s", ( $number) );
         $format = $prefix.$code;
-        $sql = "SELECT 1 r FROM remaster where recode = '$format'"; 
+        $sql = "SELECT 1 r FROM receipt where recode = '$format'"; 
         $stmt = $pdo->prepare($sql); 
         $stmt->execute(); 
         if ($stmt->rowCount() > 0){

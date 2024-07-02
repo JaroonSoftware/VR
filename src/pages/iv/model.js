@@ -5,8 +5,9 @@ import "../../assets/styles/banks.css"
 import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import { EditableRow, EditableCell } from "../../components/table/TableEditAble";
+import { TagInvoiceStatus } from "../../components/badge-and-tag/";
 import dayjs from 'dayjs';
-import {  EditOutlined, PrinterOutlined } from "@ant-design/icons";
+import {  EditOutlined } from "@ant-design/icons";
 import { comma } from '../../utils/util';
 
 const calTotalDiscount = (rec) => {
@@ -55,6 +56,15 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
     },
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
   },
+  {
+    title: "สถานะ",
+    dataIndex: "doc_status",
+    key: "doc_status", 
+    width: '13%',
+    sorter: (a, b) => a.doc_status.localeCompare(b.doc_status),
+    sortDirections: ["descend", "ascend"],
+    render: (data) => <TagInvoiceStatus result={data} />,
+  },
   { 
     title: "จัดทำโดย",
     dataIndex: "created_name",
@@ -95,13 +105,13 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
             size="small"
           />
         </Popconfirm> */}
-        <Button
+        {/* <Button
           icon={<PrinterOutlined />} 
           className='bn-warning-outline'
           style={{ cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center'}}
           onClick={(e) => handlePrint(record) }
           size="small"
-        />        
+        />         */}
         {/* <ButtonAttachFiles code={record.srcode} refs='Sample Request' showExpire={true} /> */}
       </Space>
     ),

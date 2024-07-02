@@ -22,13 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     try {   
         $sql = " 
         select 
-        a.*,
+        a.*,a.active_status as doc_status,
         c.*,
         concat(u.firstname, ' ', u.lastname) created_name
-        from remaster a        
-        left join customer c on a.cuscode = c.cuscode        
+        from receipt a        
+        left join ivmaster i on a.ivcode = i.ivcode        
+        left join customer c on i.cuscode = c.cuscode        
         left join user u on a.created_by = u.code
-        where 1 = 1 and a.active_status = 'Y'
+        where 1 = 1 
         $recode
         $cuscode
         $cusname

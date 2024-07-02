@@ -196,7 +196,7 @@ const MyAccess = () => {
                         <Table 
                         title={()=>TitleTable} 
                         size='small' 
-                        rowKey="qtcode" 
+                        rowKey="ivcode" 
                         columns={column} 
                         dataSource={accessData} 
                         scroll={{ x: 'max-content' }} 

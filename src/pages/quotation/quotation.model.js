@@ -5,6 +5,8 @@ import "../../assets/styles/banks.css"
 import { Tooltip } from "antd";
 // import { EditOutlined, QuestionCircleOutlined, DeleteOutlined } from "@ant-design/icons"; 
 import { EditableRow, EditableCell } from "../../components/table/TableEditAble";
+import { TagQuotationStatus } from "../../components/badge-and-tag/";
+
 import dayjs from 'dayjs';
 import { EditOutlined, PrinterOutlined } from "@ant-design/icons";
 import { comma } from '../../utils/util';
@@ -54,6 +56,15 @@ export const accessColumn = ({handleEdit, handleDelete, handleView, handlePrint}
       showTitle: false,
     },
     render: (v) => <Tooltip placement="topLeft" title={v}>{v}</Tooltip>, 
+  },
+  {
+    title: "สถานะ",
+    dataIndex: "doc_status",
+    key: "doc_status", 
+    width: '13%',
+    sorter: (a, b) => a.doc_status.localeCompare(b.doc_status),
+    sortDirections: ["descend", "ascend"],
+    render: (data) => <TagQuotationStatus result={data} />,
   },
   { 
     title: "จัดทำโดย",
