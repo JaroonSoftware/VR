@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-
+import { TagInvoiceStatus } from "../../../components/badge-and-tag/";
 
 /** get items column */
 export const customersColumn = ({handleChoose})=>{
@@ -8,14 +8,14 @@ export const customersColumn = ({handleChoose})=>{
       {
         title: "เลขที่ใบแจ้งหนี้",
         key: "ivcode",
-        width: "20%",
+        width: "15%",
         dataIndex: "ivcode", 
         render: (v, record) => <Link className="text-select" onClick={()=>handleChoose(record)}>{v}</Link>
       },
       {
         title: "วันที่ใบแจ้งหนี้",
         key: "ivdate",
-        width: "20%",
+        width: "15%",
         dataIndex: "ivdate", 
         render: (v, record) => <Link className="text-select" onClick={()=>handleChoose(record)}>{v}</Link>
       },
@@ -29,9 +29,19 @@ export const customersColumn = ({handleChoose})=>{
       {
         title: "ชื่อลูกค้า",
         dataIndex: "cusname",
-        width: "45%",
+        width: "35%",
         key: "cusname",
         render: (v, record) => <Link className="text-select" onClick={()=>handleChoose(record)}> {v}</Link>
-      } 
+      },
+      {
+        title: "สถานะ",
+        dataIndex: "doc_status",
+        key: "doc_status", 
+        width: '20%',
+        align: "center",
+        sorter: (a, b) => a.doc_status.localeCompare(b.doc_status),
+        sortDirections: ["descend", "ascend"],
+        render: (data) => <TagInvoiceStatus result={data} />,
+      },
     ]
   };

@@ -9,8 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
     try { 
         $res = null;
         
-        $sql = "SELECT i.ivcode,i.ivdate,c.cuscode, c.cusname,c.prename, c.idno, c.road, c.subdistrict, c.district, c.province, c.zipcode
-         FROM ivmaster as i inner join `customer` as c where i.active_status = 'Y' ";
+        $sql = "SELECT i.ivcode,i.ivdate,c.cuscode, c.cusname,c.prename, c.idno, c.road, c.subdistrict, c.district, c.province, c.zipcode,i.doc_status
+         FROM ivmaster as i inner join `customer` as c on (i.cuscode=c.cuscode) where i.active_status = 'Y' and (i.doc_status != 'ชำระครบแล้ว' and i.doc_status != 'ยกเลิก') ";
             // $type_code
             $stmt = $conn->prepare($sql); 
             $stmt->execute();

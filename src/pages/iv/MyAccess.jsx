@@ -59,15 +59,28 @@ const MyAccess = () => {
               {/* Ignore */}
           </Col>
           <Col xs={24} sm={8} md={12} lg={12} xl={12}>
-              <Flex justify='flex-end' gap={8}>
-                  <Button type="primary" size='small' className='bn-action' icon={<SearchOutlined />} onClick={() => handleSearch()}>
-                      Searchd
-                  </Button>
-                  <Button type="primary" size='small' className='bn-action' danger icon={<ClearOutlined />} onClick={() => handleClear()}>
-                      Clear
-                  </Button>
-              </Flex>
-          </Col>
+          <Flex justify="flex-end" gap={8}>
+            <Button
+              type="primary"
+              size="small"
+              className="bn-action"
+              danger
+              icon={<ClearOutlined />}
+              onClick={() => handleClear()}
+            >
+              Clear
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              className="bn-action"
+              icon={<SearchOutlined />}
+              onClick={() => handleSearch()}
+            >
+              Searchd
+            </Button>
+          </Flex>
+        </Col>
         </Row> 
         </>
     )

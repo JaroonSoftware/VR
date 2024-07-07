@@ -28,28 +28,28 @@ const QuotationAccess = () => {
         <>  
         <Row gutter={[8,8]}> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='รหัสใบเสนอราคา' name='qtcode'>
-                    <Input placeholder='กรอกรหัสใบเสนอราคา' />
+                <Form.Item label='เลขที่ใบเสนอราคา' name='qtcode'>
+                <Input placeholder='Enter Quotation Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='วันที่ใบเสนอราคา' name='qtdate'>
+                <Form.Item label='วันที่ใบเสร็จรับเงิน' name='qtdate'>
                     <RangePicker placeholder={['เริ่มวันที่', 'ถึงวันที่']} style={{width:'100%', height:40}}  />
                 </Form.Item>
             </Col> 
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='ร้องขอโดย' name='created_by'>
-                    <Input placeholder='กรอก ชื่อ-นามสกุล ผู้ร้องขอ' />
+                <Form.Item label='จัดทำโดย' name='created_by'>
+                    <Input placeholder='Enter First Name or Last Name.' />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                 <Form.Item label='รหัสลูกค้า' name='cuscode'>
-                    <Input placeholder='กรอกรหัสลูกค้า' />
+                    <Input placeholder='Enter Customer Code.' />
                 </Form.Item>                            
             </Col>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                <Form.Item label='ชื่อลูกค้า' name='cusname'>
-                    <Input placeholder='กรอกชื่อลูกค้า' />
+                <Form.Item label='ชื่อลุูกค้า' name='cusname'>
+                    <Input placeholder='Enter Customer Name.' />
                 </Form.Item>                            
             </Col>
         </Row>
@@ -58,15 +58,28 @@ const QuotationAccess = () => {
               {/* Ignore */}
           </Col>
           <Col xs={24} sm={8} md={12} lg={12} xl={12}>
-              <Flex justify='flex-end' gap={8}>
-                  <Button type="primary" size='small' className='bn-action' icon={<SearchOutlined />} onClick={() => handleSearch()}>
-                      ค้นหา
-                  </Button>
-                  <Button type="primary" size='small' className='bn-action' danger icon={<ClearOutlined />} onClick={() => handleClear()}>
-                      ล้าง
-                  </Button>
-              </Flex>
-          </Col>
+          <Flex justify="flex-end" gap={8}>
+            <Button
+              type="primary"
+              size="small"
+              className="bn-action"
+              danger
+              icon={<ClearOutlined />}
+              onClick={() => handleClear()}
+            >
+              Clear
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              className="bn-action"
+              icon={<SearchOutlined />}
+              onClick={() => handleSearch()}
+            >
+              Searchd
+            </Button>
+          </Flex>
+        </Col>
         </Row> 
         </>
     )

@@ -8,8 +8,8 @@ export default function TagQuotationStatus({result}) {
   let elementToRender;
 
   switch (result) {
-    case 'เรียบร้อยแล้ว':
-      elementToRender = <Tag icon={<CheckCircleFilled />} color="#87d068"> เรียบร้อยแล้ว </Tag>;
+    case 'ออกใบแจ้งหนี้แล้ว':
+      elementToRender = <Tag icon={<CheckCircleFilled />} color="#87d068"> ออกใบแจ้งหนี้แล้ว </Tag>;
       break;
     case 'กำลังรอดำเนินการ':
       elementToRender = <Tag icon={<ClockCircleFilled />} color="#347C98"> กำลังรอดำเนินการ </Tag>;

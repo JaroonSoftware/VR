@@ -190,7 +190,7 @@ function InvoiceManage() {
     // console.log(val.contact)
     setFormDetail((state) => ({ ...state, ...customers }));
     form.setFieldsValue({ ...fvalue, ...customers });
-    setListDetail([]);
+    // setListDetail([]);
   };
 
   const handleChoosedQuotation = async (val) => {
@@ -268,7 +268,7 @@ function InvoiceManage() {
       .catch((err) => {
         Modal.error({
           title: "This is an error message",
-          content: "Please enter require data",
+          content: "คุณกรอกข้อมูล ไม่ครบถ้วน",
         });
       });
   };

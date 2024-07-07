@@ -84,11 +84,10 @@ function ReceiptManage() {
           .get(config?.code)
           .catch((error) => message.error("get Receipt data fail."));
         const {
-          data: { header, detail },
+          data: { header },
         } = res.data;
         const { recode, redate, deldate } = header;
         setFormDetail(header);
-        setListDetail(detail);
         setRECode(recode);
         form.setFieldsValue({
           ...header,
@@ -255,7 +254,6 @@ function ReceiptManage() {
     form
       .validateFields()
       .then((v) => {
-        if (listDetail.length < 1) throw new Error("กรุณาเพิ่ม รายการขาย");
 
         const header = {
           ...formDetail,
@@ -264,7 +262,8 @@ function ReceiptManage() {
           remark: form.getFieldValue("remark"),
           deldate: dayjs(form.getFieldValue("deldate")).format("YYYY-MM-DD"),
           payment: form.getFieldValue("payment"),
-          price: form.getFieldValue("price"),          
+          price: form.getFieldValue("price"),
+          balance: openBalance,
         };
         const detail = listDetail;
 
@@ -399,7 +398,17 @@ function ReceiptManage() {
               <Input placeholder="ชื่อลูกค้า" readOnly />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col
+            xs={24}
+            sm={24}
+            md={6}
+            lg={6}
+            style={
+              config.action === "create"
+                ? { display: "inline" }
+                : { display: "none" }
+            }
+          >
             <Form.Item
               name="payment_method"
               label="วิธีการชำระ"
@@ -433,9 +442,20 @@ function ReceiptManage() {
               // className="!mb-1"
             >
               {openPayAmount ? (
-                <Input placeholder="ยอดเงินทั้งหมด" />
+                <InputNumber
+                  className="width-100 input-30 text-black "
+                  style={{ height: 40 }}
+                  placeholder="ยอดเงินทั้งหมด"
+                  min="1"
+                  max={openBalance}
+                />
               ) : (
-                <Input placeholder="ยอดเงินทั้งหมด"  disabled />
+                <InputNumber
+                  className="width-100 input-30 text-end"
+                  style={{ height: 40 }}
+                  placeholder="ยอดเงินทั้งหมด"
+                  disabled
+                />
               )}
             </Form.Item>
           </Col>
@@ -720,7 +740,11 @@ function ReceiptManage() {
                   </Divider>
                   <Card style={cardStyle}>{SectionOther}</Card>
                 </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24} style={
+              config.action === "create"
+                ? { display: "inline" }
+                : { display: "none" }
+            }>
                   <Divider orientation="left" className="!my-0">
                     รายการใบสั่งซื้อสินค้า
                   </Divider>

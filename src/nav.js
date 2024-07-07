@@ -31,6 +31,11 @@ let _nav = [
     to: "/iv",    
   },
   {
+    title: "ใบเสร็จรับเงิน",
+    icon: <TbReportMoney className="nav-ico" />,
+    to: "/receipt",
+  },
+  {
     title: "ข้อมูลลูกค้า",
     icon: <RiTeamFill className="nav-ico" />,
     to: "/customers",
@@ -59,16 +64,10 @@ let _nav = [
     icon: <FaUserCircle className="nav-ico" />,
     to: "/users",
   },
-
-  {
-    title: "กำลังปรับปรุง",
-    type: "group",
-  },
-  {
-    title: "ใบเสร็จรับเงิน",
-    icon: <TbReportMoney className="nav-ico" />,
-    to: "/receipt",
-  },
+  // {
+  //   title: "กำลังปรับปรุง",
+  //   type: "group",
+  // },  
 ];
 
 export default _nav;

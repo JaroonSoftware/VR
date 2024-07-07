@@ -25,13 +25,17 @@ const ModalCustomersManage = ({ submit }) => {
   const [form] = Form.useForm();
 
   const [formDetail, setFormDetail] = useState();
+  const { Option } = Select;
 
   // const [packageTypeOption, setPackageTypeOption] = useState([]);
   const init = async () => {
+    form.setFieldsValue({
+      business_branch: "สำนักงานใหญ่",
+    });
     const cuscodeRes = await ctmService
       .getcode()
       .catch(() => message.error("Initail failed"));
-
+      
     const { data: cuscode } = cuscodeRes.data;
     const initForm = { ...formDetail, cuscode };
     setFormDetail((state) => ({ ...state, ...initForm }));
@@ -94,7 +98,7 @@ const ModalCustomersManage = ({ submit }) => {
           />
         </Form.Item>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
+      <Col xs={24} sm={24} md={4} lg={4}>
         <Form.Item
           label="คำน้ำหน้า"
           name="prename"
@@ -133,7 +137,7 @@ const ModalCustomersManage = ({ submit }) => {
           ></Select>
         </Form.Item>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
+      <Col xs={24} sm={24} md={14} lg={14}>
         <Form.Item
           label="Customer Name"
           name="cusname"
@@ -142,9 +146,33 @@ const ModalCustomersManage = ({ submit }) => {
           <Input placeholder="Enter Customer Name." />
         </Form.Item>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+      <Col xs={24} sm={24} md={6} lg={6}>
         <Form.Item label="เลขที่ผู้เสียภาษี" name="taxnumber">
           <Input placeholder="Enter Tax Number." />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={6} lg={6}>
+        <Form.Item label="ระบุสาขา" name="business_branch">
+          <Select size="large" placeholder="ระบุสาขา" allowClear>
+            <Option value="สำนักงานใหญ่">สำนักงานใหญ่</Option>
+            <Option value="สาขา">สาขา</Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={6} lg={6}>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.business_branch !== currentValues.business_branch
+          }
+        >
+          {({ getFieldValue }) =>
+            getFieldValue("business_branch") === "สาขา" ? (
+              <Form.Item name="branch_details" label="รายละเอียดสาขา">
+                <Input />
+              </Form.Item>
+            ) : null
+          }
         </Form.Item>
       </Col>
     </Row>

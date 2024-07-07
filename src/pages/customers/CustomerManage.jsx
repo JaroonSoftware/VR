@@ -38,9 +38,9 @@ const ItemsManage = () => {
     const cuscodeRes = await customerservice
       .getcode()
       .catch(() => message.error("Initail failed"));
-      form.setFieldsValue({
-        business_branch: "สำนักงานใหญ่",
-      });
+    form.setFieldsValue({
+      business_branch: "สำนักงานใหญ่",
+    });
     const { data: cuscode } = cuscodeRes.data;
     const initForm = { ...formDetail, cuscode };
     setFormDetail((state) => ({ ...state, ...initForm }));
@@ -216,29 +216,29 @@ const ItemsManage = () => {
         </Form.Item>
       </Col>
       <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item label="ระบุสาขา" name="business_branch">
-            <Select size="large" placeholder="ระบุสาขา" allowClear>
-              <Option value="สำนักงานใหญ่">สำนักงานใหญ่</Option>
-              <Option value="สาขา">สาขา</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Form.Item
-            noStyle
-            shouldUpdate={(prevValues, currentValues) =>
-              prevValues.business_branch !== currentValues.business_branch
-            }
-          >
-            {({ getFieldValue }) =>
-              getFieldValue("business_branch") === "สาขา" ? (
-                <Form.Item name="branch_details" label="รายละเอียดสาขา">
-                  <Input />
-                </Form.Item>
-              ) : null
-            }
-          </Form.Item>
-        </Col>      
+        <Form.Item label="ระบุสาขา" name="business_branch">
+          <Select size="large" placeholder="ระบุสาขา" allowClear>
+            <Option value="สำนักงานใหญ่">สำนักงานใหญ่</Option>
+            <Option value="สาขา">สาขา</Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.business_branch !== currentValues.business_branch
+          }
+        >
+          {({ getFieldValue }) =>
+            getFieldValue("business_branch") === "สาขา" ? (
+              <Form.Item name="branch_details" label="รายละเอียดสาขา">
+                <Input />
+              </Form.Item>
+            ) : null
+          }
+        </Form.Item>
+      </Col>
     </Row>
   );
 
@@ -405,7 +405,7 @@ const ItemsManage = () => {
     <div className="customer-manage xs:px-0 sm:px-0 md:px-8 lg:px-8">
       <Space direction="vertical" className="flex gap-2">
         <Form form={form} layout="vertical" autoComplete="off">
-        {SectionBottom}
+          {SectionBottom}
           <Card className="mt-4" title={config?.title}>
             <Divider
               orientation="left"
