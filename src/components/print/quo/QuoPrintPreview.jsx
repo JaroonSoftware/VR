@@ -135,7 +135,7 @@ function QuoPrintPreview() {
                 <div className='flex ps-3 grow-0' >
                     <Flex className='mb-1.5' vertical >
                         <Typography.Text className='tx-info' >ชื่อลูกค้า : {hData?.prename} {hData?.cusname}</Typography.Text> 
-                        <Typography.Text className='tx-info' >Customer : {hData?.contact}</Typography.Text> 
+                        <Typography.Text className='tx-info' >เลขประจำตัวผู้เสียภาษี : {hData?.contact}</Typography.Text> 
                     </Flex> 
                 </div>                 
             </div>              
@@ -309,7 +309,6 @@ function QuoPrintPreview() {
                 <div className="title-preview"> 
                     <Button
                         className='bn-center  bg-blue-400' 
-                        // onClick={() => { handleCheckMultiPages() }}
                         onClick={() => { handlePrint(null, () => componentRef.current ); }}
                         icon={<PiPrinterFill style={{fontSize:'1.1rem'}} />}
                     >

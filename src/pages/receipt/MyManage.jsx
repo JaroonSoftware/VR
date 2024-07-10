@@ -300,7 +300,7 @@ function ReceiptManage() {
 
   const handlePrint = () => {
     const newWindow = window.open("", "_blank");
-    newWindow.location.href = `/quo-print/${formDetail.quotcode}`;
+    newWindow.location.href = `/receipt/${formDetail.recode}`;
   };
 
   const handleDelete = (stcode) => {

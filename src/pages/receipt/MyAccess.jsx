@@ -196,7 +196,7 @@ const MyAccess = () => {
 
   const handlePrint = (recode) => {
     const newWindow = window.open("", "_blank");
-    newWindow.location.href = `/quo-print/${recode.qtcode}`;
+    newWindow.location.href = `/receipt/${recode.recode}`;
   };
 
   const column = accessColumn({ handleEdit, handleDelete, handlePrint });
