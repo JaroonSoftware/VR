@@ -59,7 +59,7 @@ function BanksManageForm({ confirm, mode, formName, source }) {
 
   const onFinish = (values) => {
     // console.log( values )
-    const { bank, acc_name, acc_no, remark } = values;
+    const { bank, account_name, account_number, remark } = values;
     const bnk = banksOptionData.find( d =>  d.key === bank );
     if( !bnk ){
         message.error( "Bank data error please choose bank" );
@@ -67,8 +67,8 @@ function BanksManageForm({ confirm, mode, formName, source }) {
     } 
     confirm({ 
         bank, 
-        acc_name, 
-        acc_no,
+        account_name, 
+        account_number,
         remark,
         bank_name : bnk?.official_name,
         bank_name_th : bnk?.thai_name,
@@ -139,12 +139,12 @@ function BanksManageForm({ confirm, mode, formName, source }) {
         <Card  style={{backgroundColor:'#f0f0f0' }} >
             <Row gutter={[8,8]} className='m-0'>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12} >
-                    <Form.Item className='' name='acc_no' label='Account Number' rules={[{ required: true, message: 'Missing Account Number', },]}>
+                    <Form.Item className='' name='account_number' label='Account Number' rules={[{ required: true, message: 'Missing Account Number', },]}>
                         <Input placeholder='Enter Account Number' />
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12} >
-                    <Form.Item className='' name='acc_name' label='Accout Name' rules={[{ required: true, message: 'Missing Account Name', },]}>
+                    <Form.Item className='' name='account_name' label='Accout Name' rules={[{ required: true, message: 'Missing Account Name', },]}>
                         <Input placeholder='Enter Accout Name' />
                     </Form.Item>
                 </Col>

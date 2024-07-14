@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useRef} from 'react';
 
-import { Modal, Card, Table, message, Form, Button, Typography } from "antd";
-import { Row, Col, Space, Spin, Flex } from "antd";
+import { Modal, Card, Table, message, Form, Typography } from "antd";
+import { Row, Col, Space, Spin } from "antd";
 import { Input } from "antd";
 import { BankTwoTone, SearchOutlined } from "@ant-design/icons";
 import { useForm } from 'antd/es/form/Form';
  
 import { bankListColumn } from "./modal-banks.model";
-import { BsUiChecks } from "react-icons/bs"; 
 
 import ModalBanksManage from './ModalBanksManage';
 // import OptionService from '../../../service/Options.service';
@@ -17,7 +16,7 @@ import "./modal-banks.css";
 // const optionService = OptionService();
 const bnkservice = BankService();
 const mngConfig = {title:"", textOk:null, textCancel:null, action:"create", code:null};
-export default function ModalBanks({show, close, values, selected=[]}) {
+export default function ModalBanks({show, close, values}) {
     const [form] = useForm();
     const inputRef = useRef(null);
     const [modalData, setModalData] = useState([]);
@@ -25,8 +24,6 @@ export default function ModalBanks({show, close, values, selected=[]}) {
 
     const [openModal,  setOpenModel] = useState(show);
     const [loading,  setLoading] = useState(true);
-
-    const [rowKeySelect, setRowKeySelect] = useState([]); 
 
     const [openManage, setOpenManage] = useState(false)
     const [config, setConfig] = useState(mngConfig);
@@ -51,10 +48,10 @@ export default function ModalBanks({show, close, values, selected=[]}) {
         if(!!value){    
             const f = modalData.filter( d => {
                 const text = ( 
-                    d.acc_no?.toLowerCase()?.includes(input) || 
+                    d.account_number?.toLowerCase()?.includes(input) || 
                     d.bank_name?.toLowerCase()?.includes(input) || 
                     d.bank_name_th?.toLowerCase()?.includes(input) ||
-                    d.acc_name?.toLowerCase()?.includes(input)
+                    d.account_name?.toLowerCase()?.includes(input)
                 );
                 return  text;
             });
@@ -62,20 +59,14 @@ export default function ModalBanks({show, close, values, selected=[]}) {
         }  else setModalDataWrap(modalData); 
     }
 
-    const handleChoose = () => {
-        const choosed = selected.map( m => m.acc_no );
-        const itemsChoose = (modalData.filter( f => rowKeySelect.includes(f.acc_no) && !choosed.includes(f.acc_no) )).map( (m, i) => ({ ...m }));
-        
-        // const trans = selected.filter( (item) =>  item?.id === "" );
-        // const rawdt = selected.filter( (item) =>  item?.id !== "" );
-        // console.log(itemsChoose, rawdt, trans); 
-        values([...selected, ...itemsChoose]);
-        
+    const handleChoose = (value) => {
+        values(value);
         setOpenModel(false);
     }
 
+
     /** setting initial component */ 
-    const column = bankListColumn(); 
+    const column = bankListColumn({handleChoose}); 
     const onload = () =>{
         setLoading(true);
         bnkservice.search({}, { ignoreLoading : true }).then(async (res) => {
@@ -83,9 +74,6 @@ export default function ModalBanks({show, close, values, selected=[]}) {
             setModalData(data);
             setModalDataWrap(data);
             // console.log(selected) 
-            const keySeleted = selected.map( m => m.acc_no );
-
-            setRowKeySelect([...keySeleted]); 
         })
         .catch((err) => { 
             message.error("Request error!");
@@ -102,37 +90,6 @@ export default function ModalBanks({show, close, values, selected=[]}) {
         } 
     }, [openModal]);
 
-    const handleCheckDuplicate = (itemCode) => !!selected.find( (item) =>  item?.acc_no === itemCode ) ;
-
-    const itemSelection = {
-        selectedRowKeys : rowKeySelect,
-        type: "checkbox",
-        fixed: true,
-        hideSelectAll:true,
-        onChange: (selectedRowKeys, selectedRows) => { 
-            // setRowKeySelect([...new Set([...selectedRowKeys, ...rowKeySelect])]);
-            // setItemsList(selectedRows);
-            //setRowKeySelect(selectedRowKeys);
-        },
-        getCheckboxProps: (record) => { 
-            return {
-                disabled: handleCheckDuplicate(record.acc_no), 
-                name: record.acc_no,
-            }
-        },
-        onSelect: (record, selected, selectedRows, nativeEvent) => {
-            //console.log(record, selected, selectedRows, nativeEvent);
-            if( selected ){
-                setRowKeySelect([...new Set([...rowKeySelect, record.acc_no])]);
-            } else {
-                const ind = rowKeySelect.findIndex( d => d === record.acc_no);
-                const tval = [...rowKeySelect];
-                tval.splice(ind, 1);
-                setRowKeySelect([...tval]);
-                //console.log(ind, rowKeySelect);
-            }
-        }
-    };
     /** setting child component */
     const ButtonManageModal = (
         <Row gutter={[{xs:32, sm:32, md:32, lg:12, xl:12}, 8]} className='m-0'>
@@ -159,18 +116,6 @@ export default function ModalBanks({show, close, values, selected=[]}) {
             style={{ top: 20 }}
             width={800}
             className='modal-customers'
-            footer={(
-                <Row>
-                    <Col span={24}>
-                        {/* Ignore */}
-                    </Col>
-                    <Col span={24}>
-                        <Flex justify='flex-end'>
-                            <Button  className='bn-center bn-primary' icon={<BsUiChecks />} onClick={()=>handleChoose()}> Confirm </Button>
-                        </Flex>
-                    </Col> 
-                </Row>
-            )}
         >
             <Spin spinning={loading} >
                 <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative'}}  >
@@ -190,9 +135,8 @@ export default function ModalBanks({show, close, values, selected=[]}) {
                         <Table
                             // bordered={false}
                             dataSource={modalDataWrap}
-                            rowSelection={itemSelection}
                             columns={column}
-                            rowKey="acc_no"
+                            rowKey="account_number"
                             pagination={{ 
                                 total:modalDataWrap?.length || 0, 
                                 showTotal:(_, range) => `${range[0]}-${range[1]} of ${modalDataWrap?.length || 0} items`,

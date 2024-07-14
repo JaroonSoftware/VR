@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
     extract($_POST, EXTR_OVERWRITE, "_");  
     $bank_name = !empty($bank_name) ? "and (b.bank_name like '%$bank_name%' or b.bank_name_th like '%$bank_name%')" : "";
-    $acc_no = !empty($acc_no) ? "and b.acc_no like '%$acc_no%'" : "";
-    $acc_name = !empty($acc_name) ? "and b.acc_name like '%$acc_name%'" : "";
+    $account_number = !empty($account_number) ? "and b.account_number like '%$account_number%'" : "";
+    $account_name = !empty($account_name) ? "and b.account_name like '%$account_name%'" : "";
  
 
     try { 
@@ -28,9 +28,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         where 1 = 1 and b.status = 'Y'
         $bank_name
         $expsname_cdt
-        $acc_no
-        $acc_name
-        order by b.created_date desc";
+        $account_number
+        $account_name
+        order by b.created_date asc";
 
         $stmt = $conn->prepare($sql); 
         $stmt->execute();

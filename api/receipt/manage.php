@@ -19,8 +19,8 @@ try {
 
         // var_dump($_POST);
         $sql = "insert receipt (`recode`, `redate`, `cuscode`, `ivcode`,
-        `payment_type`,`price`,`remark`,created_by,updated_by) 
-        values (:recode,:redate,:cuscode,:ivcode,:payment_type,:price,
+        `payment_type`,`price`,bank_id,`remark`,created_by,updated_by) 
+        values (:recode,:redate,:cuscode,:ivcode,:payment_type,:price,:bank_id,
         :remark,:action_user,:action_user)";
         
         $stmt = $conn->prepare($sql);
@@ -33,6 +33,7 @@ try {
         $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
         $stmt->bindParam(":payment_type", $header->payment_type, PDO::PARAM_STR);
         $stmt->bindParam(":price", $header->price, PDO::PARAM_STR);
+        $stmt->bindParam(":bank_id", $header->bank_id, PDO::PARAM_STR);        
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_STR); 
 

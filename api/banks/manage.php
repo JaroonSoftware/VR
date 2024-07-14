@@ -14,17 +14,17 @@ try {
         $_POST = json_decode($rest_json, true); 
         extract($_POST, EXTR_OVERWRITE, "_");
 
-        $sql = "select 1 r from banks where acc_no = :v";
+        $sql = "select 1 r from banks where account_number = :v";
         $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'v' => $acc_no ])) throw new PDOException("Banks data error => {$conn->errorInfo()}");
+        if (!$stmt->execute([ 'v' => $account_number ])) throw new PDOException("Banks data error => {$conn->errorInfo()}");
         
         if ($stmt->rowCount() > 0) throw new PDOException("Account Number is duplicate");
         
         // var_dump($_POST);
         $sql = "insert banks (
-            bank,bank_name,bank_name_th,bank_nickname,acc_no,acc_name,created_by,updated_by
+            bank,bank_name,bank_name_th,bank_nickname,account_number,account_name,created_by,updated_by
         )values (
-            :bank, :bank_name, :bank_name_th, :bank_nickname, :acc_no, :acc_name, :action_username, :action_username
+            :bank, :bank_name, :bank_name_th, :bank_nickname, :account_number, :account_name, :action_username, :action_username
         )";
 
         $stmt = $conn->prepare($sql);
@@ -34,8 +34,8 @@ try {
         $stmt->bindParam(":bank_name", $bank_name, PDO::PARAM_STR);
         $stmt->bindParam(":bank_name_th", $bank_name_th, PDO::PARAM_STR);
         $stmt->bindParam(":bank_nickname", $bank_nickname, PDO::PARAM_STR);
-        $stmt->bindParam(":acc_no", $acc_no, PDO::PARAM_STR);
-        $stmt->bindParam(":acc_name", $acc_name, PDO::PARAM_STR);
+        $stmt->bindParam(":account_number", $account_number, PDO::PARAM_STR);
+        $stmt->bindParam(":account_name", $account_name, PDO::PARAM_STR);
         $stmt->bindValue(":action_username", $action_username, PDO::PARAM_INT);
         $stmt->bindValue(":action_username", $action_username, PDO::PARAM_INT);
         if(!$stmt->execute()) {
@@ -45,16 +45,16 @@ try {
 
         $conn->commit();
         http_response_code(200);
-        echo json_encode(array("data"=> array("id" => $master->srcode)));
+        echo json_encode(array("data"=> array("bank_id" => $master->srcode)));
 
     } else  if($_SERVER["REQUEST_METHOD"] == "PUT"){
         $rest_json = file_get_contents("php://input");
         $_PUT = json_decode($rest_json, true); 
         extract($_PUT, EXTR_OVERWRITE, "_");
 
-        $sql = "select 1 r from banks where acc_no = :v and id <> :id";
+        $sql = "select 1 r from banks where account_number = :v and bank_id <> :bank_id";
         $stmt = $conn->prepare($sql); 
-        if (!$stmt->execute([ 'v' => $acc_no, 'id' => $id ])) throw new PDOException("Banks data error => {$conn->errorInfo()}");
+        if (!$stmt->execute([ 'v' => $account_number, 'bank_id' => $bank_id ])) throw new PDOException("Banks data error => {$conn->errorInfo()}");
         
         if ($stmt->rowCount() > 0) throw new PDOException("Account Number is duplicate");
         // var_dump($_POST);
@@ -65,11 +65,11 @@ try {
         bank_name = :bank_name, 
         bank_name_th = :bank_name_th, 
         bank_nickname = :bank_nickname, 
-        acc_no = :acc_no, 
-        acc_name = :acc_name,
+        account_number = :account_number, 
+        account_name = :account_name,
         updated_date = CURRENT_TIMESTAMP(), 
         updated_by = :action_username
-        where id = :id";
+        where bank_id = :bank_id";
 
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
@@ -79,10 +79,10 @@ try {
         $stmt->bindParam(":bank_name", $bank_name, PDO::PARAM_STR);
         $stmt->bindParam(":bank_name_th", $bank_name_th, PDO::PARAM_STR);
         $stmt->bindParam(":bank_nickname", $bank_nickname, PDO::PARAM_STR);
-        $stmt->bindParam(":acc_no", $acc_no, PDO::PARAM_STR);
-        $stmt->bindParam(":acc_name", $acc_name, PDO::PARAM_STR);
+        $stmt->bindParam(":account_number", $account_number, PDO::PARAM_STR);
+        $stmt->bindParam(":account_name", $account_name, PDO::PARAM_STR);
         $stmt->bindValue(":action_username", $action_username, PDO::PARAM_INT);
-        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->bindValue(":bank_id", $bank_id, PDO::PARAM_INT);
 
         if(!$stmt->execute()) {
             $error = $conn->errorInfo();
@@ -92,16 +92,16 @@ try {
         
         $conn->commit();
         http_response_code(200);
-        echo json_encode(array("data"=> array("id" => $_PUT)));
+        echo json_encode(array("data"=> array("bank_id" => $_PUT)));
 
     } else if($_SERVER["REQUEST_METHOD"] == "DELETE"){ 
         // $code = $_DELETE["code"];
         $code = $_GET["code"];
         
-        // $sql = "delete from banks where id = :id";
-        $sql = "update banks set status = 'N' where id = :id";
+        // $sql = "delete from banks where bank_id = :bank_id";
+        $sql = "update banks set status = 'N' where bank_id = :bank_id";
         $stmt = $conn->prepare($sql);
-        if (!$stmt->execute([ 'id' => $code ])){
+        if (!$stmt->execute([ 'bank_id' => $code ])){
             $error = $conn->errorInfo();
             throw new PDOException("Remove data error => $error");
         }
@@ -112,9 +112,9 @@ try {
     } else  if($_SERVER["REQUEST_METHOD"] == "GET"){
         $code = $_GET["code"];
         
-        $sql = "select * from banks where id = :id";
+        $sql = "select * from banks where bank_id = :bank_id";
         $stmt = $conn->prepare($sql);  
-        if (!$stmt->execute([ 'id' => $code ])){
+        if (!$stmt->execute([ 'bank_id' => $code ])){
             $error = $conn->errorInfo();
             throw new PDOException("Data error => $error");
         }

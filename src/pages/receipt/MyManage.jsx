@@ -24,10 +24,11 @@ import {
 import OptionService from "../../service/Options.service";
 import ReceiptService from "../../service/Receipt.service";
 import InvoiceService from "../../service/Invoice.service";
-import { SaveFilled, SearchOutlined } from "@ant-design/icons";
+import { BankFilled, SaveFilled, SearchOutlined } from "@ant-design/icons";
 import ModalCustomers from "../../components/modal/customers/ModalCustomers";
 import ModalInvoice from "../../components/modal/invoice/MyModal";
 import { ModalItems } from "../../components/modal/items/modal-items";
+import { ModalBanks } from "../../components/modal/banks/modal-banks";
 
 import {
   DEFALUT_CHECK_RECEIPT,
@@ -61,6 +62,7 @@ function ReceiptManage() {
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openPayAmount, setOpenPayAmount] = useState(false);
   const [openBalance, setOpenBalance] = useState(0);
+  const [openBanks, setOpenBanks] = useState(false);
 
   /** Receipt state */
   const [reCode, setRECode] = useState(null);
@@ -254,15 +256,18 @@ function ReceiptManage() {
     form
       .validateFields()
       .then((v) => {
-
+        // console.log(form.getFieldValue("bank_id"))
+        if( form.getFieldValue("bank_id")=== undefined) throw new Error("Bank required");
         const header = {
           ...formDetail,
+          recode: reCode,
           redate: dayjs(form.getFieldValue("redate")).format("YYYY-MM-DD"),
           payment_type: form.getFieldValue("payment_type"),
           remark: form.getFieldValue("remark"),
           deldate: dayjs(form.getFieldValue("deldate")).format("YYYY-MM-DD"),
           payment: form.getFieldValue("payment"),
           price: form.getFieldValue("price"),
+          bank_id: form.getFieldValue("bank_id"),
           balance: openBalance,
         };
         const detail = listDetail;
@@ -284,12 +289,16 @@ function ReceiptManage() {
             console.warn(err);
           });
       })
-      .catch((err) => {
-        Modal.error({
-          title: "This is an error message",
-          content: "Please enter require data",
-        });
+      .catch( err => { 
+        Modal.error({ title: 'This is an error message', content: 'Please enter require data', });
       });
+  };
+
+  const handleChoosedBanks = (val) => {
+    console.log(val);
+    // setQuotBanks(val);
+    setFormDetail((state) => ({ ...state, ...val }));
+    form.setFieldsValue({ ...form.getFieldsValue(), ...val });
   };
 
   const handleClose = async () => {
@@ -478,6 +487,58 @@ function ReceiptManage() {
                   },
                 ]}
               />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={[8, 8]} className="m-0">
+          <Col xs={24} sm={24} md={6} lg={6}>
+            <Form.Item name="bank_id" label="ธนาคาร" className="!mb-1">
+              <Space.Compact style={{ width: "100%" }}>
+                <Flex align="center" gap={8}>
+                  <i
+                    className={`bank bank-${form.getFieldValue(
+                      "bank"
+                    )} shadow huge`}
+                    style={{ height: 24, width: 24, marginTop: 4 }}
+                  ></i>
+                  <Flex align="start" gap={1} vertical>
+                    <Typography.Text ellipsis style={{ fontSize: 13 }}>
+                      {form.getFieldValue("bank_name_th")}
+                    </Typography.Text>
+                    <Typography.Text
+                      ellipsis
+                      style={{ fontSize: 9, color: "#8c8386" }}
+                    >
+                      {form.getFieldValue("bank_name")}
+                    </Typography.Text>
+                  </Flex>
+                </Flex>
+                <Button
+                  className="bn-success-outline bn-center ml-3"
+                  icon={<BankFilled />}
+                  onClick={() => setOpenBanks(true)}
+                >
+                  Choose Bank
+                </Button>
+              </Space.Compact>
+            </Form.Item>
+          </Col>          
+          <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+            <Form.Item
+              name="account_number"
+              label="เบอร์โทรลุกค้า"
+              className="!mb-1"
+            >
+              <Input placeholder="เลขที่บัญชี" readOnly />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+            <Form.Item
+              name="account_name"
+              label="เบอร์โทรลุกค้า"
+              className="!mb-1"
+            >
+              <Input placeholder="ชื่อบัญชี" readOnly />
             </Form.Item>
           </Col>
         </Row>
@@ -740,11 +801,19 @@ function ReceiptManage() {
                   </Divider>
                   <Card style={cardStyle}>{SectionOther}</Card>
                 </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24} style={
-              config.action === "create"
-                ? { display: "inline" }
-                : { display: "none" }
-            }>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={24}
+                  xl={24}
+                  xxl={24}
+                  style={
+                    config.action === "create"
+                      ? { display: "inline" }
+                      : { display: "none" }
+                  }
+                >
                   <Divider orientation="left" className="!my-0">
                     รายการใบสั่งซื้อสินค้า
                   </Divider>
@@ -767,6 +836,16 @@ function ReceiptManage() {
             handleChoosedCustomers(v);
           }}
         ></ModalCustomers>
+      )}
+
+      {openBanks && (
+        <ModalBanks
+          show={openBanks}
+          close={() => setOpenBanks(false)}
+          values={(v) => {
+            handleChoosedBanks(v);
+          }}
+        ></ModalBanks>
       )}
 
       {openInvoice && (

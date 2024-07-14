@@ -7,6 +7,7 @@ const API_URL = {
   OPTION_INVOICE: `/common/options-invoice.php`,  
   OPTION_ITEMSTYPE: `/common/options-itemstype.php`,
   OPTION_UNIT: `/common/options-unit.php`,
+  OPTION_BANKS: `/common/options-banks.php`,
 };
  
 
@@ -18,6 +19,7 @@ const OptionService = () => {
   const optionsInvoice = () => api.get(`${API_URL.OPTION_INVOICE}`, { ignoreLoading : true });
   const optionsItemstype = () => api.get(`${API_URL.OPTION_ITEMSTYPE}`, { ignoreLoading : true });
   const optionsUnit = () => api.get(`${API_URL.OPTION_UNIT}`, { ignoreLoading : true });
+  const optionsBanks = (parm = {}) => api.get(`${API_URL.OPTION_BANKS}?${getParmeter(parm)}`, { ignoreLoading : true });
 
   return {
     optionsItems,
@@ -27,6 +29,7 @@ const OptionService = () => {
     optionsInvoice,
     optionsItemstype,
     optionsUnit,
+    optionsBanks,
   };
 };
 

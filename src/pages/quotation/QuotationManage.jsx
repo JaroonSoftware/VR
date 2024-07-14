@@ -75,6 +75,7 @@ function QuotationManage() {
         const { qtcode, qtdate } = header;
         setFormDetail(header);
         setListDetail(detail);
+        // setQuotBanks( bank );
         setQuotCode(qtcode);
         form.setFieldsValue({ ...header, qtdate: dayjs(qtdate) });
 
@@ -183,7 +184,7 @@ function QuotationManage() {
   };
 
   const handleItemsChoosed = (value) => {
-    console.log(value)
+    console.log(value);
     setListDetail(value);
     handleSummaryPrice();
   };
@@ -196,7 +197,7 @@ function QuotationManage() {
 
         const header = {
           ...formDetail,
-          qtdate: dayjs(form.getFieldValue("qtdate")).format("YYYY-MM-DD"),          
+          qtdate: dayjs(form.getFieldValue("qtdate")).format("YYYY-MM-DD"),
           remark: form.getFieldValue("remark"),
         };
         const detail = listDetail;
@@ -277,7 +278,9 @@ function QuotationManage() {
   };
 
   /** setting column table */
-  const prodcolumns = columnsParametersEditable(handleEditCell,unitOption, { handleRemove});
+  const prodcolumns = columnsParametersEditable(handleEditCell, unitOption, {
+    handleRemove,
+  });
 
   const SectionCustomer = (
     <>
@@ -299,13 +302,16 @@ function QuotationManage() {
                   value={formDetail.cuscode}
                   className="!bg-white"
                 />
-                {config?.action !== "create" ? '' : <Button
-                  type="primary"
-                  icon={<SearchOutlined />}
-                  onClick={() => setOpenCustomer(true)}
-                  style={{ minWidth: 40 }}
-                ></Button>}    
-                
+                {config?.action !== "create" ? (
+                  ""
+                ) : (
+                  <Button
+                    type="primary"
+                    icon={<SearchOutlined />}
+                    onClick={() => setOpenCustomer(true)}
+                    style={{ minWidth: 40 }}
+                  ></Button>
+                )}
               </Space.Compact>
             </Form.Item>
           </Col>
@@ -315,20 +321,12 @@ function QuotationManage() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item
-              name="address"
-              label="ที่อยู่"
-              className="!mb-1"
-            >
+            <Form.Item name="address" label="ที่อยู่" className="!mb-1">
               <Input placeholder="Customer Address." readOnly />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-            <Form.Item
-              name="contact"
-              label="ผู้ติดต่อ"
-              className="!mb-1"
-            >
+            <Form.Item name="contact" label="ผู้ติดต่อ" className="!mb-1">
               <Input placeholder="Customer Contact." readOnly />
             </Form.Item>
           </Col>
@@ -336,7 +334,7 @@ function QuotationManage() {
             <Form.Item name="tel" label="เบอร์โทรลุกค้า" className="!mb-1">
               <Input placeholder="Customer Tel." readOnly />
             </Form.Item>
-          </Col>
+          </Col>          
         </Row>
       </Space>
     </>
@@ -347,7 +345,7 @@ function QuotationManage() {
       <Col span={12} className="p-0">
         <Flex gap={4} justify="start" align="center">
           <Typography.Title className="m-0 !text-zinc-800" level={3}>
-          รายการสินค้า
+            รายการสินค้า
           </Typography.Title>
         </Flex>
       </Col>
@@ -591,7 +589,7 @@ function QuotationManage() {
                   <Row className="m-0 py-3 sm:py-0" gutter={[12, 12]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                       <Typography.Title level={3} className="m-0">
-                      เลขที่ใบเสนอราคา : {quotCode}
+                        เลขที่ใบเสนอราคา : {quotCode}
                       </Typography.Title>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
@@ -601,7 +599,7 @@ function QuotationManage() {
                         className="justify-start sm:justify-end"
                       >
                         <Typography.Title level={3} className="m-0">
-                        วันที่ใบเสนอราคา :{" "}
+                          วันที่ใบเสนอราคา :{" "}
                         </Typography.Title>
                         <Form.Item name="qtdate" className="!m-0">
                           <DatePicker
@@ -626,7 +624,7 @@ function QuotationManage() {
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider orientation="left" className="!my-0">
-                  รายการสินค้าใบเสนอราคา
+                    รายการสินค้าใบเสนอราคา
                   </Divider>
                   <Card style={{ backgroundColor: "#f0f0f0" }}>
                     {SectionProduct}
