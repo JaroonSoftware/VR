@@ -156,7 +156,14 @@ function ReceiptPrintPreview() {
     return (
       <div className="content-head in-sample flex flex-col">
         <div className="print-title flex pb-2">
-          <div className="flex ps-3 grow-0" style={{ height: 90, border: "1px solid var(---color--1)" ,padding:"8px"}}>
+          <div
+            className="flex ps-3 grow-0"
+            style={{
+              height: 90,
+              border: "1px solid var(---color--1)",
+              padding: "8px",
+            }}
+          >
             <Flex className="mb-1.5" vertical>
               <Typography.Text className="tx-info">
                 ชื่อลูกค้า : {hData?.prename} {hData?.cusname}
@@ -182,7 +189,231 @@ function ReceiptPrintPreview() {
     );
   };
 
-  const QuotationSummary = () => {
+  const ContentBankCheck = () => {
+    return (
+      <>
+        {hData.payment_type !== "เงินสด" ? (
+          <Checkbox defaultChecked />
+        ) : (
+          <Checkbox />
+        )}
+        <Typography.Text className="text-sm text-end">
+          &nbsp;เช็คธนาคาร{" "}
+          {hData.payment_type !== "เงินสด" ? (
+            hData.thai_name
+          ) : (
+            <Typography.Text>.....................</Typography.Text>
+          )}{" "}
+          &nbsp;&nbsp; สาขา &nbsp;
+          {hData.payment_type !== "เงินสด" ? (
+            hData.branch
+          ) : (
+            <Typography.Text>.....................</Typography.Text>
+          )}
+          <br></br>
+          เลขที่{" "}
+          {hData.payment_type !== "เงินสด" ? (
+            hData.check_no
+          ) : (
+            <Typography.Text>.....................</Typography.Text>
+          )}
+          &nbsp; ลงวันที่{" "}
+          {hData.payment_type !== "เงินสด" ? (
+            dayjs(hData?.check_date).format("DD/MM/YYYY")
+          ) : (
+            <Typography.Text>.....................</Typography.Text>
+          )}
+          <br></br>
+          จำนวนเงิน{" "}
+          {hData.payment_type !== "เงินสด" ? (
+            comma(Number(hData?.check_amount || 0), 2, 2)
+          ) : (
+            <Typography.Text>.....................</Typography.Text>
+          )}
+          &nbsp; บาท
+        </Typography.Text>
+      </>
+    );
+  };
+
+  const ContentRemark = () => {
+    return (
+      <>
+        <Typography.Text style={{ fontSize: "11px" }}>
+          สินค้าดังกล่าวแม้จะส่งมอบแก่ผู้ซื้อแล้ว ยังเป็นทรัพย์สินของบริษัทฯ
+          จนกว่าผู้ซื้อจะชำระเงินเสร็จเรียบร้อยแล้ว
+        </Typography.Text>
+        <br></br>
+        <Typography.Text style={{ fontSize: "11px" }}>
+          หากไม่ชำระเงินภายในกำหนด ท่านจะต้องชำระค่าเสียหายแก่บริษัทฯ
+          เพิ่มร้อยละ 1.5 ต่อเดือน นับแต่วันผิดนัด
+        </Typography.Text>
+      </>
+    );
+  };
+
+  const ContentMoney = () => {
+    return (
+      <>
+        {hData.payment_type === "เงินสด" ? (
+          <Checkbox defaultChecked />
+        ) : (
+          <Checkbox />
+        )}
+        <Typography.Text className="text-sm text-end">
+          &nbsp; เงินสด
+        </Typography.Text>
+        <br></br>
+        <Flex className="w-full" justify="center" gap={32}>
+          <Flex vertical className="w-1/2" style={{ gap: 10 }}>
+            <Flex gap={2}>
+              <div
+                className="w-full"
+                style={{ height: 90, border: "1px solid var(---color--1)" }}
+              >
+                {"\u00A0"}
+              </div>
+            </Flex>
+            <Flex justify="center" gap={2}>
+              <Typography.Text
+                className="tx-info"
+                strong
+                style={{ minWidth: 48 }}
+              >
+                ผู้รับเงิน{" "}
+              </Typography.Text>
+              <Typography.Text className="tx-info" strong>
+                {"\u00A0"}
+              </Typography.Text>
+            </Flex>
+          </Flex>
+        </Flex>
+      </>
+    );
+  };
+
+  const ContentSignature = () => {
+    return (
+      <>
+        <Flex
+          className="w-full"
+          justify="center"
+          gap={32}
+          style={{ border: "1px solid var(---color--1)" }}
+          align="center"
+        >
+          <Flex
+            vertical
+            align="center"
+            className="w-full"
+            style={{ gap: 10, border: "1px solid var(---color--1)" }}
+          >
+            <Typography.Text
+              className="tx-info"
+              strong
+              style={{ minWidth: 48 }}
+            >
+              ได้รับสินค้าไว้ถูกต้องตามรายการข้างต้น ในสภาพเรียบร้อยแล้ว
+            </Typography.Text>
+            <Flex
+              className="w-full"
+              justify="center"
+              gap={32}
+              align="center"
+              style={{ gap: 10, border: "1px solid var(---color--1)" }}
+            >
+              <Flex vertical className="w-1/2" style={{ gap: 10 }}>
+                <Flex gap={2}>
+                  <div
+                    className="w-full"
+                    style={{ height: 90, border: "1px solid var(---color--1)" }}
+                  >
+                    {"\u00A0"}
+                  </div>
+                </Flex>
+                <Flex justify="center" gap={2}>
+                  <Typography.Text
+                    className="tx-info"
+                    strong
+                    style={{ minWidth: 48 }}
+                  >
+                    ผู้รับสินค้า{" "}
+                  </Typography.Text>
+                  <Typography.Text className="tx-info" strong>
+                    {"\u00A0"}
+                  </Typography.Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+          <Flex className="w-full" justify="center" gap={32}>
+            <Flex vertical className="w-1/2">
+              <Typography.Text
+                className="tx-info"
+                strong
+                style={{ minWidth: 48 }}
+              >
+                สำหรับเจ้าหน้าที่
+              </Typography.Text>
+              <Flex vertical>
+                <Flex gap={2}>
+                  <div
+                    className="w-full"
+                    style={{ height: 90, border: "1px solid var(---color--1)" }}
+                  >
+                    {"\u00A0"}
+                  </div>
+                </Flex>
+                <Flex justify="center" gap={2}>
+                  <Typography.Text
+                    className="tx-info"
+                    strong
+                    style={{ minWidth: 48 }}
+                  >
+                    ผู้รับสินค้า{" "}
+                  </Typography.Text>
+                  <Typography.Text className="tx-info" strong>
+                    {"\u00A0"}
+                  </Typography.Text>
+                </Flex>
+              </Flex>
+              <Flex vertical>
+                <Typography.Text
+                  className="tx-info"
+                  strong
+                  style={{ minWidth: 48 }}
+                >
+                  สำหรับเจ้าหน้าที่
+                </Typography.Text>
+                <Flex gap={2}>
+                  <div
+                    className="w-full"
+                    style={{ height: 90, border: "1px solid var(---color--1)" }}
+                  >
+                    {"\u00A0"}
+                  </div>
+                </Flex>
+                <Flex justify="center" gap={2}>
+                  <Typography.Text
+                    className="tx-info"
+                    strong
+                    style={{ minWidth: 48 }}
+                  >
+                    ผู้รับสินค้า{" "}
+                  </Typography.Text>
+                  <Typography.Text className="tx-info" strong>
+                    {"\u00A0"}
+                  </Typography.Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Flex>
+      </>
+    );
+  };
+
+  const QuotationSummary = ({ i }) => {
     return (
       <>
         <Table.Summary.Row style={{ height: 24 }}>
@@ -215,9 +446,8 @@ function ReceiptPrintPreview() {
               {comma(Number(hData?.total_price || 0), 2, 2)}
             </Typography.Text>
           </Table.Summary.Cell>
-        </Table.Summary.Row>
-
-        <Table.Summary.Row className="r-sum">
+        </Table.Summary.Row>        
+        <Table.Summary.Row className="r-sum" >
           <Table.Summary.Cell
             colSpan={4}
             className="text-summary text-start !align-top"
@@ -250,17 +480,7 @@ function ReceiptPrintPreview() {
             rowSpan={2}
             className="text-summary text-start !align-top"
           >
-            <Checkbox defaultChecked disabled />
-            <Typography.Text className="text-sm text-end">
-              &nbsp;เช็คธนาคาร ...................... &nbsp;&nbsp;&nbsp; สาขา
-              ......................
-              <br></br>
-              เลขที่......................................
-              ลงวันที่......../........./............
-              <br></br>
-              จำนวนเงิน.................................
-              บาท...............สตางค์
-            </Typography.Text>
+            {i < 2 ? <ContentBankCheck /> : <ContentRemark />}
           </Table.Summary.Cell>
           <Table.Summary.Cell className="text-summary text-start !align-top">
             <Typography.Text className="text-sm text-end">
@@ -315,43 +535,20 @@ function ReceiptPrintPreview() {
           <Table.Summary.Cell
             colSpan={4}
             className="text-summary text-start !align-top"
+            style={{
+              margin: "0px",
+              padding: "0px",
+              border: "1px solid var(---color--1)",
+            }}
           >
-            <Checkbox defaultChecked disabled />
-            <Typography.Text className="text-sm text-end">
-              &nbsp; เงินสด
-            </Typography.Text>
-            <br></br>
-            <Flex className="w-full" justify="center" gap={32}>
-              <Flex vertical className="w-1/2" style={{ gap: 10 }}>
-                <Flex gap={2}>
-                  <div
-                    className="w-full"
-                    style={{ height: 90, border: "1px solid var(---color--1)" }}
-                  >
-                    {"\u00A0"}
-                  </div>
-                </Flex>
-                <Flex justify="center" gap={2}>
-                  <Typography.Text
-                    className="tx-info"
-                    strong
-                    style={{ minWidth: 48 }}
-                  >
-                    ผู้รับเงิน{" "}
-                  </Typography.Text>
-                  <Typography.Text className="tx-info" strong>
-                    {"\u00A0"}
-                  </Typography.Text>
-                </Flex>
-              </Flex>
-            </Flex>
+            {i < 2 ? <ContentMoney /> : <ContentSignature />}
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </>
     );
   };
 
-  const ContentBody = () => {
+  const ContentBody = ({ i }) => {
     return (
       <div className="content-body in-sample flex flex-col">
         <Table
@@ -367,32 +564,15 @@ function ReceiptPrintPreview() {
           onRow={(record, index) => {
             return { className: "r-sub" };
           }}
-          summary={QuotationSummary}
+          // summary={QuotationSummary}
+          summary={() => {
+            return (
+              <>
+                <QuotationSummary i={i}></QuotationSummary>
+              </>
+            );
+          }}
         />
-        {/* <div className="print-title flex">
-          <div className="p-3 w-full">
-            <Flex className="mb-1.5" vertical>
-              <Typography.Text className="text-sm min-w-48" strong>
-                Remark
-              </Typography.Text>
-              <pre
-                className="text-sm mb-0.5"
-                style={{
-                  whiteSpace: "break-spaces",
-                  border: "1px solid #508ecc",
-                  padding: "0.5rem 0.5rem",
-                  minHeight: 60,
-                  outline: "none",
-                  boxShadow: "none",
-                  fontWeight: 400,
-                  lineHeight: "1rem",
-                }}
-              >
-                {hData?.remark}
-              </pre>
-            </Flex>
-          </div>
-        </div> */}
       </div>
     );
   };
@@ -405,7 +585,7 @@ function ReceiptPrintPreview() {
             <ContentData children={data} i={i}>
               <ContentHead />
               <ContentHead2 />
-              <ContentBody />
+              <ContentBody i={i} />
             </ContentData>
           </div>
         );

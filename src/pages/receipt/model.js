@@ -213,12 +213,14 @@ export const columnsParametersEditable = (handleEditCell,optionsItems,{handleRem
   }); 
 }
 export const DEFALUT_CHECK_RECEIPT = {
-  ivcode: null,
-  ivdate: null,
-  qtcode: null,  
+  recode: null,
+  redate: null,
+  ivcode: null,  
   cuscode: null,
   remark: null,
-  payment_type: null,
+  branch: null,
+  check_no: null,
+  check_amount: 0,
   price: 0,
 }
 

@@ -24,7 +24,7 @@ import {
 import OptionService from "../../service/Options.service";
 import ReceiptService from "../../service/Receipt.service";
 import InvoiceService from "../../service/Invoice.service";
-import { BankFilled, SaveFilled, SearchOutlined } from "@ant-design/icons";
+import { SaveFilled, SearchOutlined } from "@ant-design/icons";
 import ModalCustomers from "../../components/modal/customers/ModalCustomers";
 import ModalInvoice from "../../components/modal/invoice/MyModal";
 import { ModalItems } from "../../components/modal/items/modal-items";
@@ -70,7 +70,9 @@ function ReceiptManage() {
   /** Detail Data State */
   const [listDetail, setListDetail] = useState([]);
 
-  const [unitOption, setUnitOption] = React.useState([]);
+  const [unitOption, setUnitOption] = useState([]);
+  const [banksOption, setBanksOption] = useState([]);
+  const [banksOptionData, setBanksOptionDate] = useState([]);
 
   const [formDetail, setFormDetail] = useState(DEFALUT_CHECK_RECEIPT);
 
@@ -81,6 +83,35 @@ function ReceiptManage() {
 
   useEffect(() => {
     const initial = async () => {
+      const [lbanksRes] = await Promise.all([opservice.optionsBanks()]);
+        const { data: banksOptionData } = lbanksRes.data;
+
+        const opnLtd = banksOptionData.map((v) => ({
+          value: v.key,
+          label: (
+            <>
+              <Flex align="center" gap={8}>
+                <i
+                  className={`bank bank-${v.key} shadow huge`}
+                  style={{ height: 30, width: 30 }}
+                ></i>
+                <Flex align="start" gap={1} vertical>
+                  <Typography.Text ellipsis style={{ fontSize: 13 }}>{v.thai_name}</Typography.Text> 
+                  {/* <Typography.Text
+                    ellipsis={true}
+                    style={{ fontSize: 11, color: "#8c8386" }}
+                  >
+                    {v.official_name}
+                  </Typography.Text> */}
+                </Flex>
+              </Flex>
+            </>
+          ),
+          record: v,
+        }));
+        setBanksOption(opnLtd);
+        setBanksOptionDate(banksOptionData);
+
       if (config?.action !== "create") {
         const res = await reservice
           .get(config?.code)
@@ -88,13 +119,13 @@ function ReceiptManage() {
         const {
           data: { header },
         } = res.data;
-        const { recode, redate, deldate } = header;
+        const { recode, redate, check_date } = header;
         setFormDetail(header);
         setRECode(recode);
         form.setFieldsValue({
           ...header,
           redate: dayjs(redate),
-          deldate: dayjs(deldate),
+          check_date: dayjs(check_date),
         });
 
         // setTimeout( () => {  handleCalculatePrice(head?.valid_price_until, head?.dated_price_until) }, 200);
@@ -111,13 +142,14 @@ function ReceiptManage() {
           ...formDetail,
           recode: code,
           redate: dayjs(new Date()),
-        };
+          check_date: dayjs(new Date()),
+        };        
 
         setFormDetail(ininteial_value);
         form.setFieldsValue(ininteial_value);
         form.setFieldValue("vat", 7);
         form.setFieldValue("payment_method", "ชำระทั้งหมด");
-        form.setFieldValue("payment_type", "เงินโอน");
+        form.setFieldValue("payment_type", "เช็คธนาคาร");
 
         const [unitOprionRes] = await Promise.all([
           opservice.optionsUnit({ p: "unit-option" }),
@@ -257,24 +289,34 @@ function ReceiptManage() {
       .validateFields()
       .then((v) => {
         // console.log(form.getFieldValue("bank_id"))
-        if( form.getFieldValue("bank_id")=== undefined) throw new Error("Bank required");
+        const bnk = banksOptionData.find(
+          (d) => d.key === form.getFieldValue("bank")
+        );
+        if (!bnk) {
+          message.error("Bank data error please choose bank");
+          throw new Error("Bank Data is not empty.");
+        }
+
         const header = {
           ...formDetail,
           recode: reCode,
           redate: dayjs(form.getFieldValue("redate")).format("YYYY-MM-DD"),
           payment_type: form.getFieldValue("payment_type"),
           remark: form.getFieldValue("remark"),
-          deldate: dayjs(form.getFieldValue("deldate")).format("YYYY-MM-DD"),
+          check_date: dayjs(form.getFieldValue("check_date")).format("YYYY-MM-DD"),          
           payment: form.getFieldValue("payment"),
           price: form.getFieldValue("price"),
-          bank_id: form.getFieldValue("bank_id"),
+          bank: form.getFieldValue("bank"),
+          branch: form.getFieldValue("branch"),
+          check_no: form.getFieldValue("check_no"),  
+          check_amount: form.getFieldValue("check_amount"),  
+          thai_name: bnk?.thai_name,
           balance: openBalance,
         };
-        const detail = listDetail;
 
         // console.log(formDetail)
 
-        const parm = { header, detail };
+        const parm = { header };
         // console.log(parm)
         const actions =
           config?.action !== "create" ? reservice.update : reservice.create;
@@ -289,8 +331,11 @@ function ReceiptManage() {
             console.warn(err);
           });
       })
-      .catch( err => { 
-        Modal.error({ title: 'This is an error message', content: 'Please enter require data', });
+      .catch((err) => {
+        Modal.error({
+          title: "This is an error message",
+          content: "Please enter require data",
+        });
       });
   };
 
@@ -478,8 +523,8 @@ function ReceiptManage() {
                 size="large"
                 options={[
                   {
-                    value: "เงินโอน",
-                    label: "เงินโอน",
+                    value: "เช็คธนาคาร",
+                    label: "เช็คธนาคาร",
                   },
                   {
                     value: "เงินสด",
@@ -490,59 +535,113 @@ function ReceiptManage() {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={[8, 8]} className="m-0">
-          <Col xs={24} sm={24} md={6} lg={6}>
-            <Form.Item name="bank_id" label="ธนาคาร" className="!mb-1">
-              <Space.Compact style={{ width: "100%" }}>
-                <Flex align="center" gap={8}>
-                  <i
-                    className={`bank bank-${form.getFieldValue(
-                      "bank"
-                    )} shadow huge`}
-                    style={{ height: 24, width: 24, marginTop: 4 }}
-                  ></i>
-                  <Flex align="start" gap={1} vertical>
-                    <Typography.Text ellipsis style={{ fontSize: 13 }}>
-                      {form.getFieldValue("bank_name_th")}
-                    </Typography.Text>
-                    <Typography.Text
-                      ellipsis
-                      style={{ fontSize: 9, color: "#8c8386" }}
-                    >
-                      {form.getFieldValue("bank_name")}
-                    </Typography.Text>
-                  </Flex>
-                </Flex>
-                <Button
-                  className="bn-success-outline bn-center ml-3"
-                  icon={<BankFilled />}
-                  onClick={() => setOpenBanks(true)}
-                >
-                  Choose Bank
-                </Button>
-              </Space.Compact>
-            </Form.Item>
-          </Col>          
-          <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
-            <Form.Item
-              name="account_number"
-              label="เบอร์โทรลุกค้า"
-              className="!mb-1"
-            >
-              <Input placeholder="เลขที่บัญชี" readOnly />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
-            <Form.Item
-              name="account_name"
-              label="เบอร์โทรลุกค้า"
-              className="!mb-1"
-            >
-              <Input placeholder="ชื่อบัญชี" readOnly />
-            </Form.Item>
-          </Col>
-        </Row>
       </Space>
+    </>
+  );
+
+  const SectionBankCheck = (
+    <>
+      <Row gutter={[8, 8]} className="m-0">
+        <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+          <Form.Item
+            name="bank"
+            label="ธนาคาร"
+            rules={[{ required: true, message: "Missing Bank" }]}
+          >
+            {/* <Input placeholder='Enter Loading type Name.' /> */}
+            <Select
+              showSearch
+              autoClearSearchValue
+              style={{ height: 42, width: "100%" }}
+              options={banksOption}
+              optionFilterProp="children"
+              filterOption={(input, option) => {
+                const { record: v } = option;
+                const val = input?.toLowerCase();
+                return (
+                  (v?.official_name?.toLowerCase() ?? "").includes(val) ||
+                  (v?.thai_name?.toLowerCase() ?? "").includes(val) ||
+                  (v?.key?.toLowerCase() ?? "").includes(val)
+                );
+              }}
+              filterSort={(optionA, optionB) => {
+                const { record: v1 } = optionA;
+                const { record: v2 } = optionB;
+
+                return (v1?.official_name ?? "")
+                  .toLowerCase()
+                  .localeCompare((v2?.official_name ?? "").toLowerCase());
+              }}
+              optionLabelProp="label"
+              optionRender={(option) => {
+                const { record: v } = option.data;
+                return (
+                  <>
+                    <Flex align="self-end" gap={8}>
+                      <i
+                        className={`bank bank-${v.key} shadow huge flex flex-grow-1`}
+                        style={{ height: 34, width: 34, minWidth: 34 }}
+                      ></i>
+                      <Flex align="start" gap={1} vertical>
+                        <Typography.Text
+                          ellipsis
+                          style={{ fontSize: 13, maxWidth: "100%" }}
+                        >
+                          {v.thai_name}
+                        </Typography.Text>
+                        <Typography.Text
+                          ellipsis
+                          style={{
+                            fontSize: 11,
+                            color: "#8c8386",
+                            maxWidth: "100%",
+                          }}
+                        >
+                          {v.official_name}
+                        </Typography.Text>
+                      </Flex>
+                    </Flex>
+                  </>
+                );
+              }}
+              allowClear
+              placeholder="Enter Loading type Name."
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+          <Form.Item name="branch" label="สาขา" className="!mb-1">
+            <Input placeholder="สาขา" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+          <Form.Item name="check_no" label="เลขที่เช็ค" className="!mb-1">
+            <Input placeholder="เลขที่เช็ค" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <Form.Item label="วันที่เช็ค" name="check_date">
+            <DatePicker
+              size="large"
+              placeholder="วันที่เช็ค."
+              className="input-40"
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={[8, 8]} className="m-0">
+        <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+          <Form.Item name="check_amount" label="ยอดเงินเช็ค" className="!mb-1">
+            <InputNumber
+              className="width-100 input-30 text-black"
+              style={{ height: 40 }}
+              placeholder="ยอดเงินเช็ค"
+              min="1"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
     </>
   );
 
@@ -793,6 +892,13 @@ function ReceiptManage() {
                     ข้อมูลใบเสร็จรับเงิน{" "}
                   </Divider>
                   <Card style={cardStyle}>{SectionCustomers}</Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <Divider orientation="left" className="!mb-3 !mt-1">
+                    {" "}
+                    ข้อมูลเช็คธนาคาร{" "}
+                  </Divider>
+                  <Card style={cardStyle}>{SectionBankCheck}</Card>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider orientation="left" className="!mb-3 !mt-1">

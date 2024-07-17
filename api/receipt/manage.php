@@ -19,8 +19,8 @@ try {
 
         // var_dump($_POST);
         $sql = "insert receipt (`recode`, `redate`, `cuscode`, `ivcode`,
-        `payment_type`,`price`,bank_id,`remark`,created_by,updated_by) 
-        values (:recode,:redate,:cuscode,:ivcode,:payment_type,:price,:bank_id,
+        `payment_type`,`price`,bank,thai_name,branch,check_no,check_date,check_amount,`remark`,created_by,updated_by) 
+        values (:recode,:redate,:cuscode,:ivcode,:payment_type,:price,:bank,:thai_name,:branch,:check_no,:check_date,:check_amount,
         :remark,:action_user,:action_user)";
         
         $stmt = $conn->prepare($sql);
@@ -33,7 +33,12 @@ try {
         $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
         $stmt->bindParam(":payment_type", $header->payment_type, PDO::PARAM_STR);
         $stmt->bindParam(":price", $header->price, PDO::PARAM_STR);
-        $stmt->bindParam(":bank_id", $header->bank_id, PDO::PARAM_STR);        
+        $stmt->bindParam(":bank", $header->bank, PDO::PARAM_STR);        
+        $stmt->bindParam(":thai_name", $header->thai_name, PDO::PARAM_STR);        
+        $stmt->bindParam(":branch", $header->branch, PDO::PARAM_STR);
+        $stmt->bindParam(":check_no", $header->check_no, PDO::PARAM_STR);
+        $stmt->bindParam(":check_date", $header->check_date, PDO::PARAM_STR);
+        $stmt->bindParam(":check_amount", $header->check_amount, PDO::PARAM_STR);        
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_STR); 
 
@@ -102,32 +107,41 @@ try {
         extract($_PUT, EXTR_OVERWRITE, "_");
         // var_dump($_POST);
         $sql = "
-        update remaster 
+        update receipt 
         set
         redate = :redate,
         cuscode = :cuscode,
-        payment = :payment,
-        deldate = :deldate,
-        total_price = :total_price,
-        vat = :vat,
-        grand_total_price = :grand_total_price,
+        ivcode = :ivcode,
+        payment_type = :payment_type,
+        price = :price,
+        bank = :bank,
+        thai_name = :thai_name,
+        branch = :branch,
+        check_no = :check_no,
+        check_date = :check_date,
+        check_amount = :check_amount,
         remark = :remark,
         updated_date = CURRENT_TIMESTAMP(),
         updated_by = :action_user
         where recode = :recode";
 
+
         $stmt = $conn->prepare($sql);
         if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}"); 
 
         $header = (object)$header; 
-
+        
         $stmt->bindParam(":redate", $header->redate, PDO::PARAM_STR);
         $stmt->bindParam(":cuscode", $header->cuscode, PDO::PARAM_STR);
-        $stmt->bindParam(":payment", $header->payment, PDO::PARAM_STR);
-        $stmt->bindParam(":deldate", $header->deldate, PDO::PARAM_STR);
-        $stmt->bindParam(":total_price", $header->total_price, PDO::PARAM_STR);
-        $stmt->bindParam(":vat", $header->vat, PDO::PARAM_STR);
-        $stmt->bindParam(":grand_total_price", $header->grand_total_price, PDO::PARAM_STR);
+        $stmt->bindParam(":ivcode", $header->ivcode, PDO::PARAM_STR);
+        $stmt->bindParam(":payment_type", $header->payment_type, PDO::PARAM_STR);
+        $stmt->bindParam(":price", $header->price, PDO::PARAM_STR);
+        $stmt->bindParam(":bank", $header->bank, PDO::PARAM_STR);
+        $stmt->bindParam(":thai_name", $header->thai_name, PDO::PARAM_STR);
+        $stmt->bindParam(":branch", $header->branch, PDO::PARAM_STR);
+        $stmt->bindParam(":check_no", $header->check_no, PDO::PARAM_STR);
+        $stmt->bindParam(":check_date", $header->check_date, PDO::PARAM_STR);
+        $stmt->bindParam(":check_amount", $header->check_amount, PDO::PARAM_STR);
         $stmt->bindParam(":remark", $header->remark, PDO::PARAM_STR); 
         $stmt->bindParam(":action_user", $action_user, PDO::PARAM_INT);  
         $stmt->bindParam(":recode", $header->recode, PDO::PARAM_STR); 
@@ -137,33 +151,6 @@ try {
             throw new PDOException("Insert data error => $error");
             die;
         }
-
-        $sql = "delete from ivdetail where recode = :recode";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt->execute([ 'recode' => $header->recode ])){
-            $error = $conn->errorInfo();
-            throw new PDOException("Remove data error => $error");
-        }
-
-        $sql = "insert into ivdetail (recode,stcode,unit,qty,price,discount)
-        values (:recode,:stcode,:unit,:qty,:price,:discount)";
-        $stmt = $conn->prepare($sql);
-        if(!$stmt) throw new PDOException("Insert data error => {$conn->errorInfo()}");
-
-       // $detail = $detail;  
-        foreach( $detail as $ind => $val){
-            $val = (object)$val;
-            $stmt->bindParam(":recode", $header->recode, PDO::PARAM_STR);
-            $stmt->bindParam(":stcode", $val->stcode, PDO::PARAM_STR);
-            $stmt->bindParam(":unit", $val->unit, PDO::PARAM_STR);
-            $stmt->bindParam(":qty", $val->qty, PDO::PARAM_INT);
-            $stmt->bindParam(":price", $val->price, PDO::PARAM_INT);
-            $stmt->bindParam(":discount", $val->discount, PDO::PARAM_INT);
-            if(!$stmt->execute()) {
-                $error = $conn->errorInfo();
-                throw new PDOException("Insert data error => $error"); 
-            }
-        } 
         
         $conn->commit();
         http_response_code(200);

@@ -280,7 +280,7 @@
 .est-pages .ant-table-wrapper .ant-table.ant-table-small .ant-table-tbody>tr>td, 
 .est-pages .ant-table-wrapper .ant-table.ant-table-small tfoot>tr>th, 
 .est-pages .ant-table-wrapper .ant-table.ant-table-small tfoot>tr>td {
-  padding: 2px 6px;
+  padding: 0px 0px;
   font-family: inherit;
   background: #fff !important;
   transform: unset !important;
