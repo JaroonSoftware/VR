@@ -8,7 +8,16 @@ import "./index.css";
 import logo from "../../../assets/images/logo_nsf.png";
 import thaiBahtText from "thai-baht-text";
 import ReceiptService from "../../../service/Receipt.service";
-import { Button, Flex, Table, Typography, message, Checkbox } from "antd";
+import {
+  Button,
+  Flex,
+  Table,
+  Typography,
+  message,
+  Checkbox,
+  Row,
+  Col,
+} from "antd";
 import { column } from "./model";
 
 import dayjs from "dayjs";
@@ -38,6 +47,35 @@ function ReceiptPrintPreview() {
     "สำเนาใบส่งสินค้า",
     "ใบตรวจสอบสินค้า",
   ];
+  const suptopic = [
+    "ต้นฉบับ - วางบิล",
+    "สำเนา - บัญชี",
+    "ต้นฉบับ - ลูกค้า",
+    "สำเนา - ลูกค้า",
+    "ต้นฉบับ - วางบิล",
+    "ต้นฉบับ - วางบิล",
+    "ตรวจสอบสินค้า",
+  ];
+
+  const supcolor = [
+    "#FFF",
+    "#FFFF00",
+    "#00B050",
+    "#DA9694",
+    "#0070C0",
+    "#8064A2",
+    "#F79646",
+  ];
+
+  const topiccolor = [
+    "#000",
+    "#000",
+    "#000",
+    "#000",
+    "#000",
+    "#FFF",
+    "#FFF",
+  ];  
 
   const columnDesc = column;
 
@@ -58,6 +96,11 @@ function ReceiptPrintPreview() {
           } = res.data;
 
           setSpData(header);
+          for (let i = detail.length; i < 11; i++) {
+            // let data = {code:0}
+            detail.push({ code: 0 });
+            // console.log(detail)
+          }
           setDetails(detail);
         })
         .catch((err) => {
@@ -100,7 +143,7 @@ function ReceiptPrintPreview() {
     );
   };
 
-  const ContentHead = () => {
+  const ContentHead = ({i}) => {
     return (
       <div className="content-head in-sample flex flex-col">
         <div className="print-title flex pb-2">
@@ -143,6 +186,25 @@ function ReceiptPrintPreview() {
                 </Typography.Text>
                 <Typography.Text className="tx-info">
                   {dayjs(hData?.redate).format("DD/MM/YYYY")}
+                </Typography.Text>
+              </Flex>
+              <br />
+              <Flex justify="space-between">
+                <Typography.Text
+                  className="tx-info w-full bg-amber-400"
+                  align="center"
+                  style={{
+                    backgroundColor: `${supcolor[i]}`,
+                    color: `${topiccolor[i]}`,                    
+                    // className={`bank bank-${v.key} shadow huge`}
+                  }}
+                >
+                  {suptopic[i]}
+                </Typography.Text>
+              </Flex>
+              <Flex justify="space-between">
+                <Typography.Text className="tx-info">
+                  เอกสารออกเป็นชุด
                 </Typography.Text>
               </Flex>
             </Flex>
@@ -192,46 +254,59 @@ function ReceiptPrintPreview() {
   const ContentBankCheck = () => {
     return (
       <>
-        {hData.payment_type !== "เงินสด" ? (
-          <Checkbox defaultChecked />
-        ) : (
-          <Checkbox />
-        )}
-        <Typography.Text className="text-sm text-end">
-          &nbsp;เช็คธนาคาร{" "}
-          {hData.payment_type !== "เงินสด" ? (
-            hData.thai_name
-          ) : (
-            <Typography.Text>.....................</Typography.Text>
-          )}{" "}
-          &nbsp;&nbsp; สาขา &nbsp;
-          {hData.payment_type !== "เงินสด" ? (
-            hData.branch
-          ) : (
-            <Typography.Text>.....................</Typography.Text>
-          )}
-          <br></br>
-          เลขที่{" "}
-          {hData.payment_type !== "เงินสด" ? (
-            hData.check_no
-          ) : (
-            <Typography.Text>.....................</Typography.Text>
-          )}
-          &nbsp; ลงวันที่{" "}
-          {hData.payment_type !== "เงินสด" ? (
-            dayjs(hData?.check_date).format("DD/MM/YYYY")
-          ) : (
-            <Typography.Text>.....................</Typography.Text>
-          )}
-          <br></br>
-          จำนวนเงิน{" "}
-          {hData.payment_type !== "เงินสด" ? (
-            comma(Number(hData?.check_amount || 0), 2, 2)
-          ) : (
-            <Typography.Text>.....................</Typography.Text>
-          )}
-          &nbsp; บาท
-        </Typography.Text>
+        <Row>
+          <Col xs={14} sm={14} md={14} lg={14}>
+            {hData.payment_type !== "เงินสด" ? (
+              <Checkbox defaultChecked />
+            ) : (
+              <Checkbox />
+            )}
+            &nbsp;เช็คธนาคาร &nbsp;&nbsp;
+            {hData.payment_type !== "เงินสด" ? (
+              hData.thai_name
+            ) : (
+              <Typography.Text>.....................</Typography.Text>
+            )}{" "}
+          </Col>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            สาขา &nbsp;&nbsp;&nbsp;
+            {hData.payment_type !== "เงินสด" ? (
+              hData.branch
+            ) : (
+              <Typography.Text>.....................</Typography.Text>
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={14} sm={14} md={14} lg={14}>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เลขที่{" "}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {hData.payment_type !== "เงินสด" ? (
+              hData.check_no
+            ) : (
+              <Typography.Text>.......................</Typography.Text>
+            )}
+          </Col>
+          <Col xs={10} sm={10} md={10} lg={10}>
+            ลงวันที่{" "}
+            {hData.payment_type !== "เงินสด" ? (
+              dayjs(hData?.check_date).format("DD/MM/YYYY")
+            ) : (
+              <Typography.Text>.....................</Typography.Text>
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={14} sm={14} md={14} lg={14}>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;จำนวนเงิน &nbsp;&nbsp;&nbsp;
+            {hData.payment_type !== "เงินสด" ? (
+              comma(Number(hData?.check_amount || 0), 2, 2)
+            ) : (
+              <Typography.Text>.....................</Typography.Text>
+            )}
+            &nbsp; บาท
+          </Col>
+        </Row>
       </>
     );
   };
@@ -255,199 +330,7 @@ function ReceiptPrintPreview() {
   const ContentMoney = () => {
     return (
       <>
-        {hData.payment_type === "เงินสด" ? (
-          <Checkbox defaultChecked />
-        ) : (
-          <Checkbox />
-        )}
-        <Typography.Text className="text-sm text-end">
-          &nbsp; เงินสด
-        </Typography.Text>
-        <br></br>
-        <Flex className="w-full" justify="center" gap={32}>
-          <Flex vertical className="w-1/2" style={{ gap: 10 }}>
-            <Flex gap={2}>
-              <div
-                className="w-full"
-                style={{ height: 90, border: "1px solid var(---color--1)" }}
-              >
-                {"\u00A0"}
-              </div>
-            </Flex>
-            <Flex justify="center" gap={2}>
-              <Typography.Text
-                className="tx-info"
-                strong
-                style={{ minWidth: 48 }}
-              >
-                ผู้รับเงิน{" "}
-              </Typography.Text>
-              <Typography.Text className="tx-info" strong>
-                {"\u00A0"}
-              </Typography.Text>
-            </Flex>
-          </Flex>
-        </Flex>
-      </>
-    );
-  };
-
-  const ContentSignature = () => {
-    return (
-      <>
-        <Flex
-          className="w-full"
-          justify="center"
-          gap={32}
-          style={{ border: "1px solid var(---color--1)" }}
-          align="center"
-        >
-          <Flex
-            vertical
-            align="center"
-            className="w-full"
-            style={{ gap: 10, border: "1px solid var(---color--1)" }}
-          >
-            <Typography.Text
-              className="tx-info"
-              strong
-              style={{ minWidth: 48 }}
-            >
-              ได้รับสินค้าไว้ถูกต้องตามรายการข้างต้น ในสภาพเรียบร้อยแล้ว
-            </Typography.Text>
-            <Flex
-              className="w-full"
-              justify="center"
-              gap={32}
-              align="center"
-              style={{ gap: 10, border: "1px solid var(---color--1)" }}
-            >
-              <Flex vertical className="w-1/2" style={{ gap: 10 }}>
-                <Flex gap={2}>
-                  <div
-                    className="w-full"
-                    style={{ height: 90, border: "1px solid var(---color--1)" }}
-                  >
-                    {"\u00A0"}
-                  </div>
-                </Flex>
-                <Flex justify="center" gap={2}>
-                  <Typography.Text
-                    className="tx-info"
-                    strong
-                    style={{ minWidth: 48 }}
-                  >
-                    ผู้รับสินค้า{" "}
-                  </Typography.Text>
-                  <Typography.Text className="tx-info" strong>
-                    {"\u00A0"}
-                  </Typography.Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex className="w-full" justify="center" gap={32}>
-            <Flex vertical className="w-1/2">
-              <Typography.Text
-                className="tx-info"
-                strong
-                style={{ minWidth: 48 }}
-              >
-                สำหรับเจ้าหน้าที่
-              </Typography.Text>
-              <Flex vertical>
-                <Flex gap={2}>
-                  <div
-                    className="w-full"
-                    style={{ height: 90, border: "1px solid var(---color--1)" }}
-                  >
-                    {"\u00A0"}
-                  </div>
-                </Flex>
-                <Flex justify="center" gap={2}>
-                  <Typography.Text
-                    className="tx-info"
-                    strong
-                    style={{ minWidth: 48 }}
-                  >
-                    ผู้รับสินค้า{" "}
-                  </Typography.Text>
-                  <Typography.Text className="tx-info" strong>
-                    {"\u00A0"}
-                  </Typography.Text>
-                </Flex>
-              </Flex>
-              <Flex vertical>
-                <Typography.Text
-                  className="tx-info"
-                  strong
-                  style={{ minWidth: 48 }}
-                >
-                  สำหรับเจ้าหน้าที่
-                </Typography.Text>
-                <Flex gap={2}>
-                  <div
-                    className="w-full"
-                    style={{ height: 90, border: "1px solid var(---color--1)" }}
-                  >
-                    {"\u00A0"}
-                  </div>
-                </Flex>
-                <Flex justify="center" gap={2}>
-                  <Typography.Text
-                    className="tx-info"
-                    strong
-                    style={{ minWidth: 48 }}
-                  >
-                    ผู้รับสินค้า{" "}
-                  </Typography.Text>
-                  <Typography.Text className="tx-info" strong>
-                    {"\u00A0"}
-                  </Typography.Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Flex>
-      </>
-    );
-  };
-
-  const QuotationSummary = ({ i }) => {
-    return (
-      <>
-        <Table.Summary.Row style={{ height: 24 }}>
-          <Table.Summary.Cell
-            index={0}
-            colSpan={4}
-            className="!align-top"
-          ></Table.Summary.Cell>
-        </Table.Summary.Row>
-
         <Table.Summary.Row className="r-sum">
-          <Table.Summary.Cell
-            colSpan={4}
-            className="text-summary text-center !align-top"
-          >
-            <Typography.Text className="text-end">
-              ( {thaiBahtText(Number(hData?.grand_total_price || 0))} )
-            </Typography.Text>
-          </Table.Summary.Cell>
-          <Table.Summary.Cell
-            // colSpan={2}
-            className="text-summary text-start !align-top"
-          >
-            <Typography.Text className="text-sm text-end">
-              รวมราคาสินค้า
-            </Typography.Text>
-          </Table.Summary.Cell>
-          <Table.Summary.Cell className="text-summary text-end !align-top">
-            <Typography.Text className="text-sm text-end">
-              {comma(Number(hData?.total_price || 0), 2, 2)}
-            </Typography.Text>
-          </Table.Summary.Cell>
-        </Table.Summary.Row>        
-        <Table.Summary.Row className="r-sum" >
           <Table.Summary.Cell
             colSpan={4}
             className="text-summary text-start !align-top"
@@ -480,7 +363,8 @@ function ReceiptPrintPreview() {
             rowSpan={2}
             className="text-summary text-start !align-top"
           >
-            {i < 2 ? <ContentBankCheck /> : <ContentRemark />}
+            {/* {i < 2 ? <ContentBankCheck /> : <ContentRemark />} */}
+            <ContentBankCheck />
           </Table.Summary.Cell>
           <Table.Summary.Cell className="text-summary text-start !align-top">
             <Typography.Text className="text-sm text-end">
@@ -495,8 +379,8 @@ function ReceiptPrintPreview() {
         </Table.Summary.Row>
         <Table.Summary.Row className="r-sum rl">
           <Table.Summary.Cell
-            rowSpan={2}
             colSpan={2}
+            rowSpan={2}
             className="text-summary text-center !align-top"
           >
             <Typography.Text className="text-sm text-end">
@@ -507,21 +391,19 @@ function ReceiptPrintPreview() {
             </Typography.Text>
             <Flex className="w-full" justify="center" gap={32}>
               <Flex vertical className="w-3/4" style={{ gap: 10 }}>
-                <Flex gap={2}>
-                  <div
-                    className="w-full"
-                    style={{ height: 90, border: "1px solid var(---color--1)" }}
-                  >
-                    {"\u00A0"}
-                  </div>
-                </Flex>
+                <Typography.Text className="tx-info" justify="center" strong>
+                  <br />
+                  <br />
+                  <br />
+                  .........................................
+                </Typography.Text>
                 <Flex justify="center" gap={2}>
                   <Typography.Text
                     className="tx-info"
                     strong
-                    style={{ minWidth: 48 }}
+                    style={{ minWidth: 36 }}
                   >
-                    ผู้มีอำนาจลงนาม{" "}
+                    ผู้มีอำนาจลงนาม
                   </Typography.Text>
                   <Typography.Text className="tx-info" strong>
                     {"\u00A0"}
@@ -541,9 +423,295 @@ function ReceiptPrintPreview() {
               border: "1px solid var(---color--1)",
             }}
           >
-            {i < 2 ? <ContentMoney /> : <ContentSignature />}
+            {hData.payment_type === "เงินสด" ? (
+              <Checkbox defaultChecked />
+            ) : (
+              <Checkbox />
+            )}
+            <Typography.Text className="text-sm text-end">
+              &nbsp; เงินสด
+            </Typography.Text>
+            <br></br>
+            <Flex className="w-full" justify="center" gap={32}>
+              <Flex vertical className="w-1/2" style={{ gap: 10 }}>
+                <Flex justify="center" gap={2}>
+                  <Typography.Text className="tx-info" strong>
+                    <br />
+                    <br />
+                    <br />
+                    ..............................................
+                  </Typography.Text>
+                </Flex>
+                <Flex justify="center" gap={2}>
+                  <Typography.Text
+                    className="tx-info"
+                    strong
+                    style={{ minWidth: 36 }}
+                  >
+                    ผู้รับเงิน{" "}
+                  </Typography.Text>
+                  <Typography.Text className="tx-info" strong>
+                    {"\u00A0"}
+                  </Typography.Text>
+                </Flex>
+              </Flex>
+            </Flex>
           </Table.Summary.Cell>
         </Table.Summary.Row>
+      </>
+    );
+  };
+
+  const ContentSignature = () => {
+    return (
+      <>
+        <Table.Summary.Row className="r-sum">
+          <Table.Summary.Cell
+            colSpan={4}
+            rowSpan={2}
+            className="text-summary text-start !align-top"
+          >
+            <ContentRemark />
+          </Table.Summary.Cell>
+          <Table.Summary.Cell
+            // colSpan={2}
+            className="text-summary text-start !align-top"
+          >
+            <Typography.Text className="text-sm text-end">
+              ภาษีมูลค่าเพิ่ม {comma(Number(hData?.vat || 0))}%
+            </Typography.Text>
+          </Table.Summary.Cell>
+          <Table.Summary.Cell className="text-summary text-end !align-top">
+            <Typography.Text className="text-sm text-end">
+              {comma(Number((hData?.vat * hData?.total_price) / 100 || 0))}
+            </Typography.Text>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+        <Table.Summary.Row className="r-sum">
+          <Table.Summary.Cell className="text-summary text-start !align-top">
+            <Typography.Text className="text-sm text-end">
+              รวมเงินทั้งสิ้น
+            </Typography.Text>
+          </Table.Summary.Cell>
+          <Table.Summary.Cell className="text-summary text-end !align-top">
+            <Typography.Text className="text-sm text-end">
+              {comma(Number(hData?.grand_total_price || 0), 2, 2)}
+            </Typography.Text>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+        <Table.Summary.Row className="r-sum m-0 p-0" style={{ border: "0px" }}>
+          <Table.Summary.Cell
+            colSpan={6}
+            className="text-summary text-start !align-top m-0 p-0"
+          >
+            <Flex
+              className="w-full h-full"
+              justify="center"
+              gap={0}
+              align="center"
+            >
+              <Flex
+                vertical
+                align="center"
+                className="w-full h-full"
+                style={{ border: "1px solid var(---color--1)" }}
+              >
+                <Typography.Text className="tx-info mb-3" align="center" strong>
+                  ได้รับสินค้าไว้ถูกต้อง
+                  <br />
+                  ตามรายการข้างต้น
+                  <br />
+                </Typography.Text>
+                <Flex
+                  className="w-full"
+                  justify="center"
+                  align="center"
+                  style={{ gap: 10 }}
+                >
+                  <Flex vertical className="w-3/4" style={{ gap: 10 }}>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text
+                        className="tx-info"
+                        strong
+                        style={{ minWidth: 36 }}
+                      >
+                        <br />
+                        <br />
+                        .................................
+                      </Typography.Text>
+                    </Flex>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text className="tx-info" strong>
+                        ผู้รับสินค้า{" "}
+                      </Typography.Text>
+                      <Typography.Text className="tx-info" strong>
+                        {"\u00A0"}
+                      </Typography.Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Flex
+                vertical
+                align="center"
+                className="w-full h-full"
+                style={{ border: "1px solid var(---color--1)" }}
+              >
+                <Typography.Text className="tx-info mb-3" strong>
+                  สำหรับเจ้าหน้าที่
+                  <br />
+                  <br />
+                </Typography.Text>
+                <Flex
+                  className="w-full"
+                  justify="center"
+                  align="center"
+                  style={{ gap: 10 }}
+                >
+                  <Flex vertical className="w-3/4" style={{ gap: 10 }}>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text
+                        className="tx-info"
+                        strong
+                        style={{ minWidth: 36 }}
+                      >
+                        <br />
+                        <br />
+                        .................................
+                      </Typography.Text>
+                    </Flex>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text className="tx-info" strong>
+                        ผู้ส่งสินค้า{" "}
+                      </Typography.Text>
+                      <Typography.Text className="tx-info" strong>
+                        {"\u00A0"}
+                      </Typography.Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Flex
+                vertical
+                align="center"
+                className="w-full h-full"
+                style={{ border: "1px solid var(---color--1)" }}
+              >
+                <Typography.Text className="tx-info mb-3" align="center" strong>
+                  สำหรับเจ้าหน้าที่
+                  <br />
+                  <br />
+                </Typography.Text>
+                <Flex
+                  className="w-full"
+                  justify="center"
+                  align="center"
+                  style={{ gap: 10 }}
+                >
+                  <Flex vertical className="w-3/4" style={{ gap: 10 }}>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text
+                        className="tx-info"
+                        justify="center"
+                        strong
+                      >
+                        <br />
+                        <br />
+                        .................................
+                      </Typography.Text>
+                    </Flex>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text className="tx-info" strong>
+                        ผู้ตรวจนับสินค้า{" "}
+                      </Typography.Text>
+                      <Typography.Text className="tx-info" strong>
+                        {"\u00A0"}
+                      </Typography.Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Flex
+                vertical
+                align="center"
+                className="w-full h-full"
+                style={{ border: "1px solid var(---color--1)" }}
+              >
+                <Typography.Text className="tx-info mb-3" align="center" strong>
+                  ในนาม <br />
+                  บริษัท วีระ ไดรคัทติ้ง จำกัด
+                </Typography.Text>
+                <Flex
+                  className="w-full"
+                  justify="center"
+                  align="center"
+                  style={{ gap: 10 }}
+                >
+                  <Flex vertical className="w-3/4" style={{ gap: 10 }}>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text
+                        className="tx-info"
+                        justify="center"
+                        strong
+                      >
+                        <br />
+                        <br />
+                        .................................
+                      </Typography.Text>
+                    </Flex>
+                    <Flex justify="center" gap={2}>
+                      <Typography.Text className="tx-info" strong>
+                        ผู้มีอำนาจลงนาม{" "}
+                      </Typography.Text>
+                      <Typography.Text className="tx-info" strong>
+                        {"\u00A0"}
+                      </Typography.Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+      </>
+    );
+  };
+
+  const QuotationSummary = ({ i }) => {
+    return (
+      <>
+        {/* <Table.Summary.Row style={{ height: 24 }}>
+          <Table.Summary.Cell
+            index={0}
+            colSpan={4}
+            className="!align-top"
+          ></Table.Summary.Cell>
+        </Table.Summary.Row> */}
+
+        <Table.Summary.Row className="r-sum">
+          <Table.Summary.Cell
+            colSpan={4}
+            className="text-summary text-center !align-top"
+          >
+            <Typography.Text className="text-end">
+              ( {thaiBahtText(Number(hData?.grand_total_price || 0))} )
+            </Typography.Text>
+          </Table.Summary.Cell>
+          <Table.Summary.Cell
+            // colSpan={2}
+            className="text-summary text-start !align-top"
+          >
+            <Typography.Text className="text-sm text-end">
+              รวมราคาสินค้า
+            </Typography.Text>
+          </Table.Summary.Cell>
+          <Table.Summary.Cell className="text-summary text-end !align-top">
+            <Typography.Text className="text-sm text-end">
+              {comma(Number(hData?.total_price || 0), 2, 2)}
+            </Typography.Text>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+        {i < 2 ? <ContentMoney /> : <ContentSignature />}
       </>
     );
   };
@@ -583,7 +751,7 @@ function ReceiptPrintPreview() {
         return (
           <div>
             <ContentData children={data} i={i}>
-              <ContentHead />
+              <ContentHead i={i} />
               <ContentHead2 />
               <ContentBody i={i} />
             </ContentData>
@@ -595,7 +763,7 @@ function ReceiptPrintPreview() {
 
   const ContentData = ({ children, i }) => {
     return (
-      <div className="quo-pages flex flex-col">
+      <div className="rec-pages flex flex-col">
         <HeaderForm index={i} />
         <div className="print-content grow">{children}</div>
       </div>
@@ -604,7 +772,7 @@ function ReceiptPrintPreview() {
 
   return (
     <>
-      <div className="page-show" id="est">
+      <div className="page-show" id="rec">
         <div className="title-preview">
           <Button
             className="bn-center  bg-blue-400"

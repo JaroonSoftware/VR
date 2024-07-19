@@ -1,4 +1,4 @@
-import { Flex, Typography } from "antd";
+import { Typography } from "antd";
 import { comma } from "../../../utils/util";
 
 export const column = [
@@ -18,9 +18,12 @@ export const column = [
           borderLeft: "1px solid var(---color--1)",
         },
       }),
-    // render: (_, record, idx) => <span key={record?.stcode}>{idx + 1}</span>,
     render: (_, record, idx) => (
-      <Typography.Text className="tx-info">{idx + 1}</Typography.Text>
+      record.code !== 0 ? (
+        <Typography.Text className="tx-info">{idx + 1}</Typography.Text>
+      ) : (
+        <Typography.Text>&nbsp;</Typography.Text>
+      )      
     ),
   },
   {
@@ -28,22 +31,14 @@ export const column = [
     align: "left",
     key: "stname",
     dataIndex: "stname",    
-    render: (_, record, ind) => (
-      <>
-        <Flex vertical>
-          <Typography.Text className="tx-info">
+    render: (_, record, ind) => (      
+       record.code !== 0 ? (
+        <Typography.Text className="tx-info">
             {ind + 1}. {record?.stname}
           </Typography.Text>
-          <Flex vertical>
-            {/* {record?.quotations_list.map( (item, ix)=>(
-                        <Flex key={ix} gap={6}>
-                            <Typography.Text className="pl-4 tx-sub text-nowrap">{ind + 1}.{ix+1} {item?.detail_name}:</Typography.Text>
-                            <Typography.Text className="tx-sub">{item?.detail_value}</Typography.Text> 
-                        </Flex>
-                    ))} */}
-          </Flex>
-        </Flex>
-      </>
+      ) : (
+        <Typography.Text></Typography.Text>
+      )            
     ),
   },
   {
@@ -58,8 +53,13 @@ export const column = [
     key: "qty",
     dataIndex: "qty",
     width: 100,
-    render: (v) => (
-      <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
+    render: (v, record) => (
+      record.code !== 0 ? (
+        <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
+      ) : (
+        <Typography.Text></Typography.Text>
+      )      
+      
     ),
   },
   {
@@ -87,8 +87,13 @@ export const column = [
     width: 120,
     key: "price",
     dataIndex: "price",
-    render: (v) => (
-      <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
+    render: (v, record) => (
+      record.code !== 0 ? (
+        <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
+      ) : (
+        <Typography.Text></Typography.Text>
+      )      
+      
     ),
   },  
   {
@@ -109,9 +114,14 @@ export const column = [
       },
     }),
     render: (_, record) => (
-      <Typography.Text className="tx-info">
+      record.code !== 0 ? (
+        <Typography.Text className="tx-info">
         {comma(Number(record.price * record.qty), 2, 2)}
       </Typography.Text>
+      ) : (
+        <Typography.Text></Typography.Text>
+      )      
+      
     ),
   },
 ];

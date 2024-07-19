@@ -102,9 +102,9 @@
     margin-bottom: .234rem;
   }
 
-  .quo-pages .print-head .print-title { 
-    /* border-bottom: 2px solid #eb313b; */
-  }
+  /* .quo-pages .print-head .print-title { 
+    border-bottom: 2px solid #eb313b;
+  } */
 
   .quo-pages .print-foot .print-title { 
     border-top: 2px solid var(---color--1);
@@ -309,11 +309,11 @@
   padding-bottom: 18px !important; 
 }
 
-/* .quo-pages tr.ant-table-row.ant-table-row-level-0.r-sub:first-child::after{
+.quo-pages tr.ant-table-row.ant-table-row-level-0.r-sub:first-child::after{
   content: '';
   border-bottom: 1px solid #ffffff !important;
 }
-.quo-pages tr.ant-table-row.ant-table-row-level-0.r-sub::after {
+/*.quo-pages tr.ant-table-row.ant-table-row-level-0.r-sub::after {
   content: ' ';
   border-bottom: 1px solid var(---color--1) !important;
   width: 100%;

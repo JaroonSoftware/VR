@@ -288,14 +288,14 @@ function ReceiptManage() {
     form
       .validateFields()
       .then((v) => {
-        // console.log(form.getFieldValue("bank_id"))
+        
         const bnk = banksOptionData.find(
           (d) => d.key === form.getFieldValue("bank")
         );
-        if (!bnk) {
-          message.error("Bank data error please choose bank");
-          throw new Error("Bank Data is not empty.");
-        }
+        // if (!bnk) {
+        //   message.error("Bank data error please choose bank");
+        //   throw new Error("Bank Data is not empty.");
+        // }
 
         const header = {
           ...formDetail,
@@ -546,7 +546,6 @@ function ReceiptManage() {
           <Form.Item
             name="bank"
             label="ธนาคาร"
-            rules={[{ required: true, message: "Missing Bank" }]}
           >
             {/* <Input placeholder='Enter Loading type Name.' /> */}
             <Select
@@ -605,7 +604,7 @@ function ReceiptManage() {
                 );
               }}
               allowClear
-              placeholder="Enter Loading type Name."
+              placeholder="เลือกธนาคาร"
             />
           </Form.Item>
         </Col>
