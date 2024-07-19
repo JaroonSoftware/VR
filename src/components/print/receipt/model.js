@@ -52,7 +52,7 @@ export const column = [
     align: "right",
     key: "qty",
     dataIndex: "qty",
-    width: 100,
+    width: 60,
     render: (v, record) => (
       record.code !== 0 ? (
         <Typography.Text className="tx-info">{comma(Number(v))}</Typography.Text>
@@ -71,7 +71,7 @@ export const column = [
       </>
     ),
     align: "right",
-    width: 100,
+    width: 60,
     key: "unit",
     dataIndex: "unit",
   },

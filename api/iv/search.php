@@ -14,9 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $cuscode = !empty($cuscode) ? "and c.cuscode like '%$cuscode%'" : "";
     $cusname = !empty($cusname) ? "and c.cusname like '%$cusname%'" : "";
     $created_by = !empty($created_by) ? "and ( u.firstname like '%$created_by%' or u.lastname like '%$created_by%' )" : "";
-    $ivcode = "";
-    if( !empty($ivcode_form) && !empty($ivcode_to) ) {
-        $ivcode = "and date_format( a.ivcode, '%Y-%m-%d' ) >= '$ivcode_form' and date_format( a.ivcode, '%Y-%m-%d' ) <= '$ivcode_to' ";
+    $ivdate = "";
+    if( !empty($ivdate_form) && !empty($ivdate_to) ) {
+        $ivdate = "and date_format( a.ivdate, '%Y-%m-%d' ) >= '$ivdate_form' and date_format( a.ivdate, '%Y-%m-%d' ) <= '$ivdate_to' ";
     } 
     
     try {   
@@ -33,8 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $cuscode
         $cusname
         $created_by
-        $qtdate
-        order by a.created_date desc ;";
+        $ivdate
+        order by a.ivcode desc ;";
 
 
         $stmt = $conn->prepare($sql); 
@@ -42,8 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);  
 
         http_response_code(200);
-        echo json_encode(array("data"=>$res));
-        // echo json_encode(array("data" => $res,"sql" => $sql));
+        // echo json_encode(array("data"=>$res));
+        echo json_encode(array("data" => $res,"sql" => $sql));
         
     } catch (mysqli_sql_exception $e) { 
         http_response_code(400);

@@ -15,7 +15,7 @@ import { accessColumn } from "./model";
 import dayjs from "dayjs";
 import ReceiptService from "../../service/Receipt.service";
 
-const ivService = ReceiptService();
+const reService = ReceiptService();
 const mngConfig = {
   title: "",
   textOk: null,
@@ -37,14 +37,14 @@ const MyAccess = () => {
     <>
       <Row gutter={[8, 8]}>
         <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-          <Form.Item label="เลขที่ใบเสร็จรับเงิน" name="ivcode">
+          <Form.Item label="เลขที่ใบเสร็จรับเงิน" name="recode">
             <Input placeholder="Enter Receipt Code." />
           </Form.Item>
         </Col>
         <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-          <Form.Item label="วันที่ใบเสร็จรับเงิน" name="ivdate">
+          <Form.Item label="วันที่ใบเสร็จรับเงิน" name="redate">
             <RangePicker
-              placeholder={["From Date", "To date"]}
+              placeholder={["เริ่มวันที่", "ถึงวันที่"]}
               style={{ width: "100%", height: 40 }}
             />
           </Form.Item>
@@ -123,15 +123,17 @@ const MyAccess = () => {
   const handleSearch = () => {
     form.validateFields().then((v) => {
       const data = { ...v };
-      if (!!data?.ivdate) {
-        const arr = data?.ivdate.map((m) => dayjs(m).format("YYYY-MM-DD"));
-        const [ivdate_form, ivdate_to] = arr;
+      // console.log(data)
+      if (!!data?.redate) {
+        const arr = data?.redate.map((m)   => dayjs(m).format("YYYY-MM-DD"));
+        const [redate_form, redate_to] = arr;
+        
         //data.created_date = arr
-        Object.assign(data, { ivdate_form, ivdate_to });
+        Object.assign(data, { redate_form, redate_to });
       }
       setTimeout(
         () =>
-          ivService
+          reService
             .search(data, { ignoreLoading: Object.keys(data).length !== 0 })
             .then((res) => {
               const { data } = res.data;
@@ -181,7 +183,7 @@ const MyAccess = () => {
 
   const handleDelete = (data) => {
     // startLoading();
-    ivService
+    reService
       .deleted(data?.quotcode)
       .then((_) => {
         const tmp = accessData.filter((d) => d.quotcode !== data?.quotcode);
@@ -248,14 +250,7 @@ const MyAccess = () => {
         size="middle"
         style={{ display: "flex", position: "relative" }}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          autoComplete="off"
-          onValuesChange={() => {
-            handleSearch(true);
-          }}
-        >
+        <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch(true)}}>
           {FormSearch}
         </Form>
         <Card>

@@ -106,7 +106,7 @@ const MyAccess = () => {
 
         form.validateFields().then((v) => {
             const data = { ...v };
-            if( !!data?.ivdate ) {
+            if( !!data?.ivdate) {
                 const arr = data?.ivdate.map( m => dayjs(m).format("YYYY-MM-DD") )
                 const [ivdate_form, ivdate_to] = arr; 
                 //data.created_date = arr
@@ -200,7 +200,7 @@ const MyAccess = () => {
     return (
     <div className='so-access' id="area">
         <Space direction="vertical" size="middle" style={{ display: 'flex', position: 'relative' }} >
-            <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch(true)}}>
+            <Form form={form} layout="vertical" autoComplete="off" onValuesChange={()=>{ handleSearch()}}>
                 {FormSearch}
             </Form> 
             <Card>
