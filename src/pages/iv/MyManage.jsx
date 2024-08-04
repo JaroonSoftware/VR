@@ -39,6 +39,7 @@ const ivservice = InvoiceService();
 const qtservice = QuotationService();
 
 const gotoFrom = "/iv";
+const dateFormat = 'DD/MM/YYYY';
 
 function InvoiceManage() {
   const navigate = useNavigate();
@@ -696,6 +697,7 @@ function InvoiceManage() {
                             className="input-40"
                             allowClear={false}
                             onChange={handleQuotDate}
+                            format={dateFormat}
                           />
                         </Form.Item>
                       </Flex>

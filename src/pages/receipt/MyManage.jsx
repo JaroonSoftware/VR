@@ -48,6 +48,7 @@ const reservice = ReceiptService();
 const ivservice = InvoiceService();
 
 const gotoFrom = "/receipt";
+const dateFormat = 'DD/MM/YYYY';
 
 function ReceiptManage() {
   const navigate = useNavigate();
@@ -625,6 +626,7 @@ function ReceiptManage() {
               placeholder="วันที่เช็ค."
               className="input-40"
               style={{ width: "100%" }}
+              format={dateFormat}
             />
           </Form.Item>
         </Col>
@@ -876,6 +878,7 @@ function ReceiptManage() {
                             className="input-40"
                             allowClear={false}
                             onChange={handleQuotDate}
+                            format={dateFormat}
                           />
                         </Form.Item>
                       </Flex>

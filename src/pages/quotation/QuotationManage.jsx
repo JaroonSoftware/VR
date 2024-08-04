@@ -36,6 +36,7 @@ const opservice = OptionService();
 const qtservice = QuotationService();
 
 const gotoFrom = "/quotation";
+const dateFormat = 'DD/MM/YYYY';
 
 function QuotationManage() {
   const navigate = useNavigate();
@@ -606,6 +607,7 @@ function QuotationManage() {
                             className="input-40"
                             allowClear={false}
                             onChange={handleQuotDate}
+                            format={dateFormat}
                           />
                         </Form.Item>
                       </Flex>
